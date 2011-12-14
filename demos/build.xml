@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="demo" default="-usage" basedir=".">
+
+<description>
+Builds the proof of concept prototypes.
+</description>
+	
+	<property name="dir.root" location="${basedir}/.."/>
+	<import file="${dir.root}/tools/ant/init.xml"/>
+	
+	<property name="dir.config" location="${dir.root}/tools/mxmlc"/>
+	<property name="dir.source" location="${basedir}/source"/>
+	<property name="dir.libs.away3d" location="${dir.root}/tools/away3d"/>
+	<property name="dir.target" location="${basedir}/target"/>
+	<property name="dir.release" location="${basedir}/release"/>
+	
+	
+	<target name="all" description="&gt; this is the main task (clean, compile, release)" depends="clean, compile, release" />
+	
+
+	<target name="clean" description="remove the contents of ${dir.target} and ${dir.release}">
+		<delete failonerror="true" includeemptydirs="true">
+			<fileset dir="${dir.target}" includes="${ant.project.name}*"/>
+			<fileset dir="${dir.release}" includes="${ant.project.name}*"/>
+		</delete>
+	</target>
+	
+	
+    <target name="compile" depends="clean" description="compiles demo swfs into target folder">
+
+		<local name="demoname"/>   <property name="demoname" value="SkySphere"/>
+		<local name="filename"/>   <property name="filename" value="${demoname}"/>
+		<local name="filepath"/>   <property name="filepath" value="${dir.source}"/>
+		<local name="source-path"/><property name="source-path" value="-source-path=${dir.source}"/>
+		<local name="library-path"/><property name="library-path" value="-library-path+=${dir.libs.away3d}"/>
+		<local name="link-report"/> <property name="link-report" value="-link-report=${dir.target}/${ant.project.name}-${demoname}-linkage.xml"/>
+		<local name="size-report"/> <property name="size-report" value="-size-report=${dir.target}/${ant.project.name}-${demoname}-sizes.xml"/>
+		<local name="output"/>     <property name="output" value="-output=${dir.target}/${ant.project.name}-${demoname}.swf"/>
+		<mxmlc 
+			file="${filepath}/${filename}.as" 
+			config="${dir.config}/mxmlc-config.xml" 
+			options="${source-path} ${library-path} ${link-report} ${size-report} ${output}"
+			/>
+	</target>
+	
+	<target name="release" depends="compile" description="copies build artifacts from target to release folder">
+		<copy file="${dir.target}/${ant.project.name}*.swf" todir="${dir.release}" />
+	</target>
+				
+</project>
