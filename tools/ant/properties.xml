@@ -54,5 +54,22 @@ Shared properties
 			<not><os family="mac"/></not>
 		</and>
 	</condition>
+	
+	<!-- Set convenience suffixes for application executables across platforms. -->
+	<condition property="exe" value=".exe">
+		<os family="windows"/>
+	</condition>
+	<condition property="exe" value=".app">
+		<and>
+			<os family="unix"/>
+			<os family="mac"/>
+		</and>
+	</condition>
+	<condition property="exe" value="">
+		<and>
+			<os family="unix"/>
+			<not><os family="mac"/></not>
+		</and>
+	</condition>
 
 </project>

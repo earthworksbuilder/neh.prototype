@@ -14,11 +14,11 @@ Builds the proof of concept prototypes.
 	<property name="dir.libs.away3d" location="${dir.root}/tools/away3d"/>
 	<property name="dir.target" location="${basedir}/target"/>
 	<property name="dir.release" location="${basedir}/release"/>
+	<property name="exe.flashplayer" location="${dir.root}/tools/flashplayer/debug/flashplayer${exe}"/>
 	
 	
-	<target name="all" description="&gt; this is the main task (clean, compile, release)" depends="clean, compile, release" />
+	<target name="all" description="&gt; this is the main task (clean, compile, release, run)" depends="clean, compile, release, run" />
 	
-
 	<target name="clean" description="remove the contents of ${dir.target} and ${dir.release}">
 		<delete failonerror="true" includeemptydirs="true">
 			<fileset dir="${dir.target}" includes="${ant.project.name}*"/>
@@ -26,9 +26,7 @@ Builds the proof of concept prototypes.
 		</delete>
 	</target>
 	
-	
     <target name="compile" depends="clean" description="compiles demo swfs into target folder">
-
 		<local name="demoname"/>   <property name="demoname" value="SkySphere"/>
 		<local name="filename"/>   <property name="filename" value="${demoname}"/>
 		<local name="filepath"/>   <property name="filepath" value="${dir.source}"/>
@@ -45,7 +43,14 @@ Builds the proof of concept prototypes.
 	</target>
 	
 	<target name="release" depends="compile" description="copies build artifacts from target to release folder">
-		<copy file="${dir.target}/${ant.project.name}*.swf" todir="${dir.release}" />
+		<copy todir="${dir.release}">
+			<fileset dir="${dir.target}" includes="${ant.project.name}*.swf"/>
+		</copy>
+	</target>
+	
+	<target name="run" description="launches build artifact from release folder">
+		<local name="demoname"/>   <property name="demoname" value="SkySphere"/>
+		<open file="${dir.release}/${ant.project.name}-${demoname}.swf" exe="${exe.flashplayer}" />
 	</target>
 				
 </project>
