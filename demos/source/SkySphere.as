@@ -1,9 +1,12 @@
 package
 {
     import away3d.cameras.Camera3D;
+    import away3d.containers.ObjectContainer3D;
+    import away3d.containers.Scene3D;
     import away3d.containers.View3D;
-    import away3d.materials.BitmapMaterial;
+    import away3d.materials.TextureMaterial;
     import away3d.primitives.Sphere;
+    import away3d.textures.BitmapTexture;
 
     import flash.display.Sprite;
     import flash.events.Event;
@@ -12,21 +15,23 @@ package
     import flash.geom.Vector3D;
     import flash.ui.Keyboard;
 
-    [SWF(width="1024", height="768", frameRate="50", backgroundColor="#FFFFFF")]
+    [SWF(width="1024", height="768", frameRate="60", backgroundColor="#FFFFFF")]
 	public class SkySphere extends Sprite
 	{
-		protected const spinRate:Number = .625;
-		protected const skySphereDiameter:Number = 2500;
+		[Embed(source="/../embeds/milky-way.jpg")]
+        protected const SkyTexture:Class;
 		
+		protected const spinRate:Number = .625;
+		protected const skySphereRadius:Number = 2500;
+		
+		protected var view:View3D;
 		protected var cam:Camera3D;
+		protected var scene:Scene3D;
+		
 		protected var lastKey:uint;
 		protected var keyIsDown:Boolean = false;
-		protected var view:View3D;
 		protected var yaw:Matrix3D = new Matrix3D(); // looking left / right
 		protected var pitch:Matrix3D = new Matrix3D(); // looking up / down
-		
-		[Embed(source="/../embeds/milky-way.jpg")]
-        private var SkyTexture:Class;
 		
 		public function SkySphere()
 		{
@@ -38,19 +43,17 @@ package
 			view = new View3D();
 			addChild(view);
 			
-			// snag a reference to the view's camera (default pos is at origin)
+			// snag a reference to the view's default camera (default pos is at origin)
 			cam = view.camera;
 			
-			// add a huge surrounding sphere centered around the origin
-			var skyMaterial:BitmapMaterial = new BitmapMaterial(new SkyTexture().bitmapData);
-			var largeSphere:Sphere = new Sphere(skyMaterial, skySphereDiameter, 14, 28);
-			largeSphere.scaleX = -1; // scaled inside out so we can see the texture
-			view.scene.addChild(largeSphere);
+			// snag a reference to the view's default scene and add geometry to it
+			scene = view.scene;
+			scene.addChild(sceneGeo);
 			
-			// listen for key events and run every frame
-			this.stage.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
-			this.stage.addEventListener(KeyboardEvent.KEY_UP,onKeyUp);
-			this.addEventListener(Event.ENTER_FRAME,update);
+			// listen for key events and frame updates
+			stage.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP,onKeyUp);
+			addEventListener(Event.ENTER_FRAME,update);
 		}
 		
 		protected function update(e:Event):void
@@ -72,6 +75,15 @@ package
             
             // render the view
             view.render();
+		}
+		
+		protected function get sceneGeo():ObjectContainer3D
+		{
+			// create a huge surrounding sphere centered at the origin
+			var skyMaterial:TextureMaterial = new TextureMaterial(new BitmapTexture(new SkyTexture().bitmapData));
+			var largeSphere:Sphere = new Sphere(skyMaterial, skySphereRadius);
+			largeSphere.scaleX = -1; // scaled inside out so we can see the texture
+			return largeSphere;
 		}
 		
 		protected function get cameraTransform():Matrix3D
