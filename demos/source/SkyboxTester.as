@@ -7,16 +7,15 @@ package
     import away3d.primitives.SkyBox;
     import away3d.textures.BitmapCubeTexture;
 
-    import flash.display.Bitmap;
-    import flash.display.BitmapData;
-    import flash.display.Loader;
     import flash.display.Sprite;
     import flash.events.Event;
     import flash.events.KeyboardEvent;
     import flash.geom.Matrix3D;
     import flash.geom.Vector3D;
-    import flash.net.URLRequest;
     import flash.ui.Keyboard;
+    
+    import BitmapCubeLoader;
+    
 
     [SWF(width="800", height="600", frameRate="60", backgroundColor="#000000")]
 	public class SkyboxTester extends Sprite
@@ -32,45 +31,17 @@ package
 		protected var yaw:Matrix3D = new Matrix3D(); // looking left / right
 		protected var pitch:Matrix3D = new Matrix3D(); // looking up / down
 		
-		protected var images:Vector.<BitmapData> = new <BitmapData>[null,null,null,null,null,null];
-		protected var loaders:Vector.<Loader> = new <Loader>[null,null,null,null,null,null];
-		protected var imageUrls:Array = [
-			"posX.png", "negX.png", 
-			"posY.png", "negY.png", 
-			"posZ.png", "negZ.png"
-		];
+		protected var bitmapCubeLoader:BitmapCubeLoader;
+		
 		
 		public function SkyboxTester()
 		{
-			for (var i:uint = 0; i < imageUrls.length; i++)
-			{
-				loaders[i] = new Loader();
-				loaders[i].contentLoaderInfo.addEventListener(Event.COMPLETE, makeCallback(i));
-				loaders[i].load(new URLRequest(imageUrls[i]));
-			}
-		}
-		
-		protected function makeCallback(which:uint):Function
-		{
-			// create new closure to capture current value of which
-			return function(event:Event):void { setImage(which, event); }
-		}
-		
-		protected function setImage(which:uint, event:Event):void
-		{
-			var bitmap:Bitmap = event.target.content as Bitmap;
-			images[which] = bitmap.bitmapData;
-			
-			var imagesLoaded:Boolean = true;
-			for (var i:uint = 0; i < images.length; i++)
-			{
-				if (images[i] == null)
-				{
-					imagesLoaded = false;
-					break;
-				}
-			}
-			if (imagesLoaded) initScene();
+			bitmapCubeLoader = new BitmapCubeLoader(
+				"posX.png", "negX.png", 
+				"posY.png", "negY.png", 
+				"posZ.png", "negZ.png",
+				initScene
+			);
 		}
 		
 		protected function initScene():void
@@ -114,13 +85,7 @@ package
 		
 		protected function createGeo():ObjectContainer3D
 		{
-			var material:BitmapCubeTexture = new BitmapCubeTexture
-			(
-				images[0], images[1],
-				images[2], images[3],
-				images[4], images[5]
-			);
-			var geometry:SkyBox = new SkyBox(material);
+			var geometry:SkyBox = new SkyBox(bitmapCubeLoader.texture);
 			return geometry;
 		}
 		
