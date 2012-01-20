@@ -44,26 +44,28 @@ package
 		{
 			for (var i:uint = 0; i < imageUrls.length; i++)
 			{
-				var imageRef:BitmapData = images[i];
-				var handler:Function = function(event:Event):void { setImage(imageRef,event); }; // capture imageRef in closure
 				loaders[i] = new Loader();
-				loaders[i].contentLoaderInfo.addEventListener(Event.COMPLETE, handler);
+				loaders[i].contentLoaderInfo.addEventListener(Event.COMPLETE, makeCallback(i));
 				loaders[i].load(new URLRequest(imageUrls[i]));
 			}
 		}
 		
-		protected function setImage(image:BitmapData, event:Event):void
+		protected function makeCallback(which:uint):Function
+		{
+			// create new closure to capture current value of which
+			return function(event:Event):void { setImage(which, event); }
+		}
+		
+		protected function setImage(which:uint, event:Event):void
 		{
 			var bitmap:Bitmap = event.target.content as Bitmap;
-			image = bitmap.bitmapData;
-			//throw new Error("image="+image);
+			images[which] = bitmap.bitmapData;
 			
 			var imagesLoaded:Boolean = true;
 			for (var i:uint = 0; i < images.length; i++)
 			{
 				if (images[i] == null)
 				{
-					throw new Error("image " +i +" is null");
 					imagesLoaded = false;
 					break;
 				}
@@ -73,7 +75,6 @@ package
 		
 		protected function initScene():void
 		{
-			throw new Error("initScene()");
 			// initialize view angle matrices
 			yaw.identity();
 			pitch.identity();
