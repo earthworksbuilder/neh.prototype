@@ -4,10 +4,11 @@ package
     import away3d.containers.ObjectContainer3D;
     import away3d.containers.Scene3D;
     import away3d.containers.View3D;
+    import away3d.entities.Mesh;
     import away3d.materials.TextureMaterial;
-    import away3d.primitives.Sphere;
+    import away3d.primitives.SphereGeometry;
     import away3d.textures.BitmapTexture;
-
+    
     import flash.display.Sprite;
     import flash.events.Event;
     import flash.events.KeyboardEvent;
@@ -79,11 +80,11 @@ package
 		
 		protected function get sceneGeo():ObjectContainer3D
 		{
-			// create a huge surrounding sphere centered at the origin
-			var skyMaterial:TextureMaterial = new TextureMaterial(new BitmapTexture(new SkyTexture().bitmapData));
-			var largeSphere:Sphere = new Sphere(skyMaterial, skySphereRadius);
-			largeSphere.scaleX = -1; // scaled inside out so we can see the texture
-			return largeSphere;
+			var geometry:SphereGeometry = new SphereGeometry(skySphereRadius);
+			var material:TextureMaterial = new TextureMaterial(new BitmapTexture(new SkyTexture().bitmapData));
+			var mesh:Mesh = new Mesh(geometry, material);
+			mesh.scaleX = -1; // scaled inside out to show texture while inside
+			return mesh;
 		}
 		
 		protected function get cameraTransform():Matrix3D
