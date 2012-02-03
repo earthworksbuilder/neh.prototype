@@ -1,8 +1,6 @@
 package
 {
-    import away3d.cameras.Camera3D;
     import away3d.containers.ObjectContainer3D;
-    import away3d.containers.Scene3D;
     import away3d.containers.View3D;
     import away3d.entities.Mesh;
     import away3d.materials.TextureMaterial;
@@ -11,10 +9,7 @@ package
     
     import flash.display.Sprite;
     import flash.events.Event;
-    import flash.events.KeyboardEvent;
-    import flash.geom.Matrix3D;
     import flash.geom.Vector3D;
-    import flash.ui.Keyboard;
 
     [SWF(width="1024", height="768", frameRate="60", backgroundColor="#FFFFFF")]
 	public class SkySphere extends Sprite
@@ -22,57 +17,38 @@ package
 		[Embed(source="/../embeds/milky-way.jpg")]
         protected const SkyTexture:Class;
 		
-		protected const spinRate:Number = .625;
-		protected const skySphereRadius:Number = 2500;
+		protected const spinRate:Number = .825;
+		protected const skySphereRadius:Number = 999;
 		
 		protected var view:View3D;
-		protected var cam:Camera3D;
-		protected var scene:Scene3D;
-		
-		protected var lastKey:uint;
-		protected var keyIsDown:Boolean = false;
-		protected var yaw:Matrix3D = new Matrix3D(); // looking left / right
-		protected var pitch:Matrix3D = new Matrix3D(); // looking up / down
+		protected var userTransform:UserTransform;
 		
 		public function SkySphere()
 		{
-			// initialize view angle matrices
-			yaw.identity();
-			pitch.identity();
+			super();
 			
-			// create a viewport
+			// create a viewport and add it to the stage
 			view = new View3D();
+			view.backgroundColor = 0x333333;
 			addChild(view);
 			
-			// snag a reference to the view's default camera (default pos is at origin)
-			cam = view.camera;
+			// add geometry to the scene
+			view.scene.addChild(sceneGeo);
 			
-			// snag a reference to the view's default scene and add geometry to it
-			scene = view.scene;
-			scene.addChild(sceneGeo);
+			view.camera.position = new Vector3D(0, 0, 0);
 			
-			// listen for key events and frame updates
-			stage.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
-			stage.addEventListener(KeyboardEvent.KEY_UP,onKeyUp);
+			// let user manipulate camera orientation
+			userTransform = new UserTransform(stage, view.camera.transform);
+			
+			// listen for enterframe to to render updates
 			addEventListener(Event.ENTER_FRAME,update);
 		}
 		
 		protected function update(e:Event):void
 		{
-			// adjust view rotations if user is pressing keys
-			if(keyIsDown)
-			{
-                switch(lastKey)
-                {
-                    case Keyboard.UP    : adjustPitch(-spinRate); break;
-                    case Keyboard.DOWN  : adjustPitch(+spinRate); break;
-                    case Keyboard.LEFT  : adjustYaw(-spinRate); break;
-                    case Keyboard.RIGHT : adjustYaw(+spinRate); break;
-                }
-            }
-            
-            // apply current view rotations
-            cam.transform = cameraTransform;
+			// apply current user rotations
+			userTransform.update();
+			view.camera.transform = userTransform.value;
             
             // render the view
             view.render();
@@ -82,39 +58,9 @@ package
 		{
 			var geometry:SphereGeometry = new SphereGeometry(skySphereRadius);
 			var material:TextureMaterial = new TextureMaterial(new BitmapTexture(new SkyTexture().bitmapData));
+			material.bothSides = true;
 			var mesh:Mesh = new Mesh(geometry, material);
-			mesh.scaleX = -1; // scaled inside out to show texture while inside
 			return mesh;
-		}
-		
-		protected function get cameraTransform():Matrix3D
-		{
-			var xform:Matrix3D = cam.transform;
-			xform.identity();
-			xform.prepend(pitch);
-			xform.append(yaw);
-			return xform;
-		}
-		
-		protected function adjustYaw(value:Number):void
-		{
-			yaw.prependRotation(value, Vector3D.Y_AXIS);
-		}
-		
-		protected function adjustPitch(value:Number):void
-		{
-			pitch.prependRotation(value, Vector3D.X_AXIS);
-		}
-		
-		protected function onKeyDown(e:KeyboardEvent):void
-		{
-			lastKey = e.keyCode;
-			keyIsDown = true;
-		}
-		
-		protected function onKeyUp(e:KeyboardEvent):void
-		{
-			keyIsDown = false;
 		}
 	}
 }

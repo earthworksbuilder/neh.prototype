@@ -47,35 +47,20 @@ package
 		public function set spinRate(value:Number):void { _spinRate = value; }
 		public function get spinRate():Number { return _spinRate; }
 		
-		protected function adjustYaw(value:Number):void
-		{
-			yaw.prependRotation(value, Vector3D.Y_AXIS);
-		}
+		protected function onKeyDown(e:KeyboardEvent):void { setKey(e.keyCode, true); }
+		protected function onKeyUp(e:KeyboardEvent):void { setKey(e.keyCode, false); }
 		
-		protected function adjustPitch(value:Number):void
-		{
-			pitch.prependRotation(value, Vector3D.X_AXIS);
-		}
+		protected function adjustYaw(value:Number):void { yaw.prependRotation(value, Vector3D.Y_AXIS); }
+		protected function adjustPitch(value:Number):void { pitch.prependRotation(value, Vector3D.X_AXIS); }
 		
-		protected function onKeyDown(e:KeyboardEvent):void
+		protected function setKey(keyCode:uint, value:Boolean):void
 		{
-			switch(e.keyCode)
+			switch(keyCode)
 			{
-				case Keyboard.UP    : keysDown[0] = true; break;
-				case Keyboard.DOWN  : keysDown[1] = true; break;
-				case Keyboard.LEFT  : keysDown[2] = true; break;
-				case Keyboard.RIGHT : keysDown[3] = true; break;
-			}
-		}
-		
-		protected function onKeyUp(e:KeyboardEvent):void
-		{
-			switch(e.keyCode)
-			{
-				case Keyboard.UP    : keysDown[0] = false; break;
-				case Keyboard.DOWN  : keysDown[1] = false; break;
-				case Keyboard.LEFT  : keysDown[2] = false; break;
-				case Keyboard.RIGHT : keysDown[3] = false; break;
+				case Keyboard.UP    : keysDown[0] = value; break;
+				case Keyboard.DOWN  : keysDown[1] = value; break;
+				case Keyboard.LEFT  : keysDown[2] = value; break;
+				case Keyboard.RIGHT : keysDown[3] = value; break;
 			}
 		}
 		
