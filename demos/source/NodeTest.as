@@ -3,7 +3,6 @@ package
     import away3d.containers.ObjectContainer3D;
     import away3d.containers.View3D;
     import away3d.entities.Mesh;
-    import away3d.materials.ColorMaterial;
     import away3d.materials.TextureMaterial;
     import away3d.primitives.PlaneGeometry;
     import away3d.primitives.SphereGeometry;
@@ -21,26 +20,12 @@ package
 		[Embed(source="/../embeds/milky-way.jpg")]
         protected const SkyTexture:Class;
 		
-		[Embed(source="../embeds/newark-octagon/A-negX.png")]
-		protected const GroundNegX:Class;
-		[Embed(source="../embeds/newark-octagon/A-negY.png")]
-		protected const GroundNegY:Class;
-		[Embed(source="../embeds/newark-octagon/A-negZ.png")]
-		protected const GroundNegZ:Class;
-		
-		[Embed(source="../embeds/newark-octagon/A-posX.png")]
-		protected const GroundPosX:Class;
-		[Embed(source="../embeds/newark-octagon/A-posY.png")]
-		protected const GroundPosY:Class;
-		[Embed(source="../embeds/newark-octagon/A-posZ.png")]
-		protected const GroundPosZ:Class;
-		
-		protected const spinRate:Number = .825;
 		protected const skySphereRadius:Number = 999;
 		protected var lastTime:int;
 		
 		protected var view:View3D;
 		protected var userTransform:UserTransform;
+		protected var bitmapCubeLoader:BitmapCubeLoader;
 		protected var skyGeo:ObjectContainer3D;
 		protected var groundGeo:ObjectContainer3D;
 		
@@ -48,6 +33,16 @@ package
 		{
 			super();
 			
+			bitmapCubeLoader = new BitmapCubeLoader(
+				"nodes/A-posX.png", "nodes/A-negX.png", 
+				"nodes/A-posY.png", "nodes/A-negY.png", 
+				"nodes/A-posZ.png", "nodes/A-negZ.png",
+				initScene
+			);
+		}
+		
+		protected function initScene():void
+		{
 			// create a viewport and add it to the stage
 			view = new View3D();
 			view.backgroundColor = 0x333333;
@@ -107,18 +102,18 @@ package
 		{
 			var r:Number = 50;
 			
-			var posZMesh:Mesh = createTexturedPlane(r*2, new GroundPosZ().bitmapData, false);
+			var posZMesh:Mesh = createTexturedPlane(r*2, bitmapCubeLoader.getTextureAt(BitmapCubeLoader.POSZ), false);
 			posZMesh.translate(Vector3D.Z_AXIS,  r);
 			
-			var negZMesh:Mesh = createTexturedPlane(r*2, new GroundNegZ().bitmapData, false);
+			var negZMesh:Mesh = createTexturedPlane(r*2, bitmapCubeLoader.getTextureAt(BitmapCubeLoader.NEGZ), false);
 			negZMesh.rotationY = 180;
 			negZMesh.translate(Vector3D.Z_AXIS, -r);
 			
-			var posXMesh:Mesh = createTexturedPlane(r*2, new GroundPosX().bitmapData, false);
+			var posXMesh:Mesh = createTexturedPlane(r*2, bitmapCubeLoader.getTextureAt(BitmapCubeLoader.POSX), false);
 			posXMesh.rotationY = 90;
 			posXMesh.translate(Vector3D.X_AXIS,  r);
 			
-			var negXMesh:Mesh = createTexturedPlane(r*2, new GroundNegX().bitmapData, false);
+			var negXMesh:Mesh = createTexturedPlane(r*2, bitmapCubeLoader.getTextureAt(BitmapCubeLoader.NEGX), false);
 			negXMesh.rotationY = -90;
 			negXMesh.translate(Vector3D.X_AXIS, -r);
 			
@@ -128,12 +123,12 @@ package
 			return ground;
 		}
 		
-		protected function createTexturedPlane(dim:Number, bitmapData:BitmapData, horizontal:Boolean):Mesh
+		protected function createTexturedPlane(dim:Number, bitmapTexture:BitmapTexture, horizontal:Boolean):Mesh
 		{
 			var seg:uint = 1;
 			
 			var geo:PlaneGeometry = new PlaneGeometry(dim, dim, seg, seg, horizontal);
-			var mat:TextureMaterial = new TextureMaterial(new BitmapTexture(bitmapData));
+			var mat:TextureMaterial = new TextureMaterial(bitmapTexture);
 			mat.alphaBlending = true;
 			
 			var mesh:Mesh = new Mesh(geo, mat);
