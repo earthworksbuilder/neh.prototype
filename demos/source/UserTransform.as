@@ -40,7 +40,7 @@ package
 			xform.identity();
 			xform.prepend(start);
 			xform.prepend(pitch);
-			xform.prepend(yaw);
+			xform.append(yaw);
 			return xform;
 		}
 		

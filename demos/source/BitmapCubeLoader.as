@@ -2,6 +2,7 @@
 package
 {
     import away3d.textures.BitmapCubeTexture;
+    import away3d.textures.BitmapTexture;
     
     import flash.display.Bitmap;
     import flash.display.BitmapData;
@@ -12,14 +13,14 @@ package
     
 	public class BitmapCubeLoader
 	{
-		protected const POSX:uint = 0;
-		protected const NEGX:uint = 1;
-		protected const POSY:uint = 2;
-		protected const NEGY:uint = 3;
-		protected const POSZ:uint = 4;
-		protected const NEGZ:uint = 5;
+		public static const POSX:uint = 0;
+		public static const NEGX:uint = 1;
+		public static const POSY:uint = 2;
+		public static const NEGY:uint = 3;
+		public static const POSZ:uint = 4;
+		public static const NEGZ:uint = 5;
 		
-		protected var images:Vector.<BitmapData> = new <BitmapData>[null,null,null,null,null,null];
+		protected var imageData:Vector.<BitmapData> = new <BitmapData>[null,null,null,null,null,null];
 		protected var loaders:Vector.<Loader> = new <Loader>[null,null,null,null,null,null];
 		protected var imageUrls:Vector.<String> = new <String>[null,null,null,null,null,null];
 		protected var cubeFaces:Vector.<String> = new <String>["POSX", "NEGX", "POSY", "NEGY", "POSZ", "NEGZ"];
@@ -34,6 +35,7 @@ package
 			callback:Function=null
 			):void
 		{
+			setLoaders();
 			setUrls(urlPosX, urlNegX, urlPosY, urlNegY, urlPosZ, urlNegZ);
 			if (callback != null) load(callback);
 		}
@@ -55,34 +57,23 @@ package
 		public function load(callback:Function):void
 		{
 			externalCallback = callback;
+			dispose(); // clear out any old image data
 			
-			for (var i:uint = 0; i < imageUrls.length; i++)
+			var n:uint = imageUrls.length;
+			for (var i:uint = 0; i < n; i++)
 			{
 				if (imageUrls[i] == null) throw new ArgumentError("no image url provided for " +cubeFaces[i] +" face");
-				loaders[i] = new Loader();
-				loaders[i].contentLoaderInfo.addEventListener(Event.COMPLETE, makeImageLoadHandler(i));
 				loaders[i].load(new URLRequest(imageUrls[i]));
 			}
-		}
-		
-		public function get texture():BitmapCubeTexture
-		{
-			var bitmapCubeTexture:BitmapCubeTexture = new BitmapCubeTexture
-			(
-				images[POSX], images[NEGX],
-				images[POSY], images[NEGY],
-				images[POSZ], images[NEGZ]
-			);
-			
-			return bitmapCubeTexture;
 		}
 		
 		public function get isLoaded():Boolean
 		{
 			var imagesLoaded:Boolean = true;
-			for (var i:uint = 0; i < images.length; i++)
+			var n:uint = imageData.length;
+			for (var i:uint = 0; i < n; i++)
 			{
-				if (images[i] == null)
+				if (imageData[i] == null)
 				{
 					imagesLoaded = false;
 					break;
@@ -91,14 +82,33 @@ package
 			return imagesLoaded;
 		}
 		
+		public function get cubeTexture():BitmapCubeTexture
+		{
+			var bitmapCubeTexture:BitmapCubeTexture = new BitmapCubeTexture
+			(
+				imageData[POSX], imageData[NEGX],
+				imageData[POSY], imageData[NEGY],
+				imageData[POSZ], imageData[NEGZ]
+			);
+			
+			return bitmapCubeTexture;
+		}
+		
+		public function getTextureAt(index:uint):BitmapTexture
+		{
+			if (index >= imageData.length) throw new ArgumentError("index out of range. expected [0..5], got " +index);
+			return new BitmapTexture(imageData[index]);
+		}
+		
 		public function dispose():void
 		{
-			for (var i:uint = 0; i < images.length; i++)
+			var n:uint = imageData.length;
+			for (var i:uint = 0; i < n; i++)
 			{
-				if (images[i] != null)
+				if (imageData[i] != null)
 				{
-					images[i].dispose();
-					images[i] = null;
+					imageData[i].dispose();
+					imageData[i] = null;
 				}
 			}
 		}
@@ -113,9 +123,19 @@ package
 		protected function setImage(which:uint, event:Event):void
 		{
 			var bitmap:Bitmap = event.target.content as Bitmap;
-			images[which] = bitmap.bitmapData;
+			imageData[which] = bitmap.bitmapData;
 			
 			if (isLoaded) externalCallback();
+		}
+		
+		protected function setLoaders():void
+		{
+			var n:uint = loaders.length;
+			for (var i:uint = 0; i < n; i++)
+			{
+				loaders[i] = new Loader();
+				loaders[i].contentLoaderInfo.addEventListener(Event.COMPLETE, makeImageLoadHandler(i));
+			}
 		}
 	}
 }
