@@ -12,6 +12,7 @@ Builds the proof of concept prototypes.
 	<property name="dir.config" location="${dir.root}/tools/mxmlc"/>
 	<property name="dir.source" location="${basedir}/source"/>
 	<property name="dir.libs.away3d" location="${dir.root}/tools/away3d"/>
+	<property name="dir.libs.as3-log" location="${dir.root}/tools/as3-log"/>
 	<property name="dir.target" location="${basedir}/target"/>
 	<property name="dir.release" location="${basedir}/release"/>
 	<property name="exe.flashplayer" location="${dir.root}/tools/flashplayer/debug/flashplayer${exe}"/>
@@ -33,7 +34,7 @@ Builds the proof of concept prototypes.
 			<local name="filename"/>   <property name="filename" value="@{name}"/>
 			<local name="filepath"/>   <property name="filepath" value="${dir.source}"/>
 			<local name="source-path"/><property name="source-path" value="-source-path=${dir.source}"/>
-			<local name="library-path"/><property name="library-path" value="-library-path+=${dir.libs.away3d}"/>
+			<local name="library-path"/><property name="library-path" value="-library-path+=${dir.libs.away3d} -library-path+=${dir.libs.as3-log}"/>
 			<local name="link-report"/> <property name="link-report" value="-link-report=${dir.target}/@{name}-linkage.xml"/>
 			<local name="size-report"/> <property name="size-report" value="-size-report=${dir.target}/@{name}-sizes.xml"/>
 			<local name="output"/>     <property name="output" value="-output=${dir.target}/@{name}.swf"/>
