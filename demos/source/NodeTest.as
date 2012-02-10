@@ -11,8 +11,13 @@ package
     import flash.display.BitmapData;
     import flash.display.Sprite;
     import flash.events.Event;
+    import flash.events.MouseEvent;
     import flash.geom.Vector3D;
     import flash.utils.getTimer;
+    
+    import pixeldroid.logging.LogDispatcher;
+    import pixeldroid.logging.appenders.console.ConsoleAppender;
+		
 
     [SWF(width="1024", height="768", frameRate="60", backgroundColor="#FFFFFF")]
 	public class NodeTest extends Sprite
@@ -29,20 +34,27 @@ package
 		protected var skyGeo:ObjectContainer3D;
 		protected var groundGeo:ObjectContainer3D;
 		
+		protected var currentNode:String;
+		
 		public function NodeTest()
 		{
 			super();
 			
-			bitmapCubeLoader = new BitmapCubeLoader(
-				"nodes/A-posX.png", "nodes/A-negX.png", 
-				"nodes/A-posY.png", "nodes/A-negY.png", 
-				"nodes/A-posZ.png", "nodes/A-negZ.png",
-				initScene
-			);
+			var c:ConsoleAppender = new ConsoleAppender();
+			addChild(c);
+			LogDispatcher.addAppender(c);
+			
+			bitmapCubeLoader = new BitmapCubeLoader();
+			setNodeImages(nextNode());
+			
+			debug(this, "constructor - currentNode is {0}", currentNode);
+			bitmapCubeLoader.load(initScene);
 		}
 		
 		protected function initScene():void
 		{
+			debug(this, "initScene()");
+			
 			// create a viewport and add it to the stage
 			view = new View3D();
 			view.backgroundColor = 0x333333;
@@ -63,10 +75,12 @@ package
 			userTransform = new UserTransform(stage, view.camera.transform);
 			
 			// listen for enterframe to to render updates
-			addEventListener(Event.ENTER_FRAME,update);
+			addEventListener(Event.ENTER_FRAME, update);
+			
+			view.addEventListener(MouseEvent.CLICK, onViewClicked);
 		}
 		
-		protected function update(e:Event):void
+		protected function update(event:Event):void
 		{
 			var s:Number = elapsed;
 			
@@ -79,6 +93,43 @@ package
 			
             // render the view
             view.render();
+		}
+		
+		protected function onViewClicked(event:MouseEvent):void
+		{
+			debug(this, "onViewClicked() - stage ({0},{1})", event.stageX, event.stageY);
+			debug(this, "onViewClicked() - currentNode is {0}", currentNode);
+			setNodeImages(nextNode());
+			bitmapCubeLoader.load(onNodeTraveled);
+		}
+		
+		protected function onNodeTraveled():void
+		{
+			debug(this, "onNodeTraveled() - currentNode is {0}", currentNode);
+		}
+		
+		protected function nextNode():String
+		{
+			var next:String;
+			switch(currentNode)
+			{
+				case null: next = "A"; break;
+				case "A" : next = "B"; break;
+				case "B" : next = "A"; break;
+			}
+			
+			debug(this, "nextNode() - {0} -> {1}", currentNode, next);
+			currentNode = next;
+			return currentNode;
+		}
+		
+		protected function setNodeImages(nodeName:String):void
+		{
+			bitmapCubeLoader.setUrls(
+				"nodes/"+nodeName+"-posX.png", "nodes/"+nodeName+"-negX.png", 
+				"nodes/"+nodeName+"-posY.png", "nodes/"+nodeName+"-negY.png", 
+				"nodes/"+nodeName+"-posZ.png", "nodes/"+nodeName+"-negZ.png"
+			);
 		}
 		
 		protected function get elapsed():Number

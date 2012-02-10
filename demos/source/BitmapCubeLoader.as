@@ -46,6 +46,8 @@ package
 			urlPosZ:String, urlNegZ:String
 			):void
 		{
+			dispose(); // clear out any old image data
+			
 			imageUrls[POSX] = urlPosX;
 			imageUrls[NEGX] = urlNegX;
 			imageUrls[POSY] = urlPosY;
@@ -57,7 +59,6 @@ package
 		public function load(callback:Function):void
 		{
 			externalCallback = callback;
-			dispose(); // clear out any old image data
 			
 			var n:uint = imageUrls.length;
 			for (var i:uint = 0; i < n; i++)
