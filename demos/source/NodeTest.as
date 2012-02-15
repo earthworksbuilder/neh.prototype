@@ -19,22 +19,18 @@ package
     import pixeldroid.logging.appenders.console.ConsoleAppender;
 		
 
-    [SWF(width="1024", height="768", frameRate="60", backgroundColor="#FFFFFF")]
+    [SWF(width="1024", height="768", frameRate="30", backgroundColor="#FFFFFF", quality="LOW")]
 	public class NodeTest extends Sprite
 	{
-		[Embed(source="/../embeds/milky-way.jpg")]
-        protected const SkyTexture:Class;
-		
-		protected const skySphereRadius:Number = 999;
-		protected var lastTime:int;
-		
 		protected var view:View3D;
 		protected var userTransform:UserTransform;
 		protected var bitmapCubeLoader:BitmapCubeLoader;
 		protected var skyGeo:ObjectContainer3D;
-		protected var groundGeo:ObjectContainer3D;
+		protected var groundGeo:NodeGeometry;
 		
+		protected var lastTime:int;
 		protected var currentNode:String;
+		
 		
 		public function NodeTest()
 		{
@@ -47,7 +43,7 @@ package
 			bitmapCubeLoader = new BitmapCubeLoader();
 			setNodeImages(nextNode());
 			
-			debug(this, "constructor - currentNode is {0}", currentNode);
+			debug(this, "constructor - loading cube images...");
 			bitmapCubeLoader.load(initScene);
 		}
 		
@@ -66,10 +62,11 @@ package
 			
 			// add geometry to the scene
 			var sceneGeo:ObjectContainer3D = new ObjectContainer3D();
-			skyGeo = createSkyGeo();
-			groundGeo = createGroundGeo();
+			skyGeo = new SkyGeometry();
+			groundGeo = new NodeGeometry();
 			sceneGeo.addChildren(skyGeo, groundGeo);
 			view.scene.addChild(sceneGeo);
+			onNodeTraveled();
 			
 			// let user manipulate camera orientation
 			userTransform = new UserTransform(stage, view.camera.transform);
@@ -105,7 +102,11 @@ package
 		
 		protected function onNodeTraveled():void
 		{
-			debug(this, "onNodeTraveled() - currentNode is {0}", currentNode);
+			debug(this, "onNodeTraveled() - currentNode is {0}; updating bitmapdata", currentNode);
+			for (var i:uint = 0; i < 6; i++)
+			{
+				groundGeo.setTextureData(bitmapCubeLoader.getBitmapDataAt(i), i);
+			}
 		}
 		
 		protected function nextNode():String
@@ -113,9 +114,12 @@ package
 			var next:String;
 			switch(currentNode)
 			{
-				case null: next = "A"; break;
-				case "A" : next = "B"; break;
-				case "B" : next = "A"; break;
+				case  null : next = "001"; break;
+				case "001" : next = "002"; break;
+				case "002" : next = "003"; break;
+				case "003" : next = "004"; break;
+				case "004" : next = "005"; break;
+				case "005" : next = "006"; break;
 			}
 			
 			debug(this, "nextNode() - {0} -> {1}", currentNode, next);
@@ -126,10 +130,17 @@ package
 		protected function setNodeImages(nodeName:String):void
 		{
 			bitmapCubeLoader.setUrls(
+				"nodes/posX/posX."+nodeName+".png", "nodes/negX/negX."+nodeName+".png", 
+				"nodes/posY/posY."+nodeName+".png", "nodes/negY/negY."+nodeName+".png", 
+				"nodes/posZ/posZ."+nodeName+".png", "nodes/negZ/negZ."+nodeName+".png"
+			);
+			/*
+			bitmapCubeLoader.setUrls(
 				"nodes/"+nodeName+"-posX.png", "nodes/"+nodeName+"-negX.png", 
 				"nodes/"+nodeName+"-posY.png", "nodes/"+nodeName+"-negY.png", 
 				"nodes/"+nodeName+"-posZ.png", "nodes/"+nodeName+"-negZ.png"
 			);
+			*/
 		}
 		
 		protected function get elapsed():Number
@@ -140,50 +151,5 @@ package
 			return value;
 		}
 		
-		protected function createSkyGeo():ObjectContainer3D
-		{
-			var geometry:SphereGeometry = new SphereGeometry(skySphereRadius);
-			var material:TextureMaterial = new TextureMaterial(new BitmapTexture(new SkyTexture().bitmapData));
-			material.bothSides = true;
-			var mesh:Mesh = new Mesh(geometry, material);
-			return mesh;
-		}
-				
-		protected function createGroundGeo():ObjectContainer3D
-		{
-			var r:Number = 50;
-			
-			var posZMesh:Mesh = createTexturedPlane(r*2, bitmapCubeLoader.getTextureAt(BitmapCubeLoader.POSZ), false);
-			posZMesh.translate(Vector3D.Z_AXIS,  r);
-			
-			var negZMesh:Mesh = createTexturedPlane(r*2, bitmapCubeLoader.getTextureAt(BitmapCubeLoader.NEGZ), false);
-			negZMesh.rotationY = 180;
-			negZMesh.translate(Vector3D.Z_AXIS, -r);
-			
-			var posXMesh:Mesh = createTexturedPlane(r*2, bitmapCubeLoader.getTextureAt(BitmapCubeLoader.POSX), false);
-			posXMesh.rotationY = 90;
-			posXMesh.translate(Vector3D.X_AXIS,  r);
-			
-			var negXMesh:Mesh = createTexturedPlane(r*2, bitmapCubeLoader.getTextureAt(BitmapCubeLoader.NEGX), false);
-			negXMesh.rotationY = -90;
-			negXMesh.translate(Vector3D.X_AXIS, -r);
-			
-			var ground:ObjectContainer3D = new ObjectContainer3D();
-			ground.addChildren(posZMesh, negZMesh, posXMesh, negXMesh);
-			
-			return ground;
-		}
-		
-		protected function createTexturedPlane(dim:Number, bitmapTexture:BitmapTexture, horizontal:Boolean):Mesh
-		{
-			var seg:uint = 1;
-			
-			var geo:PlaneGeometry = new PlaneGeometry(dim, dim, seg, seg, horizontal);
-			var mat:TextureMaterial = new TextureMaterial(bitmapTexture);
-			mat.alphaBlending = true;
-			
-			var mesh:Mesh = new Mesh(geo, mat);
-			return mesh;
-		}
 	}
 }

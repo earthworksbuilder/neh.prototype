@@ -46,8 +46,6 @@ package
 			urlPosZ:String, urlNegZ:String
 			):void
 		{
-			dispose(); // clear out any old image data
-			
 			imageUrls[POSX] = urlPosX;
 			imageUrls[NEGX] = urlNegX;
 			imageUrls[POSY] = urlPosY;
@@ -83,7 +81,7 @@ package
 			return imagesLoaded;
 		}
 		
-		public function get cubeTexture():BitmapCubeTexture
+		public function getCubeTextureFor():BitmapCubeTexture
 		{
 			var bitmapCubeTexture:BitmapCubeTexture = new BitmapCubeTexture
 			(
@@ -95,10 +93,16 @@ package
 			return bitmapCubeTexture;
 		}
 		
-		public function getTextureAt(index:uint):BitmapTexture
+		public function getTextureFor(index:uint):BitmapTexture
 		{
 			if (index >= imageData.length) throw new ArgumentError("index out of range. expected [0..5], got " +index);
 			return new BitmapTexture(imageData[index]);
+		}
+		
+		public function getBitmapDataAt(index:uint):BitmapData
+		{
+			if (index >= imageData.length) throw new ArgumentError("index out of range. expected [0..5], got " +index);
+			return imageData[index];
 		}
 		
 		public function dispose():void
