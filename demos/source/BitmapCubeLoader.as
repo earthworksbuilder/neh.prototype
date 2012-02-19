@@ -22,6 +22,7 @@ package
 		
 		protected var imageData:Vector.<BitmapData> = new <BitmapData>[null,null,null,null,null,null];
 		protected var loaders:Vector.<Loader> = new <Loader>[null,null,null,null,null,null];
+		protected var loadComplete:Vector.<Boolean> = new <Boolean>[false,false,false,false,false,false];
 		protected var imageUrls:Vector.<String> = new <String>[null,null,null,null,null,null];
 		protected var cubeFaces:Vector.<String> = new <String>["POSX", "NEGX", "POSY", "NEGY", "POSZ", "NEGZ"];
 		
@@ -62,6 +63,7 @@ package
 			for (var i:uint = 0; i < n; i++)
 			{
 				if (imageUrls[i] == null) throw new ArgumentError("no image url provided for " +cubeFaces[i] +" face");
+				loadComplete[i] = false;
 				loaders[i].load(new URLRequest(imageUrls[i]));
 			}
 		}
@@ -69,10 +71,10 @@ package
 		public function get isLoaded():Boolean
 		{
 			var imagesLoaded:Boolean = true;
-			var n:uint = imageData.length;
+			var n:uint = loadComplete.length;
 			for (var i:uint = 0; i < n; i++)
 			{
-				if (imageData[i] == null)
+				if (!loadComplete[i])
 				{
 					imagesLoaded = false;
 					break;
@@ -129,6 +131,7 @@ package
 		{
 			var bitmap:Bitmap = event.target.content as Bitmap;
 			imageData[which] = bitmap.bitmapData;
+			loadComplete[which] = true;
 			
 			if (isLoaded) externalCallback();
 		}
