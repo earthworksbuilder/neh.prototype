@@ -2,16 +2,13 @@ package
 {
     import away3d.containers.ObjectContainer3D;
     import away3d.containers.View3D;
+    import away3d.core.base.Object3D;
     import away3d.entities.Mesh;
-    import away3d.materials.TextureMaterial;
-    import away3d.primitives.PlaneGeometry;
-    import away3d.primitives.SphereGeometry;
-    import away3d.textures.BitmapTexture;
+    import away3d.events.MouseEvent3D;
     
-    import flash.display.BitmapData;
     import flash.display.Sprite;
     import flash.events.Event;
-    import flash.events.MouseEvent;
+    import flash.geom.Point;
     import flash.geom.Vector3D;
     import flash.utils.getTimer;
     
@@ -22,6 +19,9 @@ package
     [SWF(width="1024", height="768", frameRate="30", backgroundColor="#FFFFFF", quality="LOW")]
 	public class NodeTest extends Sprite
 	{
+		protected const TO_DEGREES:Number = 180 / Math.PI;
+		protected const STARTING_AZIMUTH:Number = 51.5; // azimuth of initial node view
+		
 		protected var view:View3D;
 		protected var userTransform:UserTransform;
 		protected var bitmapCubeLoader:BitmapCubeLoader;
@@ -63,7 +63,9 @@ package
 			// add geometry to the scene
 			var sceneGeo:ObjectContainer3D = new ObjectContainer3D();
 			skyGeo = new SkyGeometry();
+			//skyGeo.addEventListener(MouseEvent3D.CLICK, onSkyClicked); // not getting any hits
 			groundGeo = new NodeGeometry();
+			groundGeo.addEventListener(MouseEvent3D.CLICK, onGroundClicked);
 			sceneGeo.addChildren(skyGeo, groundGeo);
 			view.scene.addChild(sceneGeo);
 			onNodeTraveled();
@@ -74,7 +76,6 @@ package
 			// listen for enterframe to to render updates
 			addEventListener(Event.ENTER_FRAME, update);
 			
-			view.addEventListener(MouseEvent.CLICK, onViewClicked);
 		}
 		
 		protected function update(event:Event):void
@@ -92,12 +93,19 @@ package
             view.render();
 		}
 		
-		protected function onViewClicked(event:MouseEvent):void
+		protected function onSkyClicked(event:MouseEvent3D):void
 		{
-			debug(this, "onViewClicked() - stage ({0},{1})", event.stageX, event.stageY);
-			debug(this, "onViewClicked() - currentNode is {0}", currentNode);
-			setNodeImages(nextNode());
-			bitmapCubeLoader.load(onNodeTraveled);
+			debug(this, "onSkyClicked()");
+		}
+		
+		protected function onGroundClicked(event:MouseEvent3D):void
+		{
+			var object3d:Object3D = event.object;
+			var uv:Point = event.uv;
+			var action:String = getActionType(object3d.name, uv);
+			
+			debug(this, "onViewClicked() - azimuth: {0}, N{1}.{2} ({3}, {4}), action: {5}", currentAzimuth.toFixed(2), currentNode, object3d.name, uv.x.toFixed(3), uv.y.toFixed(3), action);
+			handleAction(action);
 		}
 		
 		protected function onNodeTraveled():void
@@ -106,6 +114,21 @@ package
 			for (var i:uint = 0; i < 6; i++)
 			{
 				groundGeo.setTextureData(bitmapCubeLoader.getBitmapDataAt(i), i);
+			}
+		}
+		
+		protected function handleAction(action:String):void
+		{
+			switch(action)
+			{
+				case "NEXT_NODE":
+					setNodeImages(nextNode());
+					bitmapCubeLoader.load(onNodeTraveled);
+					break;
+				
+				default:
+					debug(this, "handleAction() - unknown action type {0}", action);
+					break;
 			}
 		}
 		
@@ -120,6 +143,10 @@ package
 				case "003" : next = "004"; break;
 				case "004" : next = "005"; break;
 				case "005" : next = "006"; break;
+				case "006" : next = "007"; break;
+				case "007" : next = "008"; break;
+				case "008" : next = "009"; break;
+				case "009" : next = "001"; break;
 			}
 			
 			debug(this, "nextNode() - {0} -> {1}", currentNode, next);
@@ -134,13 +161,31 @@ package
 				"nodes/posY/posY."+nodeName+".png", "nodes/negY/negY."+nodeName+".png", 
 				"nodes/posZ/posZ."+nodeName+".png", "nodes/negZ/negZ."+nodeName+".png"
 			);
-			/*
-			bitmapCubeLoader.setUrls(
-				"nodes/"+nodeName+"-posX.png", "nodes/"+nodeName+"-negX.png", 
-				"nodes/"+nodeName+"-posY.png", "nodes/"+nodeName+"-negY.png", 
-				"nodes/"+nodeName+"-posZ.png", "nodes/"+nodeName+"-negZ.png"
-			);
-			*/
+		}
+		
+		protected function getActionType(objectName:String, textureCoords:Point=null):String
+		{
+			return "NEXT_NODE";
+		}
+		
+		protected function get currentAzimuth():Number
+		{
+			var a:Number;
+			var forward:Vector3D = view.camera.forwardVector;
+			var ry:Number = view.camera.rotationY;
+			
+			if (forward.x >= 0)
+			{
+				if (forward.z >= 0) a = ry;
+				else a = 180 - ry;
+			}
+			else
+			{
+				if (forward.z < 0) a = 180 - ry;
+				else a = 360 + ry;
+			}
+			
+			return (a + STARTING_AZIMUTH) % 360;
 		}
 		
 		protected function get elapsed():Number
