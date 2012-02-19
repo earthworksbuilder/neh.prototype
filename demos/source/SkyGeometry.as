@@ -1,6 +1,7 @@
 package
 {
 	import away3d.containers.ObjectContainer3D;
+	import away3d.core.raytracing.picking.MouseHitMethod;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.SphereGeometry;
@@ -24,6 +25,9 @@ package
 			material.bothSides = true;
 			
 			var mesh:Mesh = new Mesh(geometry, material);
+			mesh.name = "MeshSky";
+			mesh.mouseEnabled = true;
+			mesh.mouseHitMethod = MouseHitMethod.BOUNDS_ONLY;
 			addChild(mesh);
 		}
 	}

@@ -1,6 +1,7 @@
 package
 {
 	import away3d.containers.ObjectContainer3D;
+	import away3d.core.raytracing.picking.MouseHitMethod;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
@@ -64,17 +65,21 @@ package
 		protected function initialize(r:Number=50):void
 		{
 			var posZMesh:Mesh = createTexturedPlane(r*2, posZTexture, false);
+			posZMesh.name = "POSZ";
 			posZMesh.translate(Vector3D.Z_AXIS,  r);
 			
 			var negZMesh:Mesh = createTexturedPlane(r*2, negZTexture, false);
+			negZMesh.name = "NEGZ";
 			negZMesh.rotationY = 180;
 			negZMesh.translate(Vector3D.Z_AXIS, -r);
 			
 			var posXMesh:Mesh = createTexturedPlane(r*2, posXTexture, false);
+			posXMesh.name = "POSX";
 			posXMesh.rotationY = 90;
 			posXMesh.translate(Vector3D.X_AXIS,  r);
 			
 			var negXMesh:Mesh = createTexturedPlane(r*2, negXTexture, false);
+			negXMesh.name = "NEGX";
 			negXMesh.rotationY = -90;
 			negXMesh.translate(Vector3D.X_AXIS, -r);
 			
@@ -90,6 +95,8 @@ package
 			mat.alphaBlending = true;
 			
 			var mesh:Mesh = new Mesh(geo, mat);
+			mesh.mouseEnabled = true;
+			mesh.mouseHitMethod = MouseHitMethod.MESH_ANY_HIT;
 			return mesh;
 		}
 		
