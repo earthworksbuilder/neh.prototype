@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<map startNode="001" startAzimuth="51.5">
+	<node id="001">
+		<hotspot color="ff0000">
+			<jumpToNode id="002" azimuth="0"/>
+		</hotspot>
+	</node>
+	<node id="002">
+		<hotspot color="ff0000">
+			<jumpToNode id="001" azimuth="180"/>
+		</hotspot>
+	</node>
+</map>
