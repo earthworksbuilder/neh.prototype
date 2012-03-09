@@ -2,13 +2,13 @@
 
 <project name="demo" default="-usage" basedir=".">
 
-<description>
+	<description>
 Builds the proof of concept prototypes.
 </description>
-	
+
 	<property name="dir.root" location="${basedir}/.."/>
 	<import file="${dir.root}/tools/ant/init.xml"/>
-	
+
 	<property name="dir.config" location="${dir.root}/tools/mxmlc"/>
 	<property name="dir.source" location="${basedir}/source"/>
 	<property name="dir.libs.away3d" location="${dir.root}/tools/away3d"/>
@@ -16,54 +16,79 @@ Builds the proof of concept prototypes.
 	<property name="dir.target" location="${basedir}/target"/>
 	<property name="dir.release" location="${basedir}/release"/>
 	<property name="exe.flashplayer" location="${dir.root}/tools/flashplayer/debug/flashplayer${exe}"/>
-	
-	<property name="demo" value="SkyboxTrees"></property>
-	
-	
-	<target name="all" description="&gt; ant -Ddemo=Demo_Name all (clean, compile, release, run)" depends="clean, compile, release, run" />
-	
+
+	<property name="demo" value="SkyboxTrees">
+	</property>
+
+
+	<target name="all" description="&gt; ant -Ddemo=Demo_Name all (clean, compile, release, run)" depends="clean, compile, release, run"/>
+
 	<target name="clean" description="remove the contents of ${dir.target} and ${dir.release}">
 		<delete failonerror="true" includeemptydirs="true">
 			<fileset dir="${dir.target}" includes="*" excludes="readme"/>
 		</delete>
 	</target>
-	
+
 	<macrodef name="compile-demo">
 		<attribute name="name" default="UNKNOWN"/>
 		<sequential>
-			<local name="filename"/>   <property name="filename" value="@{name}"/>
-			<local name="filepath"/>   <property name="filepath" value="${dir.source}"/>
-			<local name="source-path"/><property name="source-path" value="-source-path=${dir.source}"/>
-			<local name="library-path"/><property name="library-path" value="-library-path+=${dir.libs.away3d} -library-path+=${dir.libs.as3-log}"/>
-			<local name="link-report"/> <property name="link-report" value="-link-report=${dir.target}/@{name}-linkage.xml"/>
-			<local name="size-report"/> <property name="size-report" value="-size-report=${dir.target}/@{name}-sizes.xml"/>
-			<local name="output"/>     <property name="output" value="-output=${dir.target}/@{name}.swf"/>
-			<mxmlc 
-				file="${filepath}/${filename}.as" 
-				config="${dir.config}/mxmlc-config.xml" 
-				options="${source-path} ${library-path} ${link-report} ${size-report} ${output}"
-				/>
+			<local name="filename"/>
+			<property name="filename" value="@{name}"/>
+			<local name="filepath"/>
+			<property name="filepath" value="${dir.source}"/>
+			<local name="source-path"/>
+			<property name="source-path" value="-source-path=${dir.source}"/>
+			<local name="library-path"/>
+			<property name="library-path" value="-library-path+=${dir.libs.away3d} -library-path+=${dir.libs.as3-log}"/>
+			<local name="link-report"/>
+			<property name="link-report" value="-link-report=${dir.target}/@{name}-linkage.xml"/>
+			<local name="size-report"/>
+			<property name="size-report" value="-size-report=${dir.target}/@{name}-sizes.xml"/>
+			<local name="output"/>
+			<property name="output" value="-output=${dir.target}/@{name}.swf"/>
+			<mxmlc file="${filepath}/${filename}.as" config="${dir.config}/mxmlc-config.xml" options="${source-path} ${library-path} ${link-report} ${size-report} ${output}"/>
 		</sequential>
 	</macrodef>
-	
+
 	<macrodef name="run-demo">
 		<attribute name="name" default="UNKNOWN"/>
 		<sequential>
-			<open file="${dir.release}/@{name}.swf" exe="${exe.flashplayer}" />
+			<open file="${dir.release}/@{name}.swf" exe="${exe.flashplayer}"/>
 		</sequential>
 	</macrodef>
-	
-    <target name="compile" depends="clean" description="compiles demo swfs into target folder">
-    	<compile-demo name="${demo}"/>
+
+	<target name="compile" depends="clean" description="compiles demo swfs into target folder">
+		<compile-demo name="${demo}"/>
 	</target>
-	
+
 	<target name="release" depends="compile" description="copies build artifacts from target to release folder">
 		<copy file="${dir.target}/${demo}.swf" todir="${dir.release}"/>
 	</target>
-	
+
 	<target name="run" description="launches build artifact from release folder">
-    	<run-demo name="${demo}"/>
+		<run-demo name="${demo}"/>
 	</target>
-	
-					
+
+
+	<target name="compile-release" depends="compile, release"/>
+
+	<target name="compile-all" description="compile and release all the examples" depends="clean">
+		<antcall target="compile-release">
+			<param name="demo" value="NodeTest"/>
+		</antcall>
+		<antcall target="compile-release">
+			<param name="demo" value="SkyboxNewark"/>
+		</antcall>
+		<antcall target="compile-release">
+			<param name="demo" value="SkyboxTester"/>
+		</antcall>
+		<antcall target="compile-release">
+			<param name="demo" value="SkyboxTrees"/>
+		</antcall>
+		<antcall target="compile-release">
+			<param name="demo" value="SkySphere"/>
+		</antcall>
+	</target>
+
+
 </project>

@@ -34,7 +34,10 @@
     <sourceAttachmentPath/>
   </compiler>
   <applications>
+    <application path="SkyboxTrees.as"/>
     <application path="NodeTest.as"/>
+    <application path="SkyboxNewark.as"/>
+    <application path="SkySphere.as"/>
     <application path="SkyboxTester.as"/>
   </applications>
   <modules/>
