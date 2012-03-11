@@ -12,7 +12,7 @@ Builds the game prototype.
 	<property name="dir.config" location="${dir.root}/tools/mxmlc"/>
 	<property name="dir.source" location="${basedir}/source"/>
 	<property name="dir.libs.away3d" location="${dir.root}/tools/away3d"/>
-	<property name="dir.libs.as3-log" location="${dir.root}/tools/as3-log"/>
+	<property name="dir.libs.log-as3" location="${dir.root}/tools/log-as3"/>
 	<property name="dir.libs.simplesignals-as3" location="${dir.root}/tools/simplesignals-as3"/>
 	<property name="dir.target" location="${basedir}/target"/>
 	<property name="dir.release" location="${basedir}/release"/>
@@ -40,7 +40,7 @@ Builds the game prototype.
 			<local name="source-path"/>
 			<property name="source-path" value="-source-path=${dir.source}"/>
 			<local name="library-path"/>
-			<property name="library-path" value="-library-path+=${dir.libs.away3d} -library-path+=${dir.libs.as3-log} -library-path+=${dir.libs.simplesignals-as3}"/>
+			<property name="library-path" value="-library-path+=${dir.libs.away3d} -library-path+=${dir.libs.log-as3} -library-path+=${dir.libs.simplesignals-as3}"/>
 			<local name="link-report"/>
 			<property name="link-report" value="-link-report=${dir.target}/@{name}-linkage.xml"/>
 			<local name="size-report"/>
