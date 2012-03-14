@@ -6,11 +6,11 @@ package mteb.view
 	import mteb.view.scene.SceneLayer;
 
 
-	public class LayerLocator
+	public class LayerLocator implements ILayerLocator
 	{
-		private static var instance:LayerLocator;
+		private static var instance:ILayerLocator;
 
-		public static function getInstance():LayerLocator
+		public static function getInstance():ILayerLocator
 		{
 			return instance || (instance = new LayerLocator(new SingletonKey()));
 		}

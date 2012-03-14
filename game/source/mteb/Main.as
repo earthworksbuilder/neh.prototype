@@ -5,6 +5,8 @@ package mteb
 	import flash.events.KeyboardEvent;
 
 	import mteb.data.DataLocator;
+	import mteb.data.IDataLocator;
+	import mteb.view.ILayerLocator;
 	import mteb.view.LayerLocator;
 
 
@@ -21,13 +23,13 @@ package mteb
 		protected function initialize():void
 		{
 			// connect event driven data to events
-			const data:DataLocator = DataLocator.getInstance();
+			const data:IDataLocator = DataLocator.getInstance();
 			addEventListener(Event.ENTER_FRAME, data.time.onFrame);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, data.look.onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, data.look.onKeyUp);
 
 			// add display object layers to stage
-			const layers:LayerLocator = LayerLocator.getInstance();
+			const layers:ILayerLocator = LayerLocator.getInstance();
 			addChild(layers.scene);
 			addChild(layers.debug); // needs to be last so on top
 		}

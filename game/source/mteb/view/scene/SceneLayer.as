@@ -15,6 +15,7 @@ package mteb.view.scene
 	import mteb.command.SignalBus;
 	import mteb.command.signals.FrameEntered;
 	import mteb.data.DataLocator;
+	import mteb.data.IDataLocator;
 
 
 	public class SceneLayer extends Sprite implements ISignalReceiver
@@ -25,7 +26,7 @@ package mteb.view.scene
 		protected const bitmapCubeLoader:BitmapCubeLoader = new BitmapCubeLoader();
 
 		protected var currentNode:String;
-		protected const dataLocator:DataLocator = DataLocator.getInstance();
+		protected const dataLocator:IDataLocator = DataLocator.getInstance();
 		protected var groundGeo:NodeGeometry;
 		protected var skyGeo:ObjectContainer3D;
 		protected var view:View3D;

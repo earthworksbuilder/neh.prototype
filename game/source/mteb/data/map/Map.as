@@ -2,7 +2,7 @@ package mteb.data.map
 {
 
 
-	public class Map
+	public class Map implements IMap
 	{
 		protected var _currentNode:Node;
 

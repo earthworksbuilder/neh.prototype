@@ -2,6 +2,7 @@ package mteb.data
 {
 	import mteb.data.input.IOrientationTransform;
 	import mteb.data.input.UserOrientationTransform;
+	import mteb.data.map.IMap;
 	import mteb.data.map.Map;
 	import mteb.data.stats.IStats;
 	import mteb.data.stats.Stats;
@@ -9,18 +10,18 @@ package mteb.data
 	import mteb.data.time.Time;
 
 
-	public class DataLocator
+	public class DataLocator implements IDataLocator
 	{
-		private static var instance:DataLocator;
+		private static var instance:IDataLocator;
 
-		public static function getInstance():DataLocator
+		public static function getInstance():IDataLocator
 		{
 			return instance || (instance = new DataLocator(new SingletonKey()));
 		}
 
 		private var _look:IOrientationTransform;
 
-		private var _map:Map;
+		private var _map:IMap;
 
 		private var _stats:IStats;
 
@@ -35,7 +36,7 @@ package mteb.data
 
 		public function get look():IOrientationTransform  { return _look || (_look = new UserOrientationTransform()); }
 
-		public function get map():Map  { return _map || (_map = new Map()); }
+		public function get map():IMap  { return _map || (_map = new Map()); }
 
 		public function get stats():IStats  { return _stats || (_stats = new Stats()); }
 
