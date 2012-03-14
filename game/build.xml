@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="demo" default="-usage" basedir=".">
+<project name="MeetTheEarthworksBuilders" default="-usage" basedir=".">
 
 	<description>
 Builds the game prototype.
@@ -63,11 +63,11 @@ Builds the game prototype.
 	</target>
 
 	<target name="release" depends="compile" description="copies build artifacts from target to release folder">
-		<copy file="${dir.target}/${file}.swf" todir="${dir.release}"/>
+		<copy file="${dir.target}/${file}.swf" tofile="${dir.release}/${ant.project.name}.swf"/>
 	</target>
 
 	<target name="run" description="launches build artifact from release folder">
-		<run-file name="${file}"/>
+		<run-file name="${ant.project.name}"/>
 	</target>
 
 </project>

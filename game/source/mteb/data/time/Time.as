@@ -1,34 +1,52 @@
 package mteb.data.time
 {
+	import flash.events.Event;
 	import flash.utils.getTimer;
 
 	import pixeldroid.signals.IProtectedSignal;
+	import pixeldroid.signals.ISignal;
+	import pixeldroid.signals.ISignalBus;
+
+	import mteb.command.SignalBus;
+	import mteb.command.signals.FrameEntered;
 
 
-	public class Time
+	public class Time implements ITime
 	{
-		public const tick:IProtectedSignal = new TickSignal();
-		protected var elapsed:Number;
 
-		protected var lastTick:int;
+		protected var elapsed:Number;
+		protected const frameEntered:IProtectedSignal = new FrameEntered();
+		protected var lastFrame:int;
+		protected var totalFrames:uint;
 
 
 		public function Time()
 		{
+			totalFrames = 0;
+
+			const signalBus:ISignalBus = SignalBus.getInstance();
+			signalBus.addSignal(frameEntered as ISignal);
+		}
+
+		public function get framesElapsed():uint
+		{
+			return totalFrames;
+		}
+
+		public function onFrame(event:Event):void
+		{
+			var now:int = getTimer();
+			elapsed = (lastFrame ? (now - lastFrame) : now) * .001; // convert ms elapsed to seconds
+			lastFrame = now;
+
+			totalFrames++;
+
+			frameEntered.send(this);
 		}
 
 		public function get secondsElapsed():Number
 		{
 			return elapsed;
-		}
-
-		public function tock():void
-		{
-			var now:int = getTimer();
-			elapsed = (lastTick ? (now - lastTick) : now) * .001; // seconds elapsed
-			lastTick = now;
-
-			tick.send(this);
 		}
 	}
 }

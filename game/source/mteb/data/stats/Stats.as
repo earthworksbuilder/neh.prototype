@@ -2,7 +2,7 @@ package mteb.data.stats
 {
 
 
-	public class Stats
+	public class Stats implements IStats
 	{
 
 		private var _score:Number = 0;

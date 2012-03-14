@@ -1,29 +1,33 @@
 package mteb.view.scene
 {
-	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
+
+	import pixeldroid.signals.ISignal;
+	import pixeldroid.signals.ISignalBus;
+	import pixeldroid.signals.ISignalReceiver;
 
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
 	import away3d.events.MouseEvent3D;
-	import mteb.input.UserTransform;
-	import mteb.view.Updatable;
+	import mteb.command.SignalBus;
+	import mteb.command.signals.FrameEntered;
+	import mteb.data.DataLocator;
 
 
-	public class SceneLayer extends Sprite implements Updatable
+	public class SceneLayer extends Sprite implements ISignalReceiver
 	{
 		protected const STARTING_AZIMUTH:Number = 51.5; // azimuth of initial node view
 		protected const TO_DEGREES:Number = 180 / Math.PI;
 
-		protected var bitmapCubeLoader:BitmapCubeLoader;
+		protected const bitmapCubeLoader:BitmapCubeLoader = new BitmapCubeLoader();
+
 		protected var currentNode:String;
+		protected const dataLocator:DataLocator = DataLocator.getInstance();
 		protected var groundGeo:NodeGeometry;
 		protected var skyGeo:ObjectContainer3D;
-
-		protected var userTransform:UserTransform;
 		protected var view:View3D;
 
 
@@ -31,23 +35,24 @@ package mteb.view.scene
 		{
 			super();
 
-			bitmapCubeLoader = new BitmapCubeLoader();
+			const signalBus:ISignalBus = SignalBus.getInstance();
+			signalBus.addReceiver(FrameEntered, this);
+
 			setNodeImages(nextNode());
 
 			debug(this, "constructor - loading cube images...");
 			bitmapCubeLoader.load(initScene);
 		}
 
-		public function get displayObject():DisplayObject  { return this as DisplayObject; }
-
-		public function update(s:Number):void
+		public function receive(signal:ISignal, authority:* = null):void
 		{
 			if (!view)
 				return;
 
+			const s:Number = authority as Number;
+
 			// apply current user rotations
-			userTransform.update();
-			view.camera.transform = userTransform.value;
+			view.camera.transform = dataLocator.look.value;
 
 			// spin the sky
 			skyGeo.rotationY += .25 * s;
@@ -59,8 +64,8 @@ package mteb.view.scene
 		protected function get currentAzimuth():Number
 		{
 			var a:Number;
-			var forward:Vector3D = view.camera.forwardVector;
-			var ry:Number = view.camera.rotationY;
+			const forward:Vector3D = view.camera.forwardVector;
+			const ry:Number = view.camera.rotationY;
 
 			if (forward.x >= 0)
 			{
@@ -112,19 +117,18 @@ package mteb.view.scene
 			// set camera at origin
 			view.camera.position = new Vector3D(0, 0, 0);
 			view.camera.lookAt(new Vector3D(0, 0, 50));
+			dataLocator.look.initialValue = view.camera.transform;
 
 			// add geometry to the scene
-			var sceneGeo:ObjectContainer3D = new ObjectContainer3D();
+			const sceneGeo:ObjectContainer3D = new ObjectContainer3D();
 			skyGeo = new SkyGeometry();
 			//skyGeo.addEventListener(MouseEvent3D.CLICK, onSkyClicked); // not getting any hits
 			groundGeo = new NodeGeometry();
 			groundGeo.addEventListener(MouseEvent3D.CLICK, onGroundClicked);
 			sceneGeo.addChildren(skyGeo, groundGeo);
 			view.scene.addChild(sceneGeo);
-			onNodeTraveled();
 
-			// let user manipulate camera orientation
-			userTransform = new UserTransform(stage, view.camera.transform);
+			onNodeTraveled();
 		}
 
 		protected function nextNode():String
@@ -171,9 +175,9 @@ package mteb.view.scene
 
 		protected function onGroundClicked(event:MouseEvent3D):void
 		{
-			var object3d:Object3D = event.object;
-			var uv:Point = event.uv;
-			var action:String = getActionType(object3d.name, uv);
+			const object3d:Object3D = event.object;
+			const uv:Point = event.uv;
+			const action:String = getActionType(object3d.name, uv);
 
 			debug(this, "onViewClicked() - azimuth: {0}, N{1}.{2} ({3}, {4}), action: {5}", currentAzimuth.toFixed(2), currentNode, object3d.name, uv.x.toFixed(3), uv.y.toFixed(3), action);
 			handleAction(action);

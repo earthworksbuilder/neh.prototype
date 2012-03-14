@@ -2,18 +2,15 @@ package mteb
 {
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 
 	import mteb.data.DataLocator;
-	import mteb.data.time.Time;
 	import mteb.view.LayerLocator;
-	import mteb.view.Updatable;
 
 
 	[SWF(width="1024", height="768", frameRate="30", backgroundColor="#FFFFFF", quality="LOW")]
 	public class Main extends Sprite
 	{
-		protected var layers:Vector.<Updatable> = new <Updatable>[];
-		protected var time:Time;
 
 
 		public function Main()
@@ -21,31 +18,18 @@ package mteb
 			initialize();
 		}
 
-		protected function addLayer(value:Updatable):void
-		{
-			addChild(value.displayObject);
-			layers.push(value);
-		}
-
 		protected function initialize():void
 		{
-			time = DataLocator.getInstance().time;
+			// connect event driven data to events
+			const data:DataLocator = DataLocator.getInstance();
+			addEventListener(Event.ENTER_FRAME, data.time.onFrame);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, data.look.onKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP, data.look.onKeyUp);
 
-			const layerLocator:LayerLocator = LayerLocator.getInstance();
-			addLayer(layerLocator.scene);
-			addLayer(layerLocator.debug); // needs to be last so on top
-
-			addEventListener(Event.ENTER_FRAME, onFrame);
-		}
-
-		protected function onFrame(event:Event):void
-		{
-			time.tock();
-			var s:Number = time.secondsElapsed;
-
-			var n:uint = layers.length;
-			for (var i:uint = 0; i < n; i++)
-				layers[i].update(s);
+			// add display object layers to stage
+			const layers:LayerLocator = LayerLocator.getInstance();
+			addChild(layers.scene);
+			addChild(layers.debug); // needs to be last so on top
 		}
 	}
 }

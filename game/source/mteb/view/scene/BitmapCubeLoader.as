@@ -19,14 +19,14 @@ package mteb.view.scene
 		public static const POSY:uint = 2;
 		public static const POSZ:uint = 4;
 
-		protected var cubeFaces:Vector.<String> = new <String>["POSX", "NEGX", "POSY", "NEGY", "POSZ", "NEGZ"];
+		protected const cubeFaces:Vector.<String> = new <String>["POSX", "NEGX", "POSY", "NEGY", "POSZ", "NEGZ"];
 
 		protected var externalCallback:Function;
 
-		protected var imageData:Vector.<BitmapData> = new <BitmapData>[null, null, null, null, null, null];
-		protected var imageUrls:Vector.<String> = new <String>[null, null, null, null, null, null];
-		protected var loadComplete:Vector.<Boolean> = new <Boolean>[false, false, false, false, false, false];
-		protected var loaders:Vector.<Loader> = new <Loader>[null, null, null, null, null, null];
+		protected const imageData:Vector.<BitmapData> = new <BitmapData>[null, null, null, null, null, null];
+		protected const imageUrls:Vector.<String> = new <String>[null, null, null, null, null, null];
+		protected const loadComplete:Vector.<Boolean> = new <Boolean>[false, false, false, false, false, false];
+		protected const loaders:Vector.<Loader> = new <Loader>[null, null, null, null, null, null];
 
 
 		public function BitmapCubeLoader(urlPosX:String = null, urlNegX:String = null, urlPosY:String = null, urlNegY:String = null, urlPosZ:String = null, urlNegZ:String = null, callback:Function = null):void
