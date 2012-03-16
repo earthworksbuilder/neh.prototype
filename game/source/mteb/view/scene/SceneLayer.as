@@ -16,6 +16,7 @@ package mteb.view.scene
 	import mteb.command.signals.FrameEntered;
 	import mteb.data.DataLocator;
 	import mteb.data.IDataLocator;
+	import mteb.data.time.ITime;
 
 
 	public class SceneLayer extends Sprite implements ISignalReceiver
@@ -50,13 +51,13 @@ package mteb.view.scene
 			if (!view)
 				return;
 
-			const s:Number = authority as Number;
+			const time:ITime = authority as ITime;
 
 			// apply current user rotations
 			view.camera.transform = dataLocator.look.value;
 
 			// spin the sky
-			skyGeo.rotationY += .25 * s;
+			skyGeo.rotationY += .25 * time.secondsElapsed;
 
 			// render the view
 			view.render();

@@ -25,7 +25,7 @@ package mteb.data
 
 		private var _stats:IStats;
 
-		private var _time:ITime;
+		private var _time:ITime = new Time(); // no lazy loading for this one
 
 
 		public function DataLocator(key:SingletonKey)
@@ -40,7 +40,7 @@ package mteb.data
 
 		public function get stats():IStats  { return _stats || (_stats = new Stats()); }
 
-		public function get time():ITime  { return _time || (_time = new Time()); }
+		public function get time():ITime  { return _time; }
 	}
 }
 
