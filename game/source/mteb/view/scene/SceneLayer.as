@@ -4,14 +4,15 @@ package mteb.view.scene
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
 
-	import pixeldroid.signals.ISignal;
-	import pixeldroid.signals.ISignalBus;
-	import pixeldroid.signals.ISignalReceiver;
-
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
 	import away3d.events.MouseEvent3D;
+
+	import pixeldroid.signals.ISignal;
+	import pixeldroid.signals.ISignalBus;
+	import pixeldroid.signals.ISignalReceiver;
+
 	import mteb.command.SignalBus;
 	import mteb.command.signals.FrameEntered;
 	import mteb.data.DataLocator;
@@ -25,12 +26,12 @@ package mteb.view.scene
 		protected const TO_DEGREES:Number = 180 / Math.PI;
 
 		protected const bitmapCubeLoader:BitmapCubeLoader = new BitmapCubeLoader();
+		protected const dataLocator:IDataLocator = DataLocator.getInstance();
+		protected const groundGeo:NodeGeometry = new NodeGeometry();
+		protected const skyGeo:ObjectContainer3D = new SkyGeometry();
+		protected const view:View3D = new View3D();
 
 		protected var currentNode:String;
-		protected const dataLocator:IDataLocator = DataLocator.getInstance();
-		protected var groundGeo:NodeGeometry;
-		protected var skyGeo:ObjectContainer3D;
-		protected var view:View3D;
 
 
 		public function SceneLayer()
@@ -48,7 +49,7 @@ package mteb.view.scene
 
 		public function receive(signal:ISignal, authority:* = null):void
 		{
-			if (!view)
+			if (!bitmapCubeLoader.isLoaded)
 				return;
 
 			const time:ITime = authority as ITime;
@@ -111,8 +112,7 @@ package mteb.view.scene
 		{
 			debug(this, "initScene()");
 
-			// create a viewport and add it to the stage
-			view = new View3D();
+			// configure viewport and add it to the stage
 			view.backgroundColor = 0x333333;
 			addChild(view);
 
@@ -123,9 +123,7 @@ package mteb.view.scene
 
 			// add geometry to the scene
 			const sceneGeo:ObjectContainer3D = new ObjectContainer3D();
-			skyGeo = new SkyGeometry();
-			//skyGeo.addEventListener(MouseEvent3D.CLICK, onSkyClicked); // not getting any hits
-			groundGeo = new NodeGeometry();
+			//skyGeo.addEventListener(MouseEvent3D.CLICK, onSkyClicked); // not getting any hits, maybe because sky is inside out?
 			groundGeo.addEventListener(MouseEvent3D.CLICK, onGroundClicked);
 			sceneGeo.addChildren(skyGeo, groundGeo);
 			view.scene.addChild(sceneGeo);

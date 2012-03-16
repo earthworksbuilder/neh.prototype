@@ -12,21 +12,19 @@ package mteb.view.scene
 
 	public class BitmapCubeLoader
 	{
-		public static const NEGX:uint = 1;
-		public static const NEGY:uint = 3;
-		public static const NEGZ:uint = 5;
-		public static const POSX:uint = 0;
-		public static const POSY:uint = 2;
-		public static const POSZ:uint = 4;
-
-		protected const cubeFaces:Vector.<String> = new <String>["POSX", "NEGX", "POSY", "NEGY", "POSZ", "NEGZ"];
-
-		protected var externalCallback:Function;
+		protected const POSX:uint = SkyBoxFaceEnum.POSX.index;
+		protected const NEGX:uint = SkyBoxFaceEnum.NEGX.index;
+		protected const POSY:uint = SkyBoxFaceEnum.POSY.index;
+		protected const NEGY:uint = SkyBoxFaceEnum.NEGY.index;
+		protected const POSZ:uint = SkyBoxFaceEnum.POSZ.index;
+		protected const NEGZ:uint = SkyBoxFaceEnum.NEGZ.index;
 
 		protected const imageData:Vector.<BitmapData> = new <BitmapData>[null, null, null, null, null, null];
 		protected const imageUrls:Vector.<String> = new <String>[null, null, null, null, null, null];
 		protected const loadComplete:Vector.<Boolean> = new <Boolean>[false, false, false, false, false, false];
 		protected const loaders:Vector.<Loader> = new <Loader>[null, null, null, null, null, null];
+
+		protected var externalCallback:Function;
 
 
 		public function BitmapCubeLoader(urlPosX:String = null, urlNegX:String = null, urlPosY:String = null, urlNegY:String = null, urlPosZ:String = null, urlNegZ:String = null, callback:Function = null):void
@@ -50,12 +48,7 @@ package mteb.view.scene
 			}
 		}
 
-		public function getBitmapDataAt(index:uint):BitmapData
-		{
-			if (index >= imageData.length)
-				throw new ArgumentError("index out of range. expected [0..5], got " + index);
-			return imageData[index];
-		}
+		public function getBitmapDataAt(index:uint):BitmapData  { return imageData[index]; }
 
 		public function getCubeTextureFor():BitmapCubeTexture
 		{
@@ -94,7 +87,7 @@ package mteb.view.scene
 			for (var i:uint = 0; i < n; i++)
 			{
 				if (imageUrls[i] == null)
-					throw new ArgumentError("no image url provided for " + cubeFaces[i] + " face");
+					throw new ArgumentError("no image url provided for " + SkyBoxFaceEnum.faces[i] + " face");
 				loadComplete[i] = false;
 				loaders[i].load(new URLRequest(imageUrls[i]));
 			}
@@ -116,6 +109,7 @@ package mteb.view.scene
 			// create new closure to capture current value of which
 			return function(event:Event):void
 			{
+				debug(this, "imageLoadHandler() - loaded image {0}", which);
 				setImage(which, event);
 			}
 		}
@@ -127,7 +121,10 @@ package mteb.view.scene
 			loadComplete[which] = true;
 
 			if (isLoaded)
+			{
+				debug(this, "setImage() - image loads complete, executing externalCallback");
 				externalCallback();
+			}
 		}
 
 		protected function setLoaders():void
