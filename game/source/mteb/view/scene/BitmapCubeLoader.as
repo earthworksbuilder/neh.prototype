@@ -4,6 +4,8 @@ package mteb.view.scene
 	import flash.display.BitmapData;
 	import flash.display.Loader;
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.geom.Point;
 	import flash.net.URLRequest;
 
 	import away3d.textures.BitmapCubeTexture;
@@ -57,10 +59,13 @@ package mteb.view.scene
 			return bitmapCubeTexture;
 		}
 
+		public function getPixelAt(index:uint, uv:Point = null):uint
+		{
+			return imageData[index].getPixel32(uv.x, uv.y);
+		}
+
 		public function getTextureFor(index:uint):BitmapTexture
 		{
-			if (index >= imageData.length)
-				throw new ArgumentError("index out of range. expected [0..5], got " + index);
 			return new BitmapTexture(imageData[index]);
 		}
 
@@ -109,8 +114,17 @@ package mteb.view.scene
 			// create new closure to capture current value of which
 			return function(event:Event):void
 			{
-				debug(this, "imageLoadHandler() - loaded image {0}", which);
+				//debug(this, "imageLoadHandler() - loaded image {0}", which);
 				setImage(which, event);
+			}
+		}
+
+		protected function makeLoadErrorHandler(which:uint):Function
+		{
+			// create new closure to capture current value of which
+			return function(event:IOErrorEvent):void
+			{
+				debug(this, "loadErrorHandler() - error loading image {0}: {1}", which, event.toString());
 			}
 		}
 
@@ -134,6 +148,7 @@ package mteb.view.scene
 			{
 				loaders[i] = new Loader();
 				loaders[i].contentLoaderInfo.addEventListener(Event.COMPLETE, makeImageLoadHandler(i));
+				loaders[i].contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, makeLoadErrorHandler(i));
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 package mteb.view.scene
 {
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
@@ -15,8 +16,12 @@ package mteb.view.scene
 
 	import mteb.command.SignalBus;
 	import mteb.command.signals.FrameEntered;
+	import mteb.command.signals.NodeChanged;
 	import mteb.data.DataLocator;
 	import mteb.data.IDataLocator;
+	import mteb.data.map.ActionTrigger;
+	import mteb.data.map.IMap;
+	import mteb.data.map.Node;
 	import mteb.data.time.ITime;
 
 
@@ -25,8 +30,10 @@ package mteb.view.scene
 		protected const STARTING_AZIMUTH:Number = 51.5; // azimuth of initial node view
 		protected const TO_DEGREES:Number = 180 / Math.PI;
 
-		protected const bitmapCubeLoader:BitmapCubeLoader = new BitmapCubeLoader();
 		protected const dataLocator:IDataLocator = DataLocator.getInstance();
+		protected const bitmapCubeLoader:BitmapCubeLoader = new BitmapCubeLoader();
+		protected const hotSpotLoader:BitmapCubeLoader = new BitmapCubeLoader();
+		protected const actionTrigger:ActionTrigger = new ActionTrigger();
 		protected const groundGeo:NodeGeometry = new NodeGeometry();
 		protected const skyGeo:ObjectContainer3D = new SkyGeometry();
 		protected const view:View3D = new View3D();
@@ -38,30 +45,29 @@ package mteb.view.scene
 		{
 			super();
 
+			initScene();
+
 			const signalBus:ISignalBus = SignalBus.getInstance();
 			signalBus.addReceiver(FrameEntered, this);
-
-			setNodeImages(nextNode());
-
-			debug(this, "constructor - loading cube images...");
-			bitmapCubeLoader.load(initScene);
+			signalBus.addReceiver(NodeChanged, this);
 		}
 
 		public function receive(signal:ISignal, authority:* = null):void
 		{
-			if (!bitmapCubeLoader.isLoaded)
-				return;
+			switch (true)
+			{
+				case (signal is FrameEntered):
+					onFrameEntered(authority as ITime);
+					break;
 
-			const time:ITime = authority as ITime;
+				case (signal is NodeChanged):
+					onNodeChanged(authority as IMap);
+					break;
 
-			// apply current user rotations
-			view.camera.transform = dataLocator.look.value;
-
-			// spin the sky
-			skyGeo.rotationY += .25 * time.secondsElapsed;
-
-			// render the view
-			view.render();
+				default:
+					debug(this, "receive() - unrecognized signal {0}", signal);
+					break;
+			}
 		}
 
 		protected function get currentAzimuth():Number
@@ -88,26 +94,6 @@ package mteb.view.scene
 			return (a + STARTING_AZIMUTH) % 360;
 		}
 
-		protected function getActionType(objectName:String, textureCoords:Point = null):String
-		{
-			return "NEXT_NODE";
-		}
-
-		protected function handleAction(action:String):void
-		{
-			switch (action)
-			{
-				case "NEXT_NODE":
-					setNodeImages(nextNode());
-					bitmapCubeLoader.load(onNodeTraveled);
-					break;
-
-				default:
-					debug(this, "handleAction() - unknown action type {0}", action);
-					break;
-			}
-		}
-
 		protected function initScene():void
 		{
 			debug(this, "initScene()");
@@ -123,71 +109,65 @@ package mteb.view.scene
 
 			// add geometry to the scene
 			const sceneGeo:ObjectContainer3D = new ObjectContainer3D();
-			//skyGeo.addEventListener(MouseEvent3D.CLICK, onSkyClicked); // not getting any hits, maybe because sky is inside out?
+			//skyGeo.addEventListener(MouseEvent3D.CLICK, onSkyClicked); // not getting any hits
 			groundGeo.addEventListener(MouseEvent3D.CLICK, onGroundClicked);
 			sceneGeo.addChildren(skyGeo, groundGeo);
 			view.scene.addChild(sceneGeo);
-
-			onNodeTraveled();
 		}
 
-		protected function nextNode():String
+		protected function onFrameEntered(time:ITime):void
 		{
-			var next:String;
-			switch (currentNode)
-			{
-				case null:
-					next = "001";
-					break;
-				case "001":
-					next = "002";
-					break;
-				case "002":
-					next = "003";
-					break;
-				case "003":
-					next = "004";
-					break;
-				case "004":
-					next = "005";
-					break;
-				case "005":
-					next = "006";
-					break;
-				case "006":
-					next = "007";
-					break;
-				case "007":
-					next = "008";
-					break;
-				case "008":
-					next = "009";
-					break;
-				case "009":
-					next = "001";
-					break;
-			}
+			if (!bitmapCubeLoader.isLoaded || !hotSpotLoader.isLoaded)
+				return;
 
-			debug(this, "nextNode() - {0} -> {1}", currentNode, next);
-			currentNode = next;
-			return currentNode;
+			// apply current user rotations
+			view.camera.transform = dataLocator.look.value;
+
+			// spin the sky
+			skyGeo.rotationY += .25 * time.secondsElapsed;
+
+			// render the view
+			view.render();
 		}
 
 		protected function onGroundClicked(event:MouseEvent3D):void
 		{
 			const object3d:Object3D = event.object;
+			const index:int = SkyBoxFaceEnum.fromString(object3d.name).index;
 			const uv:Point = event.uv;
-			const action:String = getActionType(object3d.name, uv);
 
-			debug(this, "onViewClicked() - azimuth: {0}, N{1}.{2} ({3}, {4}), action: {5}", currentAzimuth.toFixed(2), currentNode, object3d.name, uv.x.toFixed(3), uv.y.toFixed(3), action);
-			handleAction(action);
+			const map:IMap = dataLocator.map;
+			const node:Node = map.currentNode;
+			actionTrigger.nodeId = node.id;
+			actionTrigger.hotspotColor = hotSpotLoader.getPixelAt(index, uv);
+
+			debug(this, "onGroundClicked() - azimuth: {0}, N{1}.{2} ({3}, {4}, {5})", currentAzimuth.toFixed(2), node.id, object3d.name, uv.x.toFixed(3), uv.y.toFixed(3), actionTrigger.hotspotColor);
+			map.triggerAction(actionTrigger);
+		}
+
+		protected function onHotspotsLoaded():void
+		{
+			debug(this, "onHotspotsLoaded() - currentNode hotspots are loaded.");
+			if (bitmapCubeLoader.isLoaded && hotSpotLoader.isLoaded)
+				updateTextures();
+		}
+
+		protected function onNodeChanged(map:IMap):void
+		{
+			const node:Node = map.currentNode;
+			hotSpotLoader.setUrls(node.hotspotPosX, node.hotspotNegX, node.hotspotPosY, node.hotspotNegY, node.hotspotPosZ, node.hotspotNegZ);
+			hotSpotLoader.load(onHotspotsLoaded);
+			bitmapCubeLoader.setUrls(node.texturePosX, node.textureNegX, node.texturePosY, node.textureNegY, node.texturePosZ, node.textureNegZ);
+			bitmapCubeLoader.load(onNodeTraveled);
+
+			debug(this, "onNodeChanged() - currentNode is {0}; loading textures and hotspots...", currentNode);
 		}
 
 		protected function onNodeTraveled():void
 		{
-			debug(this, "onNodeTraveled() - currentNode is {0}; updating bitmapdata", currentNode);
-			for (var i:uint = 0; i < 6; i++)
-				groundGeo.setTextureData(bitmapCubeLoader.getBitmapDataAt(i), i);
+			debug(this, "onNodeTraveled() - currentNode textures are loaded.");
+			if (bitmapCubeLoader.isLoaded && hotSpotLoader.isLoaded)
+				updateTextures();
 		}
 
 		protected function onSkyClicked(event:MouseEvent3D):void
@@ -195,9 +175,18 @@ package mteb.view.scene
 			debug(this, "onSkyClicked()");
 		}
 
-		protected function setNodeImages(nodeName:String):void
+		protected function updateTextures():void
 		{
-			bitmapCubeLoader.setUrls("nodes/posX/posX." + nodeName + ".png", "nodes/negX/negX." + nodeName + ".png", "nodes/posY/posY." + nodeName + ".png", "nodes/negY/negY." + nodeName + ".png", "nodes/posZ/posZ." + nodeName + ".png", "nodes/negZ/negZ." + nodeName + ".png");
+			debug(this, "updateTextures() - currentNode textures and hotspots are loaded; updating bitmapdata...");
+			var bd:BitmapData;
+			for (var i:uint = 0; i < 6; i++)
+			{
+				bd = bitmapCubeLoader.getBitmapDataAt(i);
+				bd.copyPixels(hotSpotLoader.getBitmapDataAt(i), bd.rect, (new Point(0, 0)), null, null, true);
+				groundGeo.setTextureData(bd, i);
+
+					//groundGeo.setTextureData(bitmapCubeLoader.getBitmapDataAt(i), i);
+			}
 		}
 	}
 }

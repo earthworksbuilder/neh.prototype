@@ -32,6 +32,8 @@ package mteb
 			const layers:ILayerLocator = LayerLocator.getInstance();
 			addChild(layers.scene);
 			addChild(layers.debug); // needs to be last so on top
+
+			data.map.load("nodes/nodes.xml");
 		}
 	}
 }

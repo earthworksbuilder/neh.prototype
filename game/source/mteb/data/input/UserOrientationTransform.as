@@ -17,7 +17,7 @@ package mteb.data.input
 	public class UserOrientationTransform implements IOrientationTransform, ISignalReceiver
 	{
 		protected var _initialValue:Matrix3D = new Matrix3D();
-		protected var _spinRate:Number = 30 * .942;
+		protected var _spinRate:Number = 30; // degrees / sec
 
 		protected const keysDown:Vector.<Boolean> = new <Boolean>[false, false, false, false];
 		protected const pitch:Matrix3D = new Matrix3D(); // looking up / down
