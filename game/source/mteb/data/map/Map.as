@@ -26,89 +26,96 @@ package mteb.data.map
 
 		public function load(file:String):void
 		{
+			xml = <map startNode="001" startAzimuth="51.5">
+					<node id="001" color="0x349000"/>
+					<node id="002" color="0x0000fe"/>
+					<node id="003" color="0xfd0000"/>
+					<node id="004" color="0x00fd00"/>
+					<node id="005" color="0xfe4600"/>
+					<node id="006" color="0xfe00fe"/>
+					<node id="007" color="0xf2eb16"/>
+					<node id="008" color="0x6000fd"/>
+					<node id="009" color="0xfd006b"/>
+					<node id="010" color="0x00fefe"/>
+					<node id="011" color="0x9c00fd"/>
+					<node id="012" color="0x6dc179"/>
+					<node id="013" color="0xfd8d00"/>
+					<node id="014" color="0x0077fe"/>
+					<node id="015" color="0x9ffe00"/>
+				</map>;
+
 			onMapLoaded(); // TODO: actually load map, and set onMapLoaded as complete handler
 		}
 
 		public function triggerAction(trigger:ActionTrigger):void
 		{
-			const actionType:ActionTypeEnum = getActionType(trigger);
-			debug(this, "triggerAction() - {0} : {1}", trigger, actionType);
+			var actionType:ActionTypeEnum = ActionTypeEnum.NONE;
+			var jumpId:String;
+
+			if (trigger.hotSpotColor != 0x000000)
+			{
+				jumpId = getNodeByColor(trigger.hotSpotColor);
+				if (jumpId)
+					actionType = ActionTypeEnum.NEXT_NODE;
+			}
+			debug(this, "triggerAction() - {0} : {1} (jumpId: {2})", trigger, actionType, jumpId);
 
 			switch (actionType)
 			{
 				case ActionTypeEnum.NEXT_NODE:
-					changeNode(nextNodeId(_currentNode.id));
+					changeNode(jumpId);
 					break;
 			}
 		}
 
-		protected function changeNode(nodeId:String):void
+		protected function changeNode(nodeId:String, azimuth:Number = 51.5):void
 		{
 			_currentNode.setId(nodeId);
-			//TODO: set azimuth, read from nodes.xml
+			_currentNode.azimuth = azimuth;
+
+			debug(this, "changeNode() - updated current node to: {0}; sending NodeChanged signal..", _currentNode);
 			nodeChanged.send(this);
 		}
 
-		protected function getActionType(trigger:ActionTrigger):ActionTypeEnum
+		protected function getNodeByColor(color:uint):String
 		{
-			//TODO: switch based on values for node in xml
-			var actionType:ActionTypeEnum;
-			switch (trigger.hotSpotColor)
-			{
-				case 0x000000:
-					actionType = ActionTypeEnum.NONE;
-					break;
-				default:
-					actionType = ActionTypeEnum.NEXT_NODE;
-					break;
-			}
-			return actionType;
+			var colorString:String = uintToString(color);
+			var nodeId:String;
+			var nodeList:XMLList = xml.node.(@color == colorString);
+			debug(this, "getNodeByColor() - nodeList: {0}", nodeList);
+			if (nodeList.length() > 0)
+				nodeId = nodeList[0].@id;
+			debug(this, "getNodeByColor() - {0} -> {1}", colorString, nodeId);
+
+			return nodeId;
 		}
 
-		protected function nextNodeId(currentId:String):String
+		protected function getStartAzimuth():Number
 		{
-			var next:String;
-			switch (currentId)
-			{
-				case null:
-					next = "001";
-					break;
-				case "001":
-					next = "002";
-					break;
-				case "002":
-					next = "003";
-					break;
-				case "003":
-					next = "004";
-					break;
-				case "004":
-					next = "005";
-					break;
-				case "005":
-					next = "006";
-					break;
-				case "006":
-					next = "007";
-					break;
-				case "007":
-					next = "008";
-					break;
-				case "008":
-					next = "009";
-					break;
-				case "009":
-					next = "001";
-					break;
-			}
+			return parseFloat(xml.@startAzimuth);
+		}
 
-			debug(this, "nextNodeId() - {0} -> {1}", currentId, next);
-			return next;
+		protected function getStartNode():String
+		{
+			return xml.@startNode;
 		}
 
 		protected function onMapLoaded():void
 		{
-			changeNode(nextNodeId(_currentNode.id)); // TODO: change to respect start node and azimuth from nodes.xml
+			changeNode(getStartNode(), getStartAzimuth());
+		}
+
+		protected function uintToString(value:uint):String
+		{
+			const r:uint = (value >> 16) & 0xff;
+			const g:uint = (value >> 8) & 0xff;
+			const b:uint = value & 0xff;
+
+			const rx:String = ((r < 16) ? "0" : "") + r.toString(16);
+			const gx:String = ((g < 16) ? "0" : "") + g.toString(16);
+			const bx:String = ((b < 16) ? "0" : "") + b.toString(16);
+
+			return "0x" + rx + gx + bx;
 		}
 	}
 }

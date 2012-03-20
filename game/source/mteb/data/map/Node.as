@@ -5,7 +5,7 @@ package mteb.data.map
 	public class Node
 	{
 
-		public var azimuth:Number;
+		public var azimuth:Number = 0;
 		private var _id:String;
 
 
@@ -43,7 +43,7 @@ package mteb.data.map
 
 		public function toString():String
 		{
-			var s:String = "[Node id: " + _id + "]";
+			var s:String = "[Node id: " + _id + ", azimuth: " + azimuth + "]";
 			return s;
 		}
 
