@@ -6,11 +6,17 @@ package mteb.data.map
 	public class ActionTrigger
 	{
 		public var nodeId:String;
-		public var hotspotColor:uint;
+		public var hotSpotColor:uint;
 
 
 		public function ActionTrigger()
 		{
+		}
+
+		public function toString():String
+		{
+			const s:String = "[ActionTrigger nodeId:" + nodeId + ", hotSpotColor: " + hotSpotColor.toString(16) + "]";
+			return s;
 		}
 	}
 }

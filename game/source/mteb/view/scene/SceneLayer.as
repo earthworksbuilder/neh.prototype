@@ -139,9 +139,9 @@ package mteb.view.scene
 			const map:IMap = dataLocator.map;
 			const node:Node = map.currentNode;
 			actionTrigger.nodeId = node.id;
-			actionTrigger.hotspotColor = hotSpotLoader.getPixelAt(index, uv);
+			actionTrigger.hotSpotColor = hotSpotLoader.getUvColorAt(index, uv);
 
-			debug(this, "onGroundClicked() - azimuth: {0}, N{1}.{2} ({3}, {4}, {5})", currentAzimuth.toFixed(2), node.id, object3d.name, uv.x.toFixed(3), uv.y.toFixed(3), actionTrigger.hotspotColor);
+			debug(this, "onGroundClicked() - azimuth: {0}, N{1}.{2} ({3}, {4})", currentAzimuth.toFixed(2), node.id, object3d.name, uv.x.toFixed(3), uv.y.toFixed(3));
 			map.triggerAction(actionTrigger);
 		}
 

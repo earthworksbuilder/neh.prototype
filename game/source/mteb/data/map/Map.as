@@ -31,16 +31,13 @@ package mteb.data.map
 
 		public function triggerAction(trigger:ActionTrigger):void
 		{
-			const actionType:String = "NEXT_NODE"; // TODO: read from nodes.xml based on trigger node and color
+			const actionType:ActionTypeEnum = getActionType(trigger);
+			debug(this, "triggerAction() - {0} : {1}", trigger, actionType);
 
 			switch (actionType)
 			{
-				case "NEXT_NODE":
+				case ActionTypeEnum.NEXT_NODE:
 					changeNode(nextNodeId(_currentNode.id));
-					break;
-
-				default:
-					debug(this, "triggerAction() - unknown action type {0}", actionType);
 					break;
 			}
 		}
@@ -50,6 +47,22 @@ package mteb.data.map
 			_currentNode.setId(nodeId);
 			//TODO: set azimuth, read from nodes.xml
 			nodeChanged.send(this);
+		}
+
+		protected function getActionType(trigger:ActionTrigger):ActionTypeEnum
+		{
+			//TODO: switch based on values for node in xml
+			var actionType:ActionTypeEnum;
+			switch (trigger.hotSpotColor)
+			{
+				case 0x000000:
+					actionType = ActionTypeEnum.NONE;
+					break;
+				default:
+					actionType = ActionTypeEnum.NEXT_NODE;
+					break;
+			}
+			return actionType;
 		}
 
 		protected function nextNodeId(currentId:String):String
@@ -95,7 +108,7 @@ package mteb.data.map
 
 		protected function onMapLoaded():void
 		{
-			changeNode(nextNodeId(_currentNode.id)); // TODO: change to respect start node from nodes.xml
+			changeNode(nextNodeId(_currentNode.id)); // TODO: change to respect start node and azimuth from nodes.xml
 		}
 	}
 }

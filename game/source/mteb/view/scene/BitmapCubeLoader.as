@@ -59,14 +59,17 @@ package mteb.view.scene
 			return bitmapCubeTexture;
 		}
 
-		public function getPixelAt(index:uint, uv:Point = null):uint
-		{
-			return imageData[index].getPixel32(uv.x, uv.y);
-		}
-
 		public function getTextureFor(index:uint):BitmapTexture
 		{
 			return new BitmapTexture(imageData[index]);
+		}
+
+		public function getUvColorAt(index:uint, uv:Point = null):uint
+		{
+			var bd:BitmapData = imageData[index];
+			var color:uint = bd.getPixel(Math.round(uv.x * bd.width), Math.round(uv.y * bd.height));
+
+			return color;
 		}
 
 		public function get isLoaded():Boolean
