@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--  for i in *.png; do mv $i negX"${i/negZ/}"; done -->
 <map startNode="001" startAzimuth="51.5">
-	<node id="001">
-		<hotspot color="ff0000">
-			<jumpToNode id="002" azimuth="0"/>
-		</hotspot>
-	</node>
-	<node id="002">
-		<hotspot color="ff0000">
-			<jumpToNode id="001" azimuth="180"/>
-		</hotspot>
-	</node>
+	<node id="001" color="0x329243"/>
+	<node id="002" color="0x3852a3"/>
+	<node id="003" color="0xec1e23"/>
+	<node id="004" color="0x68bc44"/>
+	<node id="005" color="0xee4a22"/>
+	<node id="006" color="0xb8509e"/>
+	<node id="007" color="0xf2eb16"/>
+	<node id="008" color="0x5951a2"/>
+	<node id="009" color="0xec136e"/>
+	<node id="010" color="0x6bcbdd"/>
+	<node id="011" color="0x7a50a0"/>
+	<node id="012" color="0x6dc179"/>
+	<node id="013" color="0xf58d1e"/>
+	<node id="014" color="0x4172b8"/>
+	<node id="015" color="0xa9ce37"/>
 </map>
