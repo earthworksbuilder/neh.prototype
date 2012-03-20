@@ -56,13 +56,13 @@ package mteb.data.map
 			{
 				jumpId = getNodeByColor(trigger.hotSpotColor);
 				if (jumpId)
-					actionType = ActionTypeEnum.NEXT_NODE;
+					actionType = ActionTypeEnum.JUMP_TO_NODE;
 			}
 			debug(this, "triggerAction() - {0} : {1} (jumpId: {2})", trigger, actionType, jumpId);
 
 			switch (actionType)
 			{
-				case ActionTypeEnum.NEXT_NODE:
+				case ActionTypeEnum.JUMP_TO_NODE:
 					changeNode(jumpId);
 					break;
 			}
