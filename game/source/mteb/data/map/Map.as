@@ -29,22 +29,22 @@ package mteb.data.map
 			xml = <map startNode="001" startAzimuth="51.5">
 					<node id="001" color="0x349000"/>
 					<node id="002" color="0x0000fe"/>
-					<node id="003" color="0xfd0000"/>
-					<node id="004" color="0x00fd00"/>
+					<node id="003" color="0xfe0000"/>
+					<node id="004" color="0x00fe00"/>
 					<node id="005" color="0xfe4600"/>
 					<node id="006" color="0xfe00fe"/>
-					<node id="007" color="0xf2eb16"/>
-					<node id="008" color="0x6000fd"/>
-					<node id="009" color="0xfd006b"/>
+					<node id="007" color="0xfefe00"/>
+					<node id="008" color="0x6000fe"/>
+					<node id="009" color="0xfe006b"/>
 					<node id="010" color="0x00fefe"/>
-					<node id="011" color="0x9c00fd"/>
+					<node id="011" color="0x9c00fe"/>
 					<node id="012" color="0x6dc179"/>
 					<node id="013" color="0xfd8d00"/>
 					<node id="014" color="0x0077fe"/>
 					<node id="015" color="0x9ffe00"/>
 				</map>;
 
-			onMapLoaded(); // TODO: actually load map, and set onMapLoaded as complete handler
+			onMapLoaded(); // TODO: load map externally, and set onMapLoaded as complete handler
 		}
 
 		public function triggerAction(trigger:ActionTrigger):void
@@ -79,14 +79,19 @@ package mteb.data.map
 
 		protected function getNodeByColor(color:uint):String
 		{
-			var colorString:String = uintToString(color);
 			var nodeId:String;
-			var nodeList:XMLList = xml.node.(@color == colorString);
-			debug(this, "getNodeByColor() - nodeList: {0}", nodeList);
-			if (nodeList.length() > 0)
-				nodeId = nodeList[0].@id;
-			debug(this, "getNodeByColor() - {0} -> {1}", colorString, nodeId);
+			const nodeList:XMLList = xml.node;
+			const n:uint = nodeList.length();
+			for (var i:uint = 0; i < n; i++)
+			{
+				if (isApproximateMatch(color, parseInt(nodeList[i].@color)))
+				{
+					nodeId = nodeList[i].@id;
+					break;
+				}
+			}
 
+			debug(this, "getNodeByColor() - {0} -> {1}", uintToString(color), nodeId);
 			return nodeId;
 		}
 
@@ -98,6 +103,29 @@ package mteb.data.map
 		protected function getStartNode():String
 		{
 			return xml.@startNode;
+		}
+
+		protected function isApproximateMatch(a:uint, b:uint, fuzz:uint = 3):Boolean
+		{
+			if (a == b)
+				return true;
+
+			const ra:int = (a >> 16) & 0xff;
+			const rb:int = (b >> 16) & 0xff;
+			if (Math.abs(ra - rb) > fuzz)
+				return false;
+
+			const ga:int = (a >> 8) & 0xff;
+			const gb:int = (b >> 8) & 0xff;
+			if (Math.abs(ga - gb) > fuzz)
+				return false;
+
+			const ba:int = a & 0xff;
+			const bb:int = b & 0xff;
+			if (Math.abs(ba - bb) > fuzz)
+				return false;
+
+			return true;
 		}
 
 		protected function onMapLoaded():void
