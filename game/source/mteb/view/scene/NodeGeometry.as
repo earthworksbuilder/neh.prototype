@@ -72,7 +72,7 @@ package mteb.view.scene
 			return mesh;
 		}
 
-		protected function initialize(r:Number = 50):void
+		protected function initialize(r:Number = 512):void
 		{
 			const posZMesh:Mesh = createTexturedPlane(r * 2, posZTexture, false);
 			posZMesh.name = SkyBoxFaceEnum.POSZ.toString();
