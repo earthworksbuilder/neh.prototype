@@ -37,7 +37,11 @@ package mteb.data.input
 
 		public function get initialValue():Matrix3D  { return _initialValue.clone(); }
 
-		public function set initialValue(value:Matrix3D):void  { _initialValue = value.clone(); }
+		public function set initialValue(value:Matrix3D):void
+		{
+			_initialValue = value.clone();
+			updatesMade = true;
+		}
 
 		public function onKeyDown(e:KeyboardEvent):void  { setKey(e.keyCode, true); }
 

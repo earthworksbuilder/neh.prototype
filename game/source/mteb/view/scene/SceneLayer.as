@@ -35,7 +35,7 @@ package mteb.view.scene
 		protected const hotSpotLoader:BitmapCubeLoader = new BitmapCubeLoader();
 		protected const actionTrigger:ActionTrigger = new ActionTrigger();
 		protected const groundGeo:NodeGeometry = new NodeGeometry();
-		protected const skyGeo:ObjectContainer3D = new SkyGeometry();
+		protected const skyGeo:ObjectContainer3D = new SkyGeometry() as ObjectContainer3D;
 		protected const view:View3D = new View3D();
 
 		protected var currentNode:String;
@@ -105,6 +105,7 @@ package mteb.view.scene
 			// set camera at origin
 			view.camera.position = new Vector3D(0, 0, 0);
 			view.camera.lookAt(new Vector3D(0, 0, 50));
+			view.camera.rotationX = -17.5;
 			dataLocator.look.initialValue = view.camera.transform;
 
 			// add geometry to the scene
@@ -142,6 +143,7 @@ package mteb.view.scene
 			actionTrigger.hotSpotColor = hotSpotLoader.getUvColorAt(index, uv);
 
 			debug(this, "onGroundClicked() - azimuth: {0}, N{1}.{2} ({3}, {4})", currentAzimuth.toFixed(2), node.id, object3d.name, uv.x.toFixed(3), uv.y.toFixed(3));
+			//TODO: change to signal send instead of direct map call
 			map.triggerAction(actionTrigger);
 		}
 
