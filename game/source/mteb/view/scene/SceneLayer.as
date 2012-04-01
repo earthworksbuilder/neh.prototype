@@ -36,6 +36,7 @@ package mteb.view.scene
 		protected const actionTrigger:ActionTrigger = new ActionTrigger();
 		protected const groundGeo:NodeGeometry = new NodeGeometry();
 		protected const skyGeo:ObjectContainer3D = new SkyGeometry() as ObjectContainer3D;
+		protected const moonOrbit:Orbit = new Orbit();
 		protected const moonGeo:ObjectContainer3D = new MoonGeometry() as ObjectContainer3D;
 		protected const view:View3D = new View3D();
 
@@ -113,9 +114,11 @@ package mteb.view.scene
 			const sceneGeo:ObjectContainer3D = new ObjectContainer3D();
 			//skyGeo.addEventListener(MouseEvent3D.CLICK, onSkyClicked); // not getting any hits
 			groundGeo.addEventListener(MouseEvent3D.CLICK, onGroundClicked);
-			moonGeo.translate(Vector3D.Z_AXIS, 256);
-			moonGeo.translate(Vector3D.Y_AXIS, 64);
-			sceneGeo.addChildren(skyGeo, groundGeo, moonGeo);
+
+			moonOrbit.setSubject(moonGeo, 1024);
+			moonOrbit.oscillateDistance = 1024;
+
+			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit);
 			view.scene.addChild(sceneGeo);
 		}
 
@@ -131,7 +134,7 @@ package mteb.view.scene
 			skyGeo.rotationY += .25 * time.secondsElapsed;
 
 			// revolve the moon
-			moonGeo.rotationZ += .25 * time.secondsElapsed;
+			moonOrbit.travel(time.secondsElapsed);
 
 			// render the view
 			view.render();

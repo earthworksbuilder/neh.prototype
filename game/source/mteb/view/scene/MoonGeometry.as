@@ -19,7 +19,7 @@ package mteb.view.scene
 			initialize();
 		}
 
-		protected function initialize(r:Number = 8):void
+		protected function initialize(r:Number = 32):void
 		{
 			var geometry:SphereGeometry = new SphereGeometry(r);
 			var material:TextureMaterial = new TextureMaterial(new BitmapTexture(new MoonTexture().bitmapData));

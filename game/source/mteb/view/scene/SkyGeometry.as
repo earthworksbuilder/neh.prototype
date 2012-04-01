@@ -20,7 +20,7 @@ package mteb.view.scene
 			initialize();
 		}
 
-		protected function initialize(r:Number = 1024):void
+		protected function initialize(r:Number = 2048):void
 		{
 			var geometry:SphereGeometry = new SphereGeometry(r);
 			var material:TextureMaterial = new TextureMaterial(new BitmapTexture(new SkyTexture().bitmapData));
