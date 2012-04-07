@@ -38,6 +38,9 @@ package mteb.view.scene
 		protected const skyGeo:ObjectContainer3D = new SkyGeometry() as ObjectContainer3D;
 		protected const moonOrbit:Orbit = new Orbit();
 		protected const moonGeo:ObjectContainer3D = new MoonGeometry() as ObjectContainer3D;
+		protected const moonTrail:MoonTrail = new MoonTrail();
+		protected const moonTrailFrameSkip:uint = 4;
+		protected var moonTrailFrame:uint = moonTrailFrameSkip;
 		protected const view:View3D = new View3D();
 
 		protected var currentNode:String;
@@ -107,7 +110,7 @@ package mteb.view.scene
 			// set camera at origin
 			view.camera.position = new Vector3D(0, 0, 0);
 			view.camera.lookAt(new Vector3D(0, 0, 50));
-			view.camera.rotationX = -17.5;
+			view.camera.rotationX = -19;
 			dataLocator.look.initialValue = view.camera.transform;
 
 			// add geometry to the scene
@@ -116,8 +119,9 @@ package mteb.view.scene
 			groundGeo.addEventListener(MouseEvent3D.CLICK, onGroundClicked);
 
 			moonOrbit.setSubject(moonGeo, 1024);
-			moonOrbit.oscillateDistance = 1024;
+			moonOrbit.oscillateDistance = 512;
 
+			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail);
 			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit);
 			view.scene.addChild(sceneGeo);
 		}
@@ -135,6 +139,11 @@ package mteb.view.scene
 
 			// revolve the moon
 			moonOrbit.travel(time.secondsElapsed);
+			if (--moonTrailFrame == 0)
+			{
+				moonTrail.setNextPoint(moonGeo.scenePosition);
+				moonTrailFrame = moonTrailFrameSkip;
+			}
 
 			// render the view
 			view.render();

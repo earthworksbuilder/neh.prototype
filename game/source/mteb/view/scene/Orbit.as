@@ -8,7 +8,7 @@ package mteb.view.scene
 
 	public class Orbit extends ObjectContainer3D
 	{
-		public var spinSpeed:Number = 12;
+		public var speed:Number = 32;
 		public var oscillateDistance:Number = 40;
 
 		protected const S:Matrix3D = new Matrix3D();
@@ -40,7 +40,7 @@ package mteb.view.scene
 		public function travel(secondsElapsed:Number):void
 		{
 			R.identity();
-			angle += spinSpeed * secondsElapsed;
+			angle += speed * secondsElapsed;
 			R.appendRotation(-1 * angle, Vector3D.X_AXIS);
 
 			T2.identity();
