@@ -38,6 +38,7 @@ package
 			view.scene.addChild(sceneGeo);
 
 			view.camera.position = new Vector3D(0, 0, 0);
+			view.camera.rotate(Vector3D.X_AXIS, -85);
 
 			// let user manipulate camera orientation
 			userTransform = new UserTransform(stage, view.camera.transform);
@@ -52,6 +53,7 @@ package
 			var material:TextureMaterial = new TextureMaterial(new BitmapTexture(new SkyTexture().bitmapData));
 			material.bothSides = true;
 			var mesh:Mesh = new Mesh(geometry, material);
+			mesh.rotate(Vector3D.Y_AXIS, -115);
 			return mesh;
 		}
 
