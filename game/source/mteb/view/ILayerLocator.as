@@ -8,5 +8,7 @@ package mteb.view
 		function get debug():DisplayObject;
 
 		function get scene():DisplayObject;
+
+		function get ui():DisplayObject;
 	}
 }
