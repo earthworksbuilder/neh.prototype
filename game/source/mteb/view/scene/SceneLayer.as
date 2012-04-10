@@ -126,8 +126,9 @@ package mteb.view.scene
 			//skyGeo.addEventListener(MouseEvent3D.CLICK, onSkyClicked); // not getting any hits
 			groundGeo.addEventListener(MouseEvent3D.CLICK, onGroundClicked);
 
+			moonGeo.translate(Vector3D.X_AXIS, 512);
 			moonOrbit.setSubject(moonGeo, 1024);
-			moonOrbit.oscillateDistance = 512;
+			moonOrbit.oscillateDistance = 630;
 
 			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail);
 			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit);
