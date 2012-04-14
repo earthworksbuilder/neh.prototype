@@ -5,6 +5,7 @@ package mteb.view.debug
 
 	import pixeldroid.logging.LogDispatcher;
 	import pixeldroid.logging.appenders.console.ConsoleAppender;
+	import pixeldroid.logging.appenders.console.ConsoleAppenderProperties;
 
 
 	public class DebugLayer extends Sprite
@@ -18,9 +19,6 @@ package mteb.view.debug
 
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
-			console = new ConsoleAppender();
-			LogDispatcher.addAppender(console);
-
 			debug(this, "constructor");
 		}
 
@@ -28,8 +26,18 @@ package mteb.view.debug
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
+			const consolePrefs:ConsoleAppenderProperties = new ConsoleAppenderProperties();
+			consolePrefs.width = stage.stageWidth;
+			consolePrefs.height = stage.stageHeight;
+
+			console = new ConsoleAppender(consolePrefs);
+			console.hide();
+
+			LogDispatcher.addAppender(console);
+
 			addChild(console);
-			console.y = stage.stageHeight - console.height; // console height is not set until after added to stage
+			console.x = 0;
+			console.y = 0;
 
 			debug(this, "console added to stage");
 		}
