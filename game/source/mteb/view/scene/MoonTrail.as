@@ -2,17 +2,22 @@ package mteb.view.scene
 {
 	import flash.geom.Vector3D;
 
+	import away3d.arcane;
 	import away3d.entities.SegmentSet;
 	import away3d.primitives.LineSegment;
+	import away3d.primitives.data.Segment;
 
 
 	public class MoonTrail extends SegmentSet
 	{
+		public var maxThickness:Number = 30;
+		public var minThickness:Number = 3;
+
 		protected const lastPoint:Vector3D = new Vector3D();
 		protected var trailLength:uint;
 
 
-		public function MoonTrail(trailLength:uint = 512)
+		public function MoonTrail(trailLength:uint = 400)
 		{
 			super();
 			this.trailLength = trailLength;
@@ -25,17 +30,40 @@ package mteb.view.scene
 
 			if (lastPoint.lengthSquared > 0)
 			{
-				if (numSegments == trailLength)
+				if (numSegments < trailLength)
+					addSegment(new LineSegment(lastPoint.clone(), newPoint, color, color));
+
+				var i:uint = 0;
+				var s:Segment, s1:Segment;
+				while (i < numSegments)
 				{
-					removeSegment(getSegment(0));
-					debug(this, "setNextPoint() - removed 1: {0} segments", _segments.length);
+					s = _segments[i];
+					s.thickness = getThickness(i / numSegments);
+
+					if (i + 1 < numSegments)
+					{
+						s1 = _segments[i + 1];
+						s.start.setTo(s1.start.x, s1.start.y, s1.start.z);
+						s.end.setTo(s1.end.x, s1.end.y, s1.end.z);
+					}
+					else
+					{
+						s.start.setTo(lastPoint.x, lastPoint.y, lastPoint.z);
+						s.end.setTo(newPoint.x, newPoint.y, newPoint.z);
+					}
+
+					arcane::updateSegment(s);
+					i++;
 				}
 
-				addSegment(new LineSegment(lastPoint.clone(), newPoint, color, color, thickness));
-				debug(this, "setNextPoint() - added 1: {0} segments", _segments.length);
 			}
 
 			lastPoint.setTo(newPoint.x, newPoint.y, newPoint.z);
+		}
+
+		protected function getThickness(t:Number):Number
+		{
+			return minThickness + ((maxThickness - minThickness) * t);
 		}
 	}
 }
