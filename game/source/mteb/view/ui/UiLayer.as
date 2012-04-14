@@ -2,21 +2,13 @@ package mteb.view.ui
 {
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.text.TextField;
-	import flash.text.TextFieldAutoSize;
-
-	import pixeldroid.signals.ISignal;
-	import pixeldroid.signals.ISignalBus;
-	import pixeldroid.signals.ISignalReceiver;
-
-	import mteb.command.SignalBus;
-	import mteb.command.signals.AzimuthChanged;
-	import mteb.data.map.ICompass;
 
 
-	public class UiLayer extends Sprite implements ISignalReceiver
+	public class UiLayer extends Sprite
 	{
-		protected const textField:TextField = new TextField();
+		protected var heading:HeadingDisplay;
+		protected var timeControl:TimeControl;
+		protected var mapControl:MapControl;
 
 
 		public function UiLayer()
@@ -24,43 +16,28 @@ package mteb.view.ui
 			super();
 
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-
-			const signalBus:ISignalBus = SignalBus.getInstance();
-			signalBus.addReceiver(AzimuthChanged, this);
-		}
-
-		public function receive(signal:ISignal, authority:* = null):void
-		{
-			switch (true)
-			{
-				case (signal is AzimuthChanged):
-					onAzimuthChanged(authority as ICompass);
-					break;
-
-				default:
-					debug(this, "receive() - unrecognized signal {0}", signal);
-					break;
-			}
 		}
 
 		protected function onAddedToStage(event:Event):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
-			addChild(textField);
-			textField.autoSize = TextFieldAutoSize.LEFT;
-			textField.background = true;
-			textField.backgroundColor = 0x666666;
-			textField.textColor = 0x000000;
+			heading = new HeadingDisplay();
+			heading.x = 0;
+			heading.y = stage.stageHeight - heading.height;
+			addChild(heading);
 
-			textField.text = "Azimuth: - - - -";
+			timeControl = new TimeControl();
+			timeControl.x = (stage.stageWidth * .5) - (timeControl.width * .5);
+			timeControl.y = stage.stageHeight - timeControl.height;
+			addChild(timeControl);
+
+			mapControl = new MapControl();
+			mapControl.x = stage.stageWidth - mapControl.width;
+			mapControl.y = stage.stageHeight - mapControl.height;
+			addChild(mapControl);
 
 			debug(this, "ui layer added to stage");
-		}
-
-		protected function onAzimuthChanged(compass:ICompass):void
-		{
-			textField.text = "Azimuth: " + compass.currentAzimuth.toFixed(2);
 		}
 	}
 }
