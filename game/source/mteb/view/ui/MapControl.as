@@ -16,7 +16,7 @@ package mteb.view.ui
 		{
 			const g:Graphics = graphics;
 			g.beginFill(0x6666ff);
-			g.drawRect(0, 0, 256, 256);
+			g.drawRect(0, 0, 256, 128);
 			g.endFill();
 		}
 	}

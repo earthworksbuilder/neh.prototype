@@ -213,10 +213,8 @@ package mteb.view.scene
 			for (var i:uint = 0; i < 6; i++)
 			{
 				bd = bitmapCubeLoader.getBitmapDataAt(i);
-				bd.copyPixels(hotSpotLoader.getBitmapDataAt(i), bd.rect, (new Point(0, 0)), null, null, true);
+				//bd.copyPixels(hotSpotLoader.getBitmapDataAt(i), bd.rect, (new Point(0, 0)), null, null, true); // overlay hotspot onto texture for debugging
 				groundGeo.setTextureData(bd, i);
-
-					//groundGeo.setTextureData(bitmapCubeLoader.getBitmapDataAt(i), i);
 			}
 		}
 	}

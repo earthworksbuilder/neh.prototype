@@ -47,8 +47,8 @@ package mteb.data.map
 			return s;
 		}
 
-		protected function hotspotUrl(face:String):String  { return "nodes/hotspots/" + face + "/" + face + "." + _id + ".png"; }
+		protected function hotspotUrl(face:String):String  { return "nodes/hotspots/" + face + "/" + "node" + "." + _id + ".png"; }
 
-		protected function textureUrl(face:String):String  { return "nodes/textures/" + face + "/" + face + "." + _id + ".png"; }
+		protected function textureUrl(face:String):String  { return "nodes/textures/" + face + "/" + "node" + "." + _id + ".png"; }
 	}
 }
