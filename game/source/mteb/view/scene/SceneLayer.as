@@ -144,10 +144,11 @@ package mteb.view.scene
 			view.camera.transform = dataLocator.look.value;
 
 			// spin the sky
-			skyGeo.spin += .25 * time.secondsElapsed;
+			//skyGeo.spin += .25 * time.secondsElapsed;
+			skyGeo.travel(time.secondsElapsedScaled);
 
 			// revolve the moon
-			moonOrbit.travel(time.secondsElapsed);
+			moonOrbit.travel(time.secondsElapsedScaled);
 			if (--moonTrailFrame == 0)
 			{
 				moonTrail.setNextPoint(moonGeo.scenePosition);

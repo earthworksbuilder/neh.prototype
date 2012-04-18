@@ -18,6 +18,7 @@ package mteb.data.time
 		protected const frameEntered:IProtectedSignal = new FrameEntered();
 		protected var lastFrame:int;
 		protected var totalFrames:uint;
+		protected var _multiplier:Number = 5 * 1000;
 
 
 		public function Time()
@@ -33,6 +34,10 @@ package mteb.data.time
 			return totalFrames;
 		}
 
+		public function get multiplier():Number  { return _multiplier; }
+
+		public function set multiplier(value:Number):void  { _multiplier = value; }
+
 		public function onFrame(event:Event):void
 		{
 			var now:int = getTimer();
@@ -47,6 +52,11 @@ package mteb.data.time
 		public function get secondsElapsed():Number
 		{
 			return elapsed;
+		}
+
+		public function get secondsElapsedScaled():Number
+		{
+			return elapsed * _multiplier;
 		}
 	}
 }

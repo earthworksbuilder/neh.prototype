@@ -17,6 +17,10 @@ package mteb.view.scene
 
 	public class SkyGeometry extends ObjectContainer3D
 	{
+
+		/** How many degrees per second the sky spins */
+		public var speed:Number = 360 / 23.9345 / 60 / 60; // sidereal period of the Earth; see http://answers.yahoo.com/question/index?qid=20090923082900AAKT8ZK
+
 		[Embed(source="/../embeds/starfield-2048x1024-marked.png")]
 		protected const SkyTexture:Class;
 
@@ -75,6 +79,11 @@ package mteb.view.scene
 			TILT.appendRotation(_tilt, Vector3D.X_AXIS);
 
 			super.arcane::invalidateTransform();
+		}
+
+		public function travel(secondsElapsed:Number):void
+		{
+			spin += speed * secondsElapsed;
 		}
 
 		protected function initialize(r:Number = 2048):void
