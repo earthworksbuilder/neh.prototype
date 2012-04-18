@@ -18,7 +18,7 @@ package mteb.data.time
 		protected const frameEntered:IProtectedSignal = new FrameEntered();
 		protected var lastFrame:int;
 		protected var totalFrames:uint;
-		protected var _multiplier:Number = 5 * 1000;
+		protected var _multiplier:Number = 50 * 1000;
 
 
 		public function Time()

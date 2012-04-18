@@ -26,7 +26,7 @@ package mteb.data.map
 
 		public function load(file:String):void
 		{
-			xml = <map startNode="001" startAzimuth="51.5">
+			xml = <map startNode="005" startAzimuth="51.5">
 					<node id="001" color="0x349000"/>
 					<node id="002" color="0x0000fe"/>
 					<node id="003" color="0xfe0000"/>

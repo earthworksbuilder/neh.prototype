@@ -19,7 +19,7 @@ package mteb.view.scene
 	{
 
 		/** How many degrees per second the sky spins */
-		public var speed:Number = 360 / 23.9345 / 60 / 60; // sidereal period of the Earth; see http://answers.yahoo.com/question/index?qid=20090923082900AAKT8ZK
+		public var speed:Number = 360 / (23.9345 * 60 * 60); // sidereal period of the Earth; see http://answers.yahoo.com/question/index?qid=20090923082900AAKT8ZK
 
 		[Embed(source="/../embeds/starfield-2048x1024-marked.png")]
 		protected const SkyTexture:Class;
