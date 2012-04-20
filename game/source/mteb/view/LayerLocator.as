@@ -3,6 +3,8 @@ package mteb.view
 	import flash.display.DisplayObject;
 
 	import mteb.view.debug.DebugLayer;
+	import mteb.view.debug.IDebugLayer;
+	import mteb.view.scene.ISceneLayer;
 	import mteb.view.scene.SceneLayer;
 	import mteb.view.ui.UiLayer;
 
@@ -16,9 +18,9 @@ package mteb.view
 			return instance || (instance = new LayerLocator(new SingletonKey()));
 		}
 
-		private var _debug:DisplayObject;
+		private var _debug:IDebugLayer;
 		private var _ui:DisplayObject;
-		private var _scene:DisplayObject;
+		private var _scene:ISceneLayer;
 
 
 		public function LayerLocator(key:SingletonKey)
@@ -27,9 +29,9 @@ package mteb.view
 				throw new ArgumentError(SingletonKey.ERROR_MSG);
 		}
 
-		public function get debug():DisplayObject  { return _debug || (_debug = new DebugLayer() as DisplayObject); }
+		public function get debug():IDebugLayer  { return _debug || (_debug = new DebugLayer() as IDebugLayer); }
 
-		public function get scene():DisplayObject  { return _scene || (_scene = new SceneLayer() as DisplayObject); }
+		public function get scene():ISceneLayer  { return _scene || (_scene = new SceneLayer() as ISceneLayer); }
 
 		public function get ui():DisplayObject  { return _ui || (_ui = new UiLayer() as DisplayObject); }
 	}

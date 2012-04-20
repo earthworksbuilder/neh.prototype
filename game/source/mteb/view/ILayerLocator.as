@@ -2,12 +2,15 @@ package mteb.view
 {
 	import flash.display.DisplayObject;
 
+	import mteb.view.debug.IDebugLayer;
+	import mteb.view.scene.ISceneLayer;
+
 
 	public interface ILayerLocator
 	{
-		function get debug():DisplayObject;
+		function get debug():IDebugLayer;
 
-		function get scene():DisplayObject;
+		function get scene():ISceneLayer;
 
 		function get ui():DisplayObject;
 	}

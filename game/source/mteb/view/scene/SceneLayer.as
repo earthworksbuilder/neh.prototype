@@ -1,6 +1,7 @@
 package mteb.view.scene
 {
 	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
@@ -28,7 +29,7 @@ package mteb.view.scene
 	import mteb.data.time.ITime;
 
 
-	public class SceneLayer extends Sprite implements ISignalReceiver, ICompass
+	public class SceneLayer extends Sprite implements ISceneLayer, ISignalReceiver, ICompass
 	{
 		protected const STARTING_AZIMUTH:Number = 51.5; // azimuth of initial node view
 		protected const TO_DEGREES:Number = 180 / Math.PI;
@@ -87,6 +88,8 @@ package mteb.view.scene
 			return (a + STARTING_AZIMUTH) % 360;
 		}
 
+		public function get displayObject():DisplayObject  { return this as DisplayObject; }
+
 		public function receive(signal:ISignal, authority:* = null):void
 		{
 			switch (true)
@@ -104,6 +107,8 @@ package mteb.view.scene
 					break;
 			}
 		}
+
+		public function get view3D():View3D  { return view; }
 
 		protected function initScene():void
 		{

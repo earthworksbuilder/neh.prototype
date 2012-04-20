@@ -30,9 +30,11 @@ package mteb
 
 			// add display object layers to stage
 			const layers:ILayerLocator = LayerLocator.getInstance();
-			addChild(layers.scene);
+			addChild(layers.scene.displayObject);
 			addChild(layers.ui);
-			addChild(layers.debug); // needs to be last so on top
+			addChild(layers.debug.displayObject); // needs to be last so on top
+
+			layers.debug.view3D = layers.scene.view3D;
 
 			data.map.load("nodes/nodes.xml");
 		}

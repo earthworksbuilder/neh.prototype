@@ -1,16 +1,21 @@
 package mteb.view.debug
 {
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
+
+	import away3d.containers.View3D;
+	import away3d.debug.AwayStats;
 
 	import pixeldroid.logging.LogDispatcher;
 	import pixeldroid.logging.appenders.console.ConsoleAppender;
 	import pixeldroid.logging.appenders.console.ConsoleAppenderProperties;
 
 
-	public class DebugLayer extends Sprite
+	public class DebugLayer extends Sprite implements IDebugLayer
 	{
 		protected var console:ConsoleAppender;
+		protected var stats:AwayStats;
 
 
 		public function DebugLayer()
@@ -21,6 +26,10 @@ package mteb.view.debug
 
 			debug(this, "constructor");
 		}
+
+		public function get displayObject():DisplayObject  { return this as DisplayObject; }
+
+		public function set view3D(value:View3D):void  { stats.registerView(value); }
 
 		protected function onAddedToStage(event:Event):void
 		{
@@ -38,6 +47,11 @@ package mteb.view.debug
 			addChild(console);
 			console.x = 0;
 			console.y = 0;
+
+			stats = new AwayStats();
+			addChild(stats);
+			stats.x = stage.stageWidth - stats.width;
+			stats.y = 0;
 
 			debug(this, "console added to stage");
 		}
