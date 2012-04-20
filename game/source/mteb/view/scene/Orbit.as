@@ -53,12 +53,11 @@ package mteb.view.scene
 		{
 			R.identity();
 			angle += speed * secondsElapsed;
-			//angle = (angle + (speed * secondsElapsed)) % 360.0;
 			R.appendRotation(-1 * angle, Vector3D.X_AXIS);
 
 			const s:Number = Math.sin((angle / (oscillatePeriod * 3600)) * TO_RADIANS); // not sure what the magic 3600 represents just yet..
 			const oscillationValue:Number = oscillateOffset + ((oscillateDistance / 2) * s);
-			debug(this, "travel() - angle: {0} ({1}r), s: {2}, oscillation tx: {3}", angle.toFixed(2), (angle / 360).toFixed(2), s.toFixed(2), oscillationValue.toFixed(2));
+			//debug(this, "travel() - angle: {0} ({1}r), s: {2}, oscillation tx: {3}", angle.toFixed(2), (angle / 360).toFixed(2), s.toFixed(2), oscillationValue.toFixed(2));
 			T2.identity();
 			T2.appendTranslation(oscillationValue, 0, 0);
 
