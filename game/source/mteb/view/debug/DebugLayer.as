@@ -15,6 +15,7 @@ package mteb.view.debug
 	public class DebugLayer extends Sprite implements IDebugLayer
 	{
 		protected var console:ConsoleAppender;
+		protected var cmd:CommandLine;
 		protected var stats:AwayStats;
 
 
@@ -37,7 +38,7 @@ package mteb.view.debug
 
 			const consolePrefs:ConsoleAppenderProperties = new ConsoleAppenderProperties();
 			consolePrefs.width = stage.stageWidth;
-			consolePrefs.height = stage.stageHeight;
+			consolePrefs.height = stage.stageHeight - 80;
 
 			console = new ConsoleAppender(consolePrefs);
 			console.hide();
@@ -47,6 +48,11 @@ package mteb.view.debug
 			addChild(console);
 			console.x = 0;
 			console.y = 0;
+
+			cmd = new CommandLine();
+			addChild(cmd);
+			cmd.x = 0;
+			cmd.y = console.y + console.height;
 
 			stats = new AwayStats();
 			addChild(stats);
