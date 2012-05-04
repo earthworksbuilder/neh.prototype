@@ -3,6 +3,7 @@ package mteb.view.debug
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 
 	import away3d.containers.View3D;
 	import away3d.debug.AwayStats;
@@ -11,12 +12,19 @@ package mteb.view.debug
 	import pixeldroid.logging.appenders.console.ConsoleAppender;
 	import pixeldroid.logging.appenders.console.ConsoleAppenderProperties;
 
+	import mteb.command.CommandInterpreter;
+	import mteb.view.debug.commandline.CommandLine;
+	import mteb.view.debug.commandline.NullCommandInterpreter;
+
 
 	public class DebugLayer extends Sprite implements IDebugLayer
 	{
+		protected const container:Sprite = new Sprite();
+		protected var showing:Boolean = false;
 		protected var console:ConsoleAppender;
 		protected var cmd:CommandLine;
 		protected var stats:AwayStats;
+		protected const hideCharCode:uint = '`'.charCodeAt(0);
 
 
 		public function DebugLayer()
@@ -36,30 +44,58 @@ package mteb.view.debug
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			addChild(container);
+
 			const consolePrefs:ConsoleAppenderProperties = new ConsoleAppenderProperties();
 			consolePrefs.width = stage.stageWidth;
 			consolePrefs.height = stage.stageHeight - 80;
 
 			console = new ConsoleAppender(consolePrefs);
-			console.hide();
-
-			LogDispatcher.addAppender(console);
-
-			addChild(console);
+			container.addChild(console);
 			console.x = 0;
 			console.y = 0;
+			LogDispatcher.addAppender(console);
 
-			cmd = new CommandLine();
-			addChild(cmd);
+			cmd = new CommandLine(new CommandInterpreter());
+			container.addChild(cmd);
 			cmd.x = 0;
 			cmd.y = console.y + console.height;
 
 			stats = new AwayStats();
-			addChild(stats);
+			container.addChild(stats);
 			stats.x = stage.stageWidth - stats.width;
 			stats.y = 0;
 
-			debug(this, "console added to stage");
+			debug(this, "debug layer ready");
+			updateVis();
+		}
+
+		protected function onKeyDown(event:KeyboardEvent):void
+		{
+			event.stopImmediatePropagation();
+			const cc:uint = event.charCode;
+			switch (cc)
+			{
+				case hideCharCode:
+					showing = !showing;
+					updateVis();
+					break;
+			}
+		}
+
+		protected function updateVis():void
+		{
+			if (showing)
+			{
+				console.show();
+				addChild(container);
+			}
+			else
+			{
+				console.hide();
+				removeChild(container);
+			}
 		}
 	}
 }
