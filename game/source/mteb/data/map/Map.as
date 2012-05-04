@@ -2,13 +2,15 @@ package mteb.data.map
 {
 	import pixeldroid.signals.ISignal;
 	import pixeldroid.signals.ISignalBus;
+	import pixeldroid.signals.ISignalReceiver;
 	import pixeldroid.signals.ProtectedSignal;
 
 	import mteb.command.SignalBus;
+	import mteb.command.signals.ActionTriggered;
 	import mteb.command.signals.NodeChanged;
 
 
-	public class Map implements IMap
+	public class Map implements IMap, ISignalReceiver
 	{
 		protected const nodeChanged:ProtectedSignal = new NodeChanged();
 
@@ -20,6 +22,7 @@ package mteb.data.map
 		{
 			const signalBus:ISignalBus = SignalBus.getInstance();
 			signalBus.addSignal(nodeChanged as ISignal);
+			signalBus.addReceiver(ActionTriggered, this);
 		}
 
 		public function get currentNode():Node  { return _currentNode; }
@@ -47,23 +50,16 @@ package mteb.data.map
 			onMapLoaded(); // TODO: load map externally, and set onMapLoaded as complete handler
 		}
 
-		public function triggerAction(trigger:ActionTrigger):void
+		public function receive(signal:ISignal, authority:* = null):void
 		{
-			var actionType:ActionTypeEnum = ActionTypeEnum.NONE;
-			var jumpId:String;
-
-			if (trigger.hotSpotColor != 0x000000)
+			switch (true)
 			{
-				jumpId = getNodeByColor(trigger.hotSpotColor);
-				if (jumpId)
-					actionType = ActionTypeEnum.JUMP_TO_NODE;
-			}
-			debug(this, "triggerAction() - {0} : {1} (jumpId: {2})", trigger, actionType, jumpId);
+				case (signal is ActionTriggered):
+					onActionTriggered(authority as ActionTrigger);
+					break;
 
-			switch (actionType)
-			{
-				case ActionTypeEnum.JUMP_TO_NODE:
-					changeNode(jumpId);
+				default:
+					debug(this, "receive() - unrecognized signal {0}", signal);
 					break;
 			}
 		}
@@ -80,14 +76,18 @@ package mteb.data.map
 		protected function getNodeByColor(color:uint):String
 		{
 			var nodeId:String;
-			const nodeList:XMLList = xml.node;
-			const n:uint = nodeList.length();
-			for (var i:uint = 0; i < n; i++)
+
+			if (color != 0x000000)
 			{
-				if (isApproximateMatch(color, parseInt(nodeList[i].@color)))
+				const nodeList:XMLList = xml.node;
+				const n:uint = nodeList.length();
+				for (var i:uint = 0; i < n; i++)
 				{
-					nodeId = nodeList[i].@id;
-					break;
+					if (isApproximateMatch(color, parseInt(nodeList[i].@color)))
+					{
+						nodeId = nodeList[i].@id;
+						break;
+					}
 				}
 			}
 
@@ -126,6 +126,26 @@ package mteb.data.map
 				return false;
 
 			return true;
+		}
+
+		protected function onActionTriggered(trigger:ActionTrigger):void
+		{
+			const actionType:ActionTypeEnum = trigger.type;
+			debug(this, "onActionTriggered() - processing action type '{0}'", actionType);
+
+			switch (actionType)
+			{
+				case ActionTypeEnum.JUMP_TO_NODE:
+					const jumpId:String = trigger.nodeId || getNodeByColor(trigger.hotSpotColor);
+					if (jumpId)
+						changeNode(jumpId);
+					else
+						debug(this, "onActionTriggered() - could not resolve target nodeId");
+					break;
+				default:
+					debug(this, "onActionTriggered() - unknown action type '{0}'", actionType);
+					break;
+			}
 		}
 
 		protected function onMapLoaded():void

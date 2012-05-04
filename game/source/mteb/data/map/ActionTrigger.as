@@ -5,6 +5,7 @@ package mteb.data.map
 
 	public class ActionTrigger
 	{
+		public var type:ActionTypeEnum;
 		public var nodeId:String;
 		public var hotSpotColor:uint;
 
@@ -15,7 +16,7 @@ package mteb.data.map
 
 		public function toString():String
 		{
-			const s:String = "[ActionTrigger nodeId:" + nodeId + ", hotSpotColor: " + hotSpotColor.toString(16) + "]";
+			const s:String = "[ActionTrigger type: " + type + ", nodeId: " + nodeId + ", hotSpotColor: 0x" + hotSpotColor.toString(16) + "]";
 			return s;
 		}
 	}

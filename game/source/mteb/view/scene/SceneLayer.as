@@ -17,12 +17,14 @@ package mteb.view.scene
 	import pixeldroid.signals.ISignalReceiver;
 
 	import mteb.command.SignalBus;
+	import mteb.command.signals.ActionTriggered;
 	import mteb.command.signals.AzimuthChanged;
 	import mteb.command.signals.FrameEntered;
 	import mteb.command.signals.NodeChanged;
 	import mteb.data.DataLocator;
 	import mteb.data.IDataLocator;
 	import mteb.data.map.ActionTrigger;
+	import mteb.data.map.ActionTypeEnum;
 	import mteb.data.map.ICompass;
 	import mteb.data.map.IMap;
 	import mteb.data.map.Node;
@@ -47,6 +49,7 @@ package mteb.view.scene
 		protected const view:View3D = new View3D();
 
 		protected const azimuthChanged:IProtectedSignal = new AzimuthChanged();
+		protected const actionTriggered:IProtectedSignal = new ActionTriggered();
 
 		protected var currentNode:String;
 		protected var moonTrailFrame:uint = moonTrailFrameSkip;
@@ -60,6 +63,7 @@ package mteb.view.scene
 
 			const signalBus:ISignalBus = SignalBus.getInstance();
 			signalBus.addSignal(azimuthChanged as ISignal);
+			signalBus.addSignal(actionTriggered as ISignal);
 			signalBus.addReceiver(FrameEntered, this);
 			signalBus.addReceiver(NodeChanged, this);
 		}
@@ -171,12 +175,12 @@ package mteb.view.scene
 
 			const map:IMap = dataLocator.map;
 			const node:Node = map.currentNode;
-			actionTrigger.nodeId = node.id;
+			actionTrigger.type = ActionTypeEnum.JUMP_TO_NODE;
+			actionTrigger.nodeId = null;
 			actionTrigger.hotSpotColor = hotSpotLoader.getUvColorAt(index, uv);
 
 			debug(this, "onGroundClicked() - azimuth: {0}, N{1}.{2} ({3}, {4})", currentAzimuth.toFixed(2), node.id, object3d.name, uv.x.toFixed(3), uv.y.toFixed(3));
-			//TODO: change to signal send instead of direct map call
-			map.triggerAction(actionTrigger);
+			actionTriggered.send(actionTrigger);
 		}
 
 		protected function onHotspotsLoaded():void
@@ -194,7 +198,7 @@ package mteb.view.scene
 			bitmapCubeLoader.setUrls(node.texturePosX, node.textureNegX, node.texturePosY, node.textureNegY, node.texturePosZ, node.textureNegZ);
 			bitmapCubeLoader.load(onNodeTraveled);
 
-			debug(this, "onNodeChanged() - currentNode is {0}; loading textures and hotspots...", currentNode);
+			debug(this, "onNodeChanged() - map.currentNode is {0}; loading textures and hotspots...", node);
 		}
 
 		protected function onNodeTraveled():void
