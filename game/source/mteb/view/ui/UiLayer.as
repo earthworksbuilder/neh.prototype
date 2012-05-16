@@ -33,8 +33,8 @@ package mteb.view.ui
 			addChild(timeControl);
 
 			mapControl = new MapControl();
-			mapControl.x = stage.stageWidth - mapControl.width;
-			mapControl.y = stage.stageHeight - mapControl.height;
+			mapControl.x = stage.stageWidth - (mapControl.width / 2);
+			mapControl.y = stage.stageHeight - (mapControl.height / 2);
 			addChild(mapControl);
 
 			debug(this, "ui layer added to stage");
