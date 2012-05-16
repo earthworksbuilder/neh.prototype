@@ -30,21 +30,28 @@ package mteb.data.map
 		public function load(file:String):void
 		{
 			xml = <map startNode="005" startAzimuth="51.5">
-					<node id="001" color="0x349000"/>
-					<node id="002" color="0x0000fe"/>
-					<node id="003" color="0xfe0000"/>
-					<node id="004" color="0x00fe00"/>
-					<node id="005" color="0xfe4600"/>
-					<node id="006" color="0xfe00fe"/>
-					<node id="007" color="0xfefe00"/>
-					<node id="008" color="0x6000fe"/>
-					<node id="009" color="0xfe006b"/>
-					<node id="010" color="0x00fefe"/>
-					<node id="011" color="0x9c00fe"/>
-					<node id="012" color="0x6dc179"/>
+					<node id="001" color="0x369100"/>
+					<node id="002" color="0x0000ff"/>
+					<node id="003" color="0xff0000"/>
+					<node id="004" color="0x00ff00"/>
+					<node id="005" color="0xff4700"/>
+					<node id="006" color="0xff00ff"/>
+					<node id="007" color="0xffff00"/>
+					<node id="008" color="0x6100ff"/>
+					<node id="009" color="0xff006d"/>
+					<node id="010" color="0x00ffff"/>
+					<node id="011" color="0x9d00ff"/>
+					<node id="012" color="0x00ff90"/>
 					<node id="013" color="0xfd8d00"/>
-					<node id="014" color="0x0077fe"/>
+					<node id="014" color="0x0079ff"/>
 					<node id="015" color="0x9ffe00"/>
+					<node id="016" color="0xff7e6d"/>
+					<node id="017" color="0xffac6d"/>
+					<node id="018" color="0x9db572"/>
+					<node id="019" color="0xa48600"/>
+					<node id="020" color="0xff003f"/>
+					<node id="021" color="0x9aae3b"/>
+					<node id="022" color="0xd69d3b"/>
 				</map>;
 
 			onMapLoaded(); // TODO: load map externally, and set onMapLoaded as complete handler

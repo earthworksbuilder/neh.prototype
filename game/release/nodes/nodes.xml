@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--  for i in *.png; do mv $i negX"${i/negZ/}"; done -->
-<map startNode="001" startAzimuth="51.5">
-	<node id="001" color="0x329243"/>
-	<node id="002" color="0x3852a3"/>
-	<node id="003" color="0xec1e23"/>
-	<node id="004" color="0x68bc44"/>
-	<node id="005" color="0xee4a22"/>
-	<node id="006" color="0xb8509e"/>
-	<node id="007" color="0xf2eb16"/>
-	<node id="008" color="0x5951a2"/>
-	<node id="009" color="0xec136e"/>
-	<node id="010" color="0x6bcbdd"/>
-	<node id="011" color="0x7a50a0"/>
-	<node id="012" color="0x6dc179"/>
-	<node id="013" color="0xf58d1e"/>
-	<node id="014" color="0x4172b8"/>
-	<node id="015" color="0xa9ce37"/>
+<map startNode="005" startAzimuth="51.5">
+	<node id="001" color="0x369100"/>
+	<node id="002" color="0x0000ff"/>
+	<node id="003" color="0xff0000"/>
+	<node id="004" color="0x00ff00"/>
+	<node id="005" color="0xff4700"/>
+	<node id="006" color="0xff00ff"/>
+	<node id="007" color="0xffff00"/>
+	<node id="008" color="0x6100ff"/>
+	<node id="009" color="0xff006d"/>
+	<node id="010" color="0x00ffff"/>
+	<node id="011" color="0x9d00ff"/>
+	<node id="012" color="0x00ff90"/>
+	<node id="013" color="0xfd8d00"/>
+	<node id="014" color="0x0079ff"/>
+	<node id="015" color="0x9ffe00"/>
+	<node id="016" color="0xff7e6d"/>
+	<node id="017" color="0xffac6d"/>
+	<node id="018" color="0x9db572"/>
+	<node id="019" color="0xa48600"/>
+	<node id="020" color="0xff003f"/>
+	<node id="021" color="0x9aae3b"/>
+	<node id="022" color="0xd69d3b"/>
 </map>
