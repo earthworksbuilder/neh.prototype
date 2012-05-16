@@ -11,6 +11,7 @@ package mteb.view.scene
 	import away3d.primitives.SphereGeometry;
 	import away3d.textures.BitmapTexture;
 
+	import mteb.assets.Textures;
 
 	use namespace arcane;
 
@@ -20,9 +21,6 @@ package mteb.view.scene
 
 		/** How many degrees per second the sky spins */
 		public var speed:Number = 360 / (23.9345 * 60 * 60); // sidereal period of the Earth; see http://answers.yahoo.com/question/index?qid=20090923082900AAKT8ZK
-
-		[Embed(source="/../embeds/starfield-2048x1024-marked.png")]
-		protected const SkyTexture:Class;
 
 		protected const SPIN:Matrix3D = new Matrix3D();
 		protected const TILT:Matrix3D = new Matrix3D();
@@ -89,7 +87,7 @@ package mteb.view.scene
 		protected function initialize(r:Number = 2048):void
 		{
 			var geometry:SphereGeometry = new SphereGeometry(r);
-			var material:TextureMaterial = new TextureMaterial(new BitmapTexture(new SkyTexture().bitmapData));
+			var material:TextureMaterial = new TextureMaterial(new BitmapTexture(Textures.skyTextureBitmap.bitmapData));
 			material.bothSides = true;
 
 			var mesh:Mesh = new Mesh(geometry, material);
