@@ -21,8 +21,6 @@ package mteb.control.commands
 
 		public function execute(args:Array):void
 		{
-			debug(this, "execute() - args: {0}", args);
-
 			const signalBus:ISignalBus = SignalBus.getInstance();
 			const actionTriggered:IProtectedSignal = new ActionTriggered();
 			signalBus.addSignal(actionTriggered as ISignal);
@@ -31,6 +29,7 @@ package mteb.control.commands
 			actionTrigger.type = ActionTypeEnum.JUMP_TO_NODE;
 			actionTrigger.nodeId = args[0];
 
+			debug(this, "execute() - jumping to node id '{0}'", actionTrigger.nodeId);
 			actionTriggered.send(actionTrigger);
 		}
 

@@ -15,6 +15,7 @@ package mteb.view.debug.commandline
 
 	import pixeldroid.logging.appenders.console.ConsoleAppender;
 	import pixeldroid.logging.appenders.console.ConsoleAppenderProperties;
+
 	import mteb.control.interpreters.ICommandInterpreter;
 
 
@@ -38,6 +39,11 @@ package mteb.view.debug.commandline
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 
+		public function blur():void
+		{
+			stage.focus = null;
+		}
+
 		public function get commandParser():ICommandInterpreter  { return parser; }
 
 		public function set commandParser(value:ICommandInterpreter):void  { parser = value; }
@@ -45,6 +51,14 @@ package mteb.view.debug.commandline
 		public function get commandPrompt():String  { return prompt; }
 
 		public function set commandPrompt(value:String):void  { prompt = value; }
+
+		public function focus():void
+		{
+			stage.focus = cmd;
+			cmd.text = prompt;
+			const i:int = cmd.length;
+			cmd.setSelection(i, i);
+		}
 
 		protected function init(e:Event):void
 		{
@@ -82,27 +96,26 @@ package mteb.view.debug.commandline
 			cmd.y = 2;
 
 			cmd.text = prompt;
+			cmd.restrict = "^`";
 
-			cmd.addEventListener(TextEvent.TEXT_INPUT, onTextInput);
-			cmd.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			cmd.addEventListener(KeyboardEvent.KEY_DOWN, onKeyTyped);
 		}
 
-		protected function onKeyDown(event:KeyboardEvent):void
+		protected function onKeyTyped(event:KeyboardEvent):void
 		{
-			event.stopPropagation();
-			const kc:uint = event.keyCode;
+			event.stopImmediatePropagation();
 
+			const kc:uint = event.keyCode;
 			switch (kc)
 			{
 				case Keyboard.ENTER:
 					processCommandLine();
 					break;
-			}
-		}
 
-		protected function onTextInput(event:TextEvent):void
-		{
-			//debug(this, "onTextInput() - {0}", event.text);
+				case Keyboard.BACKQUOTE:
+					dispatchEvent(event);
+					break;
+			}
 		}
 
 		protected function processCommandLine():void

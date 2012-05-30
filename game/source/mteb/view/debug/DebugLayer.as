@@ -12,10 +12,10 @@ package mteb.view.debug
 	import pixeldroid.logging.appenders.console.ConsoleAppender;
 	import pixeldroid.logging.appenders.console.ConsoleAppenderProperties;
 
-	import mteb.control.interpreters.CommandInterpreter;
 	import mteb.control.CommandLineInitializer;
-	import mteb.view.debug.commandline.CommandLine;
+	import mteb.control.interpreters.CommandInterpreter;
 	import mteb.control.interpreters.ICommandInterpreter;
+	import mteb.view.debug.commandline.CommandLine;
 
 
 	public class DebugLayer extends Sprite implements IDebugLayer
@@ -67,6 +67,7 @@ package mteb.view.debug
 			container.addChild(cmd);
 			cmd.x = 0;
 			cmd.y = console.y + console.height;
+			cmd.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 
 			stats = new AwayStats();
 			container.addChild(stats);
@@ -80,6 +81,7 @@ package mteb.view.debug
 		protected function onKeyDown(event:KeyboardEvent):void
 		{
 			event.stopImmediatePropagation();
+
 			const cc:uint = event.charCode;
 			switch (cc)
 			{
@@ -96,9 +98,11 @@ package mteb.view.debug
 			{
 				console.show();
 				addChild(container);
+				cmd.focus();
 			}
 			else
 			{
+				cmd.blur();
 				console.hide();
 				removeChild(container);
 			}

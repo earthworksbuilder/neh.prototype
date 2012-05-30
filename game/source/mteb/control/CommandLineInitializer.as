@@ -1,9 +1,10 @@
 package mteb.control
 {
-	import mteb.control.interpreters.ICommandInterpreter;
 	import mteb.control.commands.IExecutableCommand;
 	import mteb.control.commands.JumpToNode;
 	import mteb.control.commands.ListCommands;
+	import mteb.control.commands.ToggleHotspots;
+	import mteb.control.interpreters.ICommandInterpreter;
 
 
 	public final class CommandLineInitializer
@@ -12,6 +13,7 @@ package mteb.control
 		{
 			add(interpreter, ListCommands);
 			add(interpreter, JumpToNode);
+			add(interpreter, ToggleHotspots);
 		}
 
 		private static function add(interpreter:ICommandInterpreter, Impl:Class):void
