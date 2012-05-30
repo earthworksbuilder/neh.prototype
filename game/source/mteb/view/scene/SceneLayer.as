@@ -139,11 +139,11 @@ package mteb.view.scene
 
 			moonOrbit.setSubject(moonGeo, 1024);
 
-			testArtifact.position = new Vector3D(0, 0, 100);
+			testArtifact.position = new Vector3D(0, -32, 100);
 			testArtifact.addEventListener(MouseEvent3D.CLICK, onArtifactClicked);
 
-			sceneGeo.addChildren(skyGeo, testArtifact);
-			//sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail, testArtifact);
+			//sceneGeo.addChildren(skyGeo, testArtifact);
+			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail, testArtifact);
 			view.scene.addChild(sceneGeo);
 		}
 
@@ -172,8 +172,8 @@ package mteb.view.scene
 				moonTrailFrame = moonTrailFrameSkip;
 			}
 
-			testArtifact.rotationX += .05;
-			testArtifact.rotationY += .1;
+			//testArtifact.rotationX += .05;
+			//testArtifact.rotationY += .1;
 
 			// render the view
 			view.render();
