@@ -1,15 +1,14 @@
 package mteb.view.ui
 {
-	import flash.display.Graphics;
 	import flash.display.Sprite;
 
 	import pixeldroid.signals.ISignal;
 	import pixeldroid.signals.ISignalBus;
 	import pixeldroid.signals.ISignalReceiver;
 
-	import mteb.assets.Textures;
-	import mteb.command.SignalBus;
-	import mteb.command.signals.AzimuthChanged;
+	import mteb.assets.UiElements;
+	import mteb.control.SignalBus;
+	import mteb.control.signals.AzimuthChanged;
 	import mteb.data.map.ICompass;
 
 
@@ -43,7 +42,7 @@ package mteb.view.ui
 
 		protected function initialize():void
 		{
-			map = Textures.nodeMap;
+			map = UiElements.nodeMap;
 			addChild(map);
 		}
 

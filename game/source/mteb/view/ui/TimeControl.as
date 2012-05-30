@@ -6,8 +6,8 @@ package mteb.view.ui
 
 	import pixeldroid.signals.ISignalBus;
 
-	import mteb.command.SignalBus;
-	import mteb.command.signals.TimeScaleChanged;
+	import mteb.control.SignalBus;
+	import mteb.control.signals.TimeScaleChanged;
 
 
 	public class TimeControl extends Sprite

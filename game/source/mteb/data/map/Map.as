@@ -5,9 +5,9 @@ package mteb.data.map
 	import pixeldroid.signals.ISignalReceiver;
 	import pixeldroid.signals.ProtectedSignal;
 
-	import mteb.command.SignalBus;
-	import mteb.command.signals.ActionTriggered;
-	import mteb.command.signals.NodeChanged;
+	import mteb.control.SignalBus;
+	import mteb.control.signals.ActionTriggered;
+	import mteb.control.signals.NodeChanged;
 
 
 	public class Map implements IMap, ISignalReceiver

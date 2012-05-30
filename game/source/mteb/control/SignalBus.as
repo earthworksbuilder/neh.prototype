@@ -1,4 +1,4 @@
-package mteb.command
+package mteb.control
 {
 	import pixeldroid.signals.ISignalBus;
 	import pixeldroid.signals.impl.SignalBusBase;

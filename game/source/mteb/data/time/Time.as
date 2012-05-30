@@ -8,9 +8,9 @@ package mteb.data.time
 	import pixeldroid.signals.ISignalBus;
 	import pixeldroid.signals.ISignalReceiver;
 
-	import mteb.command.SignalBus;
-	import mteb.command.signals.FrameEntered;
-	import mteb.command.signals.TimeScaleChanged;
+	import mteb.control.SignalBus;
+	import mteb.control.signals.FrameEntered;
+	import mteb.control.signals.TimeScaleChanged;
 
 
 	public class Time implements ITime, ISignalReceiver

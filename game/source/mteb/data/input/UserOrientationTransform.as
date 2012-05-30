@@ -9,8 +9,8 @@ package mteb.data.input
 	import pixeldroid.signals.ISignalBus;
 	import pixeldroid.signals.ISignalReceiver;
 
-	import mteb.command.SignalBus;
-	import mteb.command.signals.FrameEntered;
+	import mteb.control.SignalBus;
+	import mteb.control.signals.FrameEntered;
 	import mteb.data.time.ITime;
 
 

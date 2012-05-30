@@ -1,5 +1,7 @@
 package mteb.data
 {
+	import mteb.data.config.Config;
+	import mteb.data.config.IConfig;
 	import mteb.data.input.IOrientationTransform;
 	import mteb.data.input.UserOrientationTransform;
 	import mteb.data.map.IMap;
@@ -19,6 +21,8 @@ package mteb.data
 			return instance || (instance = new DataLocator(new SingletonKey()));
 		}
 
+		private var _config:IConfig;
+
 		private var _look:IOrientationTransform;
 
 		private var _map:IMap;
@@ -33,6 +37,8 @@ package mteb.data
 			if (!key)
 				throw new ArgumentError(SingletonKey.ERROR_MSG);
 		}
+
+		public function get config():IConfig  { return _config || (_config = new Config); }
 
 		public function get look():IOrientationTransform  { return _look || (_look = new UserOrientationTransform()); }
 

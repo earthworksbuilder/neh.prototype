@@ -1,5 +1,6 @@
 package mteb.data
 {
+	import mteb.data.config.IConfig;
 	import mteb.data.input.IOrientationTransform;
 	import mteb.data.map.IMap;
 	import mteb.data.stats.IStats;
@@ -8,6 +9,8 @@ package mteb.data
 
 	public interface IDataLocator
 	{
+		function get config():IConfig;
+
 		function get look():IOrientationTransform;
 
 		function get map():IMap;

@@ -92,7 +92,7 @@ package mteb.view.scene
 
 			var mesh:Mesh = new Mesh(geometry, material);
 			mesh.name = "MeshSky";
-			mesh.mouseEnabled = true;
+			mesh.mouseEnabled = false; // couldn't get true to work for sky.. due to bothSides == true ?
 			mesh.mouseHitMethod = MouseHitMethod.MESH_ANY_HIT;
 			addChild(mesh);
 		}

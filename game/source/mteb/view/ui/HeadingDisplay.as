@@ -9,8 +9,8 @@ package mteb.view.ui
 	import pixeldroid.signals.ISignalBus;
 	import pixeldroid.signals.ISignalReceiver;
 
-	import mteb.command.SignalBus;
-	import mteb.command.signals.AzimuthChanged;
+	import mteb.control.SignalBus;
+	import mteb.control.signals.AzimuthChanged;
 	import mteb.data.map.ICompass;
 
 

@@ -15,6 +15,7 @@ package mteb.view.debug.commandline
 
 	import pixeldroid.logging.appenders.console.ConsoleAppender;
 	import pixeldroid.logging.appenders.console.ConsoleAppenderProperties;
+	import mteb.control.interpreters.ICommandInterpreter;
 
 
 	public class CommandLine extends Sprite

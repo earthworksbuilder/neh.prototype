@@ -16,11 +16,11 @@ package mteb.view.scene
 	import pixeldroid.signals.ISignalBus;
 	import pixeldroid.signals.ISignalReceiver;
 
-	import mteb.command.SignalBus;
-	import mteb.command.signals.ActionTriggered;
-	import mteb.command.signals.AzimuthChanged;
-	import mteb.command.signals.FrameEntered;
-	import mteb.command.signals.NodeChanged;
+	import mteb.control.SignalBus;
+	import mteb.control.signals.ActionTriggered;
+	import mteb.control.signals.AzimuthChanged;
+	import mteb.control.signals.FrameEntered;
+	import mteb.control.signals.NodeChanged;
 	import mteb.data.DataLocator;
 	import mteb.data.IDataLocator;
 	import mteb.data.map.ActionTrigger;
@@ -53,6 +53,8 @@ package mteb.view.scene
 
 		protected var currentNode:String;
 		protected var moonTrailFrame:uint = moonTrailFrameSkip;
+
+		protected const testArtifact:ObjectContainer3D = new ArtifactGeometry();
 
 
 		public function SceneLayer()
@@ -132,14 +134,23 @@ package mteb.view.scene
 			const sceneGeo:ObjectContainer3D = new ObjectContainer3D();
 			skyGeo.tilt = -55; // align polaris for our north america position
 			skyGeo.shift = -227;
-			//skyGeo.addEventListener(MouseEvent3D.CLICK, onSkyClicked); // not getting any hits
+
 			groundGeo.addEventListener(MouseEvent3D.CLICK, onGroundClicked);
 
 			moonOrbit.setSubject(moonGeo, 1024);
 
-			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail);
-			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit);
+			testArtifact.position = new Vector3D(0, 0, 100);
+			testArtifact.addEventListener(MouseEvent3D.CLICK, onArtifactClicked);
+
+			sceneGeo.addChildren(skyGeo, testArtifact);
+			//sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail, testArtifact);
 			view.scene.addChild(sceneGeo);
+		}
+
+		protected function onArtifactClicked(event:MouseEvent3D):void
+		{
+			const object3d:Object3D = event.object;
+			debug(this, "onartifactClicked() - {0}", object3d.name);
 		}
 
 		protected function onFrameEntered(time:ITime):void
@@ -161,6 +172,9 @@ package mteb.view.scene
 				moonTrailFrame = moonTrailFrameSkip;
 			}
 
+			testArtifact.rotationX += .05;
+			testArtifact.rotationY += .1;
+
 			// render the view
 			view.render();
 
@@ -179,7 +193,7 @@ package mteb.view.scene
 			actionTrigger.nodeId = null;
 			actionTrigger.hotSpotColor = hotSpotLoader.getUvColorAt(index, uv);
 
-			debug(this, "onGroundClicked() - azimuth: {0}, N{1}.{2} ({3}, {4})", currentAzimuth.toFixed(2), node.id, object3d.name, uv.x.toFixed(3), uv.y.toFixed(3));
+			debug(this, "onGroundClicked() - N{0}.{1} ({2}, {3})", node.id, object3d.name, uv.x.toFixed(3), uv.y.toFixed(3));
 			actionTriggered.send(actionTrigger);
 		}
 
@@ -208,19 +222,16 @@ package mteb.view.scene
 				updateTextures();
 		}
 
-		protected function onSkyClicked(event:MouseEvent3D):void
-		{
-			debug(this, "onSkyClicked()");
-		}
-
 		protected function updateTextures():void
 		{
 			debug(this, "updateTextures() - currentNode textures and hotspots are loaded; updating bitmapdata...");
+			var showHotspots:Boolean = dataLocator.config.showHotspots;
 			var bd:BitmapData;
 			for (var i:uint = 0; i < 6; i++)
 			{
 				bd = bitmapCubeLoader.getBitmapDataAt(i);
-				//bd.copyPixels(hotSpotLoader.getBitmapDataAt(i), bd.rect, (new Point(0, 0)), null, null, true); // overlay hotspot onto texture for debugging
+				if (showHotspots)
+					bd.copyPixels(hotSpotLoader.getBitmapDataAt(i), bd.rect, (new Point(0, 0)), null, null, true);
 				groundGeo.setTextureData(bd, i);
 			}
 		}

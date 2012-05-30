@@ -12,9 +12,10 @@ package mteb.view.debug
 	import pixeldroid.logging.appenders.console.ConsoleAppender;
 	import pixeldroid.logging.appenders.console.ConsoleAppenderProperties;
 
-	import mteb.command.CommandInterpreter;
+	import mteb.control.interpreters.CommandInterpreter;
+	import mteb.control.CommandLineInitializer;
 	import mteb.view.debug.commandline.CommandLine;
-	import mteb.view.debug.commandline.NullCommandInterpreter;
+	import mteb.control.interpreters.ICommandInterpreter;
 
 
 	public class DebugLayer extends Sprite implements IDebugLayer
@@ -35,6 +36,8 @@ package mteb.view.debug
 
 			debug(this, "constructor");
 		}
+
+		public function get commandParser():ICommandInterpreter  { return cmd.commandParser; }
 
 		public function get displayObject():DisplayObject  { return this as DisplayObject; }
 
@@ -57,7 +60,10 @@ package mteb.view.debug
 			console.y = 0;
 			LogDispatcher.addAppender(console);
 
-			cmd = new CommandLine(new CommandInterpreter());
+			const ci:ICommandInterpreter = new CommandInterpreter();
+			CommandLineInitializer.execute(ci);
+
+			cmd = new CommandLine(ci);
 			container.addChild(cmd);
 			cmd.x = 0;
 			cmd.y = console.y + console.height;
