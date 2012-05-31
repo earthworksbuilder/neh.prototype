@@ -6,8 +6,6 @@ package mteb.view.scene
 	import away3d.containers.ObjectContainer3D;
 	import away3d.core.raycast.MouseHitMethod;
 	import away3d.entities.Mesh;
-	import away3d.materials.TextureMaterial;
-	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
 
 
@@ -57,43 +55,35 @@ package mteb.view.scene
 			}
 		}
 
-		protected function createTexturedPlane(dim:Number, bitmapTexture:BitmapTexture, horizontal:Boolean):Mesh
-		{
-			const seg:uint = 1;
-
-			const geo:PlaneGeometry = new PlaneGeometry(dim, dim, seg, seg, horizontal);
-			const mat:TextureMaterial = new TextureMaterial(bitmapTexture);
-			mat.alphaBlending = true;
-
-			const mesh:Mesh = new Mesh(geo, mat);
-			mesh.mouseEnabled = true;
-			mesh.mouseHitMethod = MouseHitMethod.MESH_CLOSEST_HIT;
-
-			return mesh;
-		}
-
 		protected function initialize(r:Number = 512):void
 		{
-			const posZMesh:Mesh = createTexturedPlane(r * 2, posZTexture, false);
+			const d:Number = r + r;
+
+			const posZMesh:Mesh = GeometryFactory.createPlane(posZTexture, d, d, false, false, true, MouseHitMethod.MESH_CLOSEST_HIT);
 			posZMesh.name = SkyBoxFaceEnum.POSZ.toString();
 			posZMesh.translate(Vector3D.Z_AXIS, r);
 
-			const negZMesh:Mesh = createTexturedPlane(r * 2, negZTexture, false);
+			const negZMesh:Mesh = GeometryFactory.createPlane(negZTexture, d, d, false, false, true, MouseHitMethod.MESH_CLOSEST_HIT);
 			negZMesh.name = SkyBoxFaceEnum.NEGZ.toString();
 			negZMesh.rotationY = 180;
 			negZMesh.translate(Vector3D.Z_AXIS, -r);
 
-			const posXMesh:Mesh = createTexturedPlane(r * 2, posXTexture, false);
+			const posXMesh:Mesh = GeometryFactory.createPlane(posXTexture, d, d, false, false, true, MouseHitMethod.MESH_CLOSEST_HIT);
 			posXMesh.name = SkyBoxFaceEnum.POSX.toString();
 			posXMesh.rotationY = 90;
 			posXMesh.translate(Vector3D.X_AXIS, r);
 
-			const negXMesh:Mesh = createTexturedPlane(r * 2, negXTexture, false);
+			const negXMesh:Mesh = GeometryFactory.createPlane(negXTexture, d, d, false, false, true, MouseHitMethod.MESH_CLOSEST_HIT);
 			negXMesh.name = SkyBoxFaceEnum.NEGX.toString();
 			negXMesh.rotationY = -90;
 			negXMesh.translate(Vector3D.X_AXIS, -r);
 
-			addChildren(posZMesh, negZMesh, posXMesh, negXMesh);
+			const negYMesh:Mesh = GeometryFactory.createPlane(negYTexture, d, d, false, false, true, MouseHitMethod.MESH_CLOSEST_HIT);
+			negYMesh.name = SkyBoxFaceEnum.NEGY.toString();
+			negYMesh.rotationX = 90;
+			negYMesh.translate(Vector3D.Y_AXIS, -r);
+
+			addChildren(posZMesh, negZMesh, posXMesh, negXMesh, negYMesh);
 		}
 	}
 }

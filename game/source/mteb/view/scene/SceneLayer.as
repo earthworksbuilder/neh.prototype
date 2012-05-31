@@ -172,9 +172,6 @@ package mteb.view.scene
 				moonTrailFrame = moonTrailFrameSkip;
 			}
 
-			//testArtifact.rotationX += .05;
-			//testArtifact.rotationY += .1;
-
 			// render the view
 			view.render();
 

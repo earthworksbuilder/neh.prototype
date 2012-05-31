@@ -5,10 +5,7 @@ package mteb.view.scene
 
 	import away3d.arcane;
 	import away3d.containers.ObjectContainer3D;
-	import away3d.core.raycast.MouseHitMethod;
 	import away3d.entities.Mesh;
-	import away3d.materials.TextureMaterial;
-	import away3d.primitives.SphereGeometry;
 	import away3d.textures.BitmapTexture;
 
 	import mteb.assets.Textures;
@@ -86,14 +83,9 @@ package mteb.view.scene
 
 		protected function initialize(r:Number = 2048):void
 		{
-			var geometry:SphereGeometry = new SphereGeometry(r);
-			var material:TextureMaterial = new TextureMaterial(new BitmapTexture(Textures.skyTextureBitmap.bitmapData));
-			material.bothSides = true;
-
-			var mesh:Mesh = new Mesh(geometry, material);
+			const texture:BitmapTexture = new BitmapTexture(Textures.skyTextureBitmap.bitmapData);
+			const mesh:Mesh = GeometryFactory.createSphere(texture, r, true);
 			mesh.name = "MeshSky";
-			mesh.mouseEnabled = false; // couldn't get true to work for sky.. due to bothSides == true ?
-			mesh.mouseHitMethod = MouseHitMethod.MESH_ANY_HIT;
 			addChild(mesh);
 		}
 

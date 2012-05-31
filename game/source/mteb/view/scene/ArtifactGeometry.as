@@ -3,8 +3,6 @@ package mteb.view.scene
 	import away3d.containers.ObjectContainer3D;
 	import away3d.core.raycast.MouseHitMethod;
 	import away3d.entities.Mesh;
-	import away3d.materials.TextureMaterial;
-	import away3d.primitives.CubeGeometry;
 	import away3d.textures.BitmapTexture;
 
 	import mteb.assets.Textures;
@@ -23,15 +21,11 @@ package mteb.view.scene
 			initialize();
 		}
 
-		protected function initialize(r:Number = 20):void
+		protected function initialize(r:Number = 32):void
 		{
-			var geometry:CubeGeometry = new CubeGeometry(r, r / 2, r);
-			var material:TextureMaterial = new TextureMaterial(new BitmapTexture(Textures.boxTextureBitmap.bitmapData));
-
-			var mesh:Mesh = new Mesh(geometry, material);
+			const texture:BitmapTexture = new BitmapTexture(Textures.boxTextureBitmap.bitmapData);
+			const mesh:Mesh = GeometryFactory.createBox(texture, r, r / 2, r, false, false, MouseHitMethod.MESH_ANY_HIT);
 			mesh.name = "Artifact-" + which;
-			mesh.mouseEnabled = true;
-			mesh.mouseHitMethod = MouseHitMethod.MESH_ANY_HIT;
 			addChild(mesh);
 		}
 	}
