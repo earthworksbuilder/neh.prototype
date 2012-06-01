@@ -54,6 +54,7 @@ package mteb.view.scene
 		protected var currentNode:String;
 		protected var moonTrailFrame:uint = moonTrailFrameSkip;
 
+		protected const compassControl:ObjectContainer3D = new CompassControl();
 		protected const testArtifact:ObjectContainer3D = new ArtifactGeometry();
 
 
@@ -139,18 +140,13 @@ package mteb.view.scene
 
 			moonOrbit.setSubject(moonGeo, 1024);
 
+			compassControl.addEventListener(MouseEvent3D.CLICK, onGeoClicked);
+
 			testArtifact.position = new Vector3D(0, -32, 100);
-			testArtifact.addEventListener(MouseEvent3D.CLICK, onArtifactClicked);
+			testArtifact.addEventListener(MouseEvent3D.CLICK, onGeoClicked);
 
-			//sceneGeo.addChildren(skyGeo, testArtifact);
-			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail, testArtifact);
+			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail, compassControl, testArtifact);
 			view.scene.addChild(sceneGeo);
-		}
-
-		protected function onArtifactClicked(event:MouseEvent3D):void
-		{
-			const object3d:Object3D = event.object;
-			debug(this, "onartifactClicked() - {0}", object3d.name);
 		}
 
 		protected function onFrameEntered(time:ITime):void
@@ -172,10 +168,19 @@ package mteb.view.scene
 				moonTrailFrame = moonTrailFrameSkip;
 			}
 
+			testArtifact.rotationX += 7 * time.secondsElapsedScaled;
+			testArtifact.rotationY += 12 * time.secondsElapsedScaled;
+
 			// render the view
 			view.render();
 
 			azimuthChanged.send(this);
+		}
+
+		protected function onGeoClicked(event:MouseEvent3D):void
+		{
+			const object3d:Object3D = event.object;
+			debug(this, "onGeoClicked() - {0}", object3d.name);
 		}
 
 		protected function onGroundClicked(event:MouseEvent3D):void

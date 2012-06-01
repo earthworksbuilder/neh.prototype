@@ -37,10 +37,9 @@ package mteb.view.scene
 			return mesh;
 		}
 
-		public static function createPlane(texture:BitmapTexture, width:Number = 256, height:Number = 256, horizontal:Boolean = false, bothSides:Boolean = false, alphaBlending:Boolean = false, hitMethod:int = -1):Mesh
+		public static function createPlane(texture:BitmapTexture, width:Number = 256, height:Number = 256, segments:uint = 1, horizontal:Boolean = false, bothSides:Boolean = false, alphaBlending:Boolean = false, hitMethod:int = -1):Mesh
 		{
-			const seg:uint = 1;
-			const geometry:PlaneGeometry = new PlaneGeometry(width, height, seg, seg, horizontal);
+			const geometry:PlaneGeometry = new PlaneGeometry(width, height, segments, segments, horizontal);
 			const material:TextureMaterial = createTextureMaterial(texture, bothSides, alphaBlending);
 
 			return createMesh(geometry, material, hitMethod);

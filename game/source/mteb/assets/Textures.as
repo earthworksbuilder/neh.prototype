@@ -11,6 +11,9 @@ package mteb.assets
 		[Embed(source="/../assets/textures/box-512x512.jpg")]
 		private static const BoxTexture:Class;
 
+		[Embed(source="/../assets/textures/compass-1024x1024.png")]
+		private static const CompassTexture:Class;
+
 		[Embed(source="/../assets/textures/moonmap-512x256.jpg")]
 		private static const MoonTexture:Class;
 
@@ -18,6 +21,8 @@ package mteb.assets
 		private static const SkyTexture:Class;
 
 		public static function get boxTextureBitmap():Bitmap  { return new BoxTexture(); }
+
+		public static function get compassTextureBitmap():Bitmap  { return new CompassTexture(); }
 
 		public static function get moonTextureBitmap():Bitmap  { return new MoonTexture(); }
 
