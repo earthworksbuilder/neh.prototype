@@ -2,6 +2,7 @@ package mteb.view.debug
 {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 
@@ -11,14 +12,19 @@ package mteb.view.debug
 	import pixeldroid.logging.LogDispatcher;
 	import pixeldroid.logging.appenders.console.ConsoleAppender;
 	import pixeldroid.logging.appenders.console.ConsoleAppenderProperties;
+	import pixeldroid.signals.ISignal;
+	import pixeldroid.signals.ISignalBus;
+	import pixeldroid.signals.ISignalReceiver;
 
 	import mteb.control.CommandLineInitializer;
+	import mteb.control.SignalBus;
 	import mteb.control.interpreters.CommandInterpreter;
 	import mteb.control.interpreters.ICommandInterpreter;
+	import mteb.control.signals.StageResized;
 	import mteb.view.debug.commandline.CommandLine;
 
 
-	public class DebugLayer extends Sprite implements IDebugLayer
+	public class DebugLayer extends Sprite implements IDebugLayer, ISignalReceiver
 	{
 		protected const container:Sprite = new Sprite();
 		protected var showing:Boolean = false;
@@ -32,6 +38,9 @@ package mteb.view.debug
 		{
 			super();
 
+			const signalBus:ISignalBus = SignalBus.getInstance();
+			signalBus.addReceiver(StageResized, this);
+
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
 			debug(this, "constructor");
@@ -41,13 +50,27 @@ package mteb.view.debug
 
 		public function get displayObject():DisplayObject  { return this as DisplayObject; }
 
+		public function receive(signal:ISignal, authority:* = null):void
+		{
+			switch (true)
+			{
+				case (signal is StageResized):
+					onStageResized(authority as Stage);
+					break;
+
+				default:
+					debug(this, "receive() - unrecognized signal {0}", signal);
+					break;
+			}
+		}
+
 		public function set view3D(value:View3D):void  { stats.registerView(value); }
 
 		protected function onAddedToStage(event:Event):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown); // TODO: use a signal instead
 			addChild(container);
 
 			const consolePrefs:ConsoleAppenderProperties = new ConsoleAppenderProperties();
@@ -90,6 +113,11 @@ package mteb.view.debug
 					updateVis();
 					break;
 			}
+		}
+
+		protected function onStageResized(stage:Stage):void
+		{
+			debug(this, "onStageResized() - TODO: adjust to new dimensions: {0}x{1}", stage.stageWidth, stage.stageHeight);
 		}
 
 		protected function updateVis():void

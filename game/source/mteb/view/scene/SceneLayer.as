@@ -3,6 +3,7 @@ package mteb.view.scene
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
 
@@ -21,6 +22,7 @@ package mteb.view.scene
 	import mteb.control.signals.AzimuthChanged;
 	import mteb.control.signals.FrameEntered;
 	import mteb.control.signals.NodeChanged;
+	import mteb.control.signals.StageResized;
 	import mteb.data.DataLocator;
 	import mteb.data.IDataLocator;
 	import mteb.data.map.ActionTrigger;
@@ -69,6 +71,7 @@ package mteb.view.scene
 			signalBus.addSignal(actionTriggered as ISignal);
 			signalBus.addReceiver(FrameEntered, this);
 			signalBus.addReceiver(NodeChanged, this);
+			signalBus.addReceiver(StageResized, this);
 		}
 
 		public function get currentAzimuth():Number
@@ -107,6 +110,10 @@ package mteb.view.scene
 
 				case (signal is NodeChanged):
 					onNodeChanged(authority as IMap);
+					break;
+
+				case (signal is StageResized):
+					onStageResized(authority as Stage);
 					break;
 
 				default:
@@ -222,6 +229,13 @@ package mteb.view.scene
 			debug(this, "onNodeTraveled() - currentNode textures are loaded.");
 			if (bitmapCubeLoader.isLoaded && hotSpotLoader.isLoaded)
 				updateTextures();
+		}
+
+		protected function onStageResized(stage:Stage):void
+		{
+			debug(this, "onStageResized() - adjusting to new dimensions: {0}x{1}", stage.stageWidth, stage.stageHeight);
+			view.width = stage.stageWidth;
+			view.height = stage.stageHeight;
 		}
 
 		protected function updateTextures():void

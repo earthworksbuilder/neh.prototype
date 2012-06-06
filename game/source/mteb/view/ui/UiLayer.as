@@ -1,10 +1,18 @@
 package mteb.view.ui
 {
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.Event;
 
+	import pixeldroid.signals.ISignal;
+	import pixeldroid.signals.ISignalBus;
+	import pixeldroid.signals.ISignalReceiver;
 
-	public class UiLayer extends Sprite
+	import mteb.control.SignalBus;
+	import mteb.control.signals.StageResized;
+
+
+	public class UiLayer extends Sprite implements ISignalReceiver
 	{
 		protected var heading:HeadingDisplay;
 		protected var timeControl:TimeControl;
@@ -15,7 +23,24 @@ package mteb.view.ui
 		{
 			super();
 
+			const signalBus:ISignalBus = SignalBus.getInstance();
+			signalBus.addReceiver(StageResized, this);
+
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+
+		public function receive(signal:ISignal, authority:* = null):void
+		{
+			switch (true)
+			{
+				case (signal is StageResized):
+					onStageResized(authority as Stage);
+					break;
+
+				default:
+					debug(this, "receive() - unrecognized signal {0}", signal);
+					break;
+			}
 		}
 
 		protected function onAddedToStage(event:Event):void
@@ -23,21 +48,30 @@ package mteb.view.ui
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
 			heading = new HeadingDisplay();
-			heading.x = 0;
-			heading.y = stage.stageHeight - heading.height;
 			addChild(heading);
 
 			timeControl = new TimeControl();
-			timeControl.x = (stage.stageWidth * .5) - (timeControl.width * .5);
-			timeControl.y = stage.stageHeight - timeControl.height;
 			addChild(timeControl);
 
 			mapControl = new MapControl();
-			mapControl.x = stage.stageWidth - (mapControl.width / 2);
-			mapControl.y = stage.stageHeight - (mapControl.height / 2);
 			addChild(mapControl);
 
+			onStageResized(stage);
 			debug(this, "ui layer added to stage");
+		}
+
+		protected function onStageResized(stage:Stage):void
+		{
+			debug(this, "onStageResized() - adjusting to new dimensions: {0}x{1}", stage.stageWidth, stage.stageHeight);
+
+			heading.x = 0;
+			heading.y = stage.stageHeight - heading.height;
+
+			timeControl.x = (stage.stageWidth * .5) - (timeControl.width * .5);
+			timeControl.y = stage.stageHeight - timeControl.height;
+
+			mapControl.x = stage.stageWidth - (mapControl.width / 2);
+			mapControl.y = stage.stageHeight - (mapControl.height / 2);
 		}
 	}
 }
