@@ -41,13 +41,15 @@ Builds the game prototype.
 			<property name="source-path" value="-source-path=${dir.source}"/>
 			<local name="library-path"/>
 			<property name="library-path" value="-library-path+=${dir.libs.away3d} -library-path+=${dir.libs.log-as3} -library-path+=${dir.libs.simplesignals-as3}"/>
+			<local name="swf-version"/>
+			<property name="swf-version" value="-swf-version=15"/>
 			<local name="link-report"/>
 			<property name="link-report" value="-link-report=${dir.target}/@{name}-linkage.xml"/>
 			<local name="size-report"/>
 			<property name="size-report" value="-size-report=${dir.target}/@{name}-sizes.xml"/>
 			<local name="output"/>
 			<property name="output" value="-output=${dir.target}/@{name}.swf"/>
-			<mxmlc file="${filepath}/${filename}.as" config="${dir.config}/mxmlc-config.xml" options="${source-path} ${library-path} ${link-report} ${size-report} ${output}"/>
+			<mxmlc file="${filepath}/${filename}.as" config="${dir.config}/mxmlc-config.xml" options="${source-path} ${library-path} ${swf-version} ${link-report} ${size-report} ${output}"/>
 		</sequential>
 	</macrodef>
 
