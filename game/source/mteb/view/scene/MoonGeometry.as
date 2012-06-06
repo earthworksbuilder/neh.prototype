@@ -16,7 +16,7 @@ package mteb.view.scene
 			initialize();
 		}
 
-		protected function initialize(r:Number = 32):void
+		protected function initialize(r:Number = 64):void
 		{
 			const texture:BitmapTexture = new BitmapTexture(Textures.moonTextureBitmap.bitmapData);
 			const mesh:Mesh = GeometryFactory.createSphere(texture, r);

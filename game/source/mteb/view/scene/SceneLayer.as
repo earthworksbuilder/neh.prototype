@@ -138,7 +138,7 @@ package mteb.view.scene
 
 			groundGeo.addEventListener(MouseEvent3D.CLICK, onGroundClicked);
 
-			moonOrbit.setSubject(moonGeo, 1024);
+			moonOrbit.setSubject(moonGeo, 1024 + 512);
 
 			compassControl.addEventListener(MouseEvent3D.CLICK, onGeoClicked);
 

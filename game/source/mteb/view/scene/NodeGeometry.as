@@ -55,7 +55,7 @@ package mteb.view.scene
 			}
 		}
 
-		protected function initialize(r:Number = 512):void
+		protected function initialize(r:Number = 1024):void
 		{
 			const d:Number = r + r;
 
@@ -78,7 +78,7 @@ package mteb.view.scene
 			negXMesh.rotationY = -90;
 			negXMesh.translate(Vector3D.X_AXIS, -r);
 
-			const negYMesh:Mesh = GeometryFactory.createPlane(negYTexture, d, d, 10, false, false, true, MouseHitMethod.MESH_CLOSEST_HIT);
+			const negYMesh:Mesh = GeometryFactory.createPlane(negYTexture, d, d, 1, false, false, true, MouseHitMethod.MESH_CLOSEST_HIT);
 			negYMesh.name = SkyBoxFaceEnum.NEGY.toString();
 			negYMesh.rotationX = 90;
 			negYMesh.translate(Vector3D.Y_AXIS, -r);
