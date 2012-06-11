@@ -7,12 +7,12 @@ package mteb.assets
 	public final class AssetUtils
 	{
 
-		public static function centeredParent(value:DisplayObject):Sprite
+		public static function createOffsetParent(value:DisplayObject, offsetX:Number = -.5, offsetY:Number = -.5):Sprite
 		{
 			const p:Sprite = new Sprite();
 			const c:DisplayObject = p.addChild(value);
-			c.x -= c.width / 2;
-			c.y -= c.height / 2;
+			c.x += c.width * offsetX;
+			c.y += c.height * offsetY;
 			return p;
 		}
 	}

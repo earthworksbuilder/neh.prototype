@@ -1,10 +1,12 @@
 package mteb.data.map
 {
+	import flash.geom.Point;
 
 
 	public class Node
 	{
 
+		public var mapPoint:Point = new Point();
 		public var azimuth:Number = 0;
 		private var _id:String;
 
@@ -43,7 +45,7 @@ package mteb.data.map
 
 		public function toString():String
 		{
-			var s:String = "[Node id: " + _id + ", azimuth: " + azimuth + "]";
+			var s:String = "[Node id: " + _id + ", azimuth: " + azimuth + ", map: " + mapPoint + "]";
 			return s;
 		}
 

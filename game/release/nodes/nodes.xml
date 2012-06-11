@@ -2,26 +2,26 @@
 
 <!-- for i in *.png; do mv $i negX"${i/negZ/}"; done -->
 <map startNode="005" startAzimuth="51.5">
-	<node id="001" color="0x369100" mapx="91" mapy="61" />
-	<node id="002" color="0x0000ff" mapx="122" mapy="51" />
-	<node id="003" color="0xff0000" mapx="168" mapy="97" />
-	<node id="004" color="0x00ff00" mapx="122" mapy="162" />
-	<node id="005" color="0xff4700" mapx="80" mapy="97" />
-	<node id="006" color="0xff00ff" mapx="86" mapy="135" />
-	<node id="007" color="0xffff00" mapx="172" mapy="124" />
-	<node id="008" color="0x6100ff" mapx="86" mapy="188" />
-	<node id="009" color="0xff006d" mapx="164" mapy="61" />
-	<node id="010" color="0x00ffff" mapx="122" mapy="141" />
-	<node id="011" color="0x9d00ff" mapx="122" mapy="188" />
-	<node id="012" color="0x00ff90" mapx="122" mapy="97" />
-	<node id="013" color="0xfd8d00" mapx="158" mapy="188" />
-	<node id="014" color="0x0079ff" mapx="159" mapy="133" />
-	<node id="015" color="0x9ffe00" mapx="80" mapy="97" />
-	<node id="016" color="0xff7e6d" mapx="170" mapy="26" />
-	<node id="017" color="0xffac6d" mapx="105" mapy="79" />
-	<node id="018" color="0x9db572" mapx="141" mapy="79" />
-	<node id="019" color="0xa48600" mapx="141" mapy="118" />
-	<node id="020" color="0xff003f" mapx="104" mapy="118" />
-	<node id="021" color="0x9aae3b" mapx="104" mapy="188" />
-	<node id="022" color="0xd69d3b" mapx="141" mapy="188" />
+	<node id="001" color="0x369100" mapx="90" mapy="60"/>
+	<node id="002" color="0x0000ff" mapx="122" mapy="49"/>
+	<node id="003" color="0xff0000" mapx="168" mapy="95"/>
+	<node id="004" color="0x00ff00" mapx="122" mapy="159"/>
+	<node id="005" color="0xff4700" mapx="122" mapy="217"/>
+	<node id="006" color="0xff00ff" mapx="86" mapy="132"/>
+	<node id="007" color="0xffff00" mapx="172" mapy="121"/>
+	<node id="008" color="0x6100ff" mapx="86" mapy="186"/>
+	<node id="009" color="0xff006d" mapx="162" mapy="58"/>
+	<node id="010" color="0x00ffff" mapx="122" mapy="139"/>
+	<node id="011" color="0x9d00ff" mapx="122" mapy="185"/>
+	<node id="012" color="0x00ff90" mapx="122" mapy="95"/>
+	<node id="013" color="0xfd8d00" mapx="159" mapy="185"/>
+	<node id="014" color="0x0079ff" mapx="158" mapy="130"/>
+	<node id="015" color="0x9ffe00" mapx="82" mapy="95"/>
+	<node id="016" color="0xff7e6d" mapx="169" mapy="24"/>
+	<node id="017" color="0xffac6d" mapx="103" mapy="76"/>
+	<node id="018" color="0x9db572" mapx="140" mapy="76"/>
+	<node id="019" color="0xa48600" mapx="140" mapy="115"/>
+	<node id="020" color="0xff003f" mapx="103" mapy="115"/>
+	<node id="021" color="0x9aae3b" mapx="103" mapy="185"/>
+	<node id="022" color="0xd69d3b" mapx="141" mapy="185"/>
 </map>
