@@ -1,7 +1,5 @@
 package mteb.view.scene
 {
-	import flash.display.BitmapData;
-
 	import away3d.core.base.Geometry;
 	import away3d.entities.Mesh;
 	import away3d.materials.MaterialBase;

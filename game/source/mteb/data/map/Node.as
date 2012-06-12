@@ -8,12 +8,15 @@ package mteb.data.map
 
 		public var mapPoint:Point = new Point();
 		public var azimuth:Number = 0;
+		public var artifact:uint = 0;
 		private var _id:String;
 
 
 		public function Node()
 		{
 		}
+
+		public function get hasArtifact():Boolean  { return artifact > 0; }
 
 		public function get hotspotNegX():String  { return hotspotUrl("negX"); }
 
@@ -45,7 +48,8 @@ package mteb.data.map
 
 		public function toString():String
 		{
-			var s:String = "[Node id: " + _id + ", azimuth: " + azimuth + ", map: " + mapPoint + "]";
+			var a:String = hasArtifact ? ("" + artifact) : "none";
+			var s:String = "[Node id: " + _id + ", azimuth: " + azimuth + ", map: " + mapPoint + ", artifact: " + a + "]";
 			return s;
 		}
 

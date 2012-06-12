@@ -42,22 +42,22 @@ package mteb.view.scene
 		protected const bitmapCubeLoader:BitmapCubeLoader = new BitmapCubeLoader();
 		protected const hotSpotLoader:BitmapCubeLoader = new BitmapCubeLoader();
 		protected const actionTrigger:ActionTrigger = new ActionTrigger();
+		protected var artifactGeo:ObjectContainer3D;
 		protected const groundGeo:NodeGeometry = new NodeGeometry();
 		protected const skyGeo:SkyGeometry = new SkyGeometry();
 		protected const moonOrbit:Orbit = new Orbit();
 		protected const moonGeo:ObjectContainer3D = new MoonGeometry() as ObjectContainer3D;
 		protected const moonTrail:MoonTrail = new MoonTrail();
 		protected const moonTrailFrameSkip:uint = 4;
+		protected const sceneGeo:ObjectContainer3D = new ObjectContainer3D();
 		protected const view:View3D = new View3D();
 
 		protected const azimuthChanged:IProtectedSignal = new AzimuthChanged();
 		protected const actionTriggered:IProtectedSignal = new ActionTriggered();
 
-		protected var currentNode:String;
 		protected var moonTrailFrame:uint = moonTrailFrameSkip;
 
 		protected const compassControl:ObjectContainer3D = new CompassControl();
-		protected const testArtifact:ObjectContainer3D = new ArtifactGeometry();
 
 
 		public function SceneLayer()
@@ -139,7 +139,6 @@ package mteb.view.scene
 			dataLocator.look.initialValue = view.camera.transform;
 
 			// add geometry to the scene
-			const sceneGeo:ObjectContainer3D = new ObjectContainer3D();
 			skyGeo.tilt = -55; // align polaris for our north america position
 			skyGeo.shift = -227;
 
@@ -149,10 +148,7 @@ package mteb.view.scene
 
 			compassControl.addEventListener(MouseEvent3D.CLICK, onGeoClicked);
 
-			testArtifact.position = new Vector3D(0, -32, 100);
-			testArtifact.addEventListener(MouseEvent3D.CLICK, onGeoClicked);
-
-			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail, compassControl, testArtifact);
+			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail, compassControl);
 			view.scene.addChild(sceneGeo);
 		}
 
@@ -174,9 +170,6 @@ package mteb.view.scene
 				moonTrail.setNextPoint(moonGeo.scenePosition);
 				moonTrailFrame = moonTrailFrameSkip;
 			}
-
-			testArtifact.rotationX += 7 * time.secondsElapsedScaled;
-			testArtifact.rotationY += 12 * time.secondsElapsedScaled;
 
 			// render the view
 			view.render();
@@ -229,6 +222,23 @@ package mteb.view.scene
 			debug(this, "onNodeTraveled() - currentNode textures are loaded.");
 			if (bitmapCubeLoader.isLoaded && hotSpotLoader.isLoaded)
 				updateTextures();
+
+			if (artifactGeo && sceneGeo.contains(artifactGeo))
+			{
+				sceneGeo.removeChild(artifactGeo);
+				artifactGeo.removeEventListener(MouseEvent3D.CLICK, onGeoClicked);
+			}
+			const map:IMap = dataLocator.map;
+			const node:Node = map.currentNode;
+			if (node.hasArtifact)
+			{
+				debug(this, "onNodeTraveled() - currentNode ({0}) has an artifact! Revealing artifact {1}...", node.id, node.artifact);
+				// TODO: add tween to reveal by fade-in
+				artifactGeo = new ArtifactGeometry(node.artifact);
+				artifactGeo.position = new Vector3D(0, -32, 100);
+				artifactGeo.addEventListener(MouseEvent3D.CLICK, onGeoClicked);
+				sceneGeo.addChild(artifactGeo);
+			}
 		}
 
 		protected function onStageResized(stage:Stage):void

@@ -70,7 +70,7 @@ package mteb.view.debug
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown); // TODO: use a signal instead
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			addChild(container);
 
 			const consolePrefs:ConsoleAppenderProperties = new ConsoleAppenderProperties();

@@ -10,23 +10,44 @@ package mteb.view.scene
 
 	public class ArtifactGeometry extends ObjectContainer3D
 	{
-		private static var which:uint = 0;
 
 
-		public function ArtifactGeometry()
+		public function ArtifactGeometry(which:uint)
 		{
 			super();
 
-			which++;
-			initialize();
+			initialize(which);
 		}
 
-		protected function initialize(r:Number = 32):void
+		protected function initialize(which:uint, r:Number = 32):void
 		{
-			const texture:BitmapTexture = new BitmapTexture(Textures.boxTextureBitmap.bitmapData);
-			const mesh:Mesh = GeometryFactory.createBox(texture, r, r / 2, r, false, false, MouseHitMethod.MESH_ANY_HIT);
-			mesh.name = "Artifact-" + which;
-			addChild(mesh);
+			var texture:BitmapTexture;
+			switch (which)
+			{
+				case 1:
+					texture = new BitmapTexture(Textures.artifact1TextureBitmap.bitmapData);
+					break;
+
+				case 2:
+					texture = new BitmapTexture(Textures.artifact2TextureBitmap.bitmapData);
+					break;
+
+				case 3:
+					texture = new BitmapTexture(Textures.artifact3TextureBitmap.bitmapData);
+					break;
+
+				case 4:
+					texture = new BitmapTexture(Textures.artifact4TextureBitmap.bitmapData);
+					break;
+
+				default:
+					throw new ArgumentError("artifact must be constructed with 1,2,3 or 4 (got " + which + ")");
+			}
+
+			const plane:Mesh = GeometryFactory.createPlane(texture, r, r, 1, false, false, true, MouseHitMethod.MESH_ANY_HIT);
+			plane.name = "Artifact " + which;
+			addChild(plane);
 		}
+		// TODO: add method to update texture by id
 	}
 }
