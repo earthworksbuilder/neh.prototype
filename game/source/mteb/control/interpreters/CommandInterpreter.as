@@ -29,7 +29,7 @@ package mteb.control.interpreters
 		{
 			var handled:Boolean = false;
 			const tokens:Array = string.split(' ');
-			const command:String = tokens.splice(0, 1);
+			const command:String = tokens.splice(0, 1)[0].toLowerCase();
 			if (commandMap[command])
 			{
 				const Impl:Class = commandMap[command] as Class;

@@ -120,7 +120,7 @@ package mteb.view.debug.commandline
 
 		protected function processCommandLine():void
 		{
-			var string:String = cmd.text.toLowerCase();
+			var string:String = cmd.text;
 			var i:uint = 0;
 			while (string.charAt(i) == prompt.charAt(i))
 				i++;

@@ -7,6 +7,7 @@ package mteb.view.scene
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
 
+	import away3d.cameras.lenses.LensBase;
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
@@ -22,9 +23,11 @@ package mteb.view.scene
 	import mteb.control.signals.AzimuthChanged;
 	import mteb.control.signals.FrameEntered;
 	import mteb.control.signals.NodeChanged;
+	import mteb.control.signals.PreferencesChanged;
 	import mteb.control.signals.StageResized;
 	import mteb.data.DataLocator;
 	import mteb.data.IDataLocator;
+	import mteb.data.config.IConfig;
 	import mteb.data.map.ActionTrigger;
 	import mteb.data.map.ActionTypeEnum;
 	import mteb.data.map.ICompass;
@@ -72,6 +75,7 @@ package mteb.view.scene
 			signalBus.addReceiver(FrameEntered, this);
 			signalBus.addReceiver(NodeChanged, this);
 			signalBus.addReceiver(StageResized, this);
+			signalBus.addReceiver(PreferencesChanged, this);
 		}
 
 		public function get currentAzimuth():Number
@@ -116,11 +120,16 @@ package mteb.view.scene
 					onStageResized(authority as Stage);
 					break;
 
+				case (signal is PreferencesChanged):
+					onPreferencesChanged(authority as IConfig);
+					break;
+
 				default:
 					debug(this, "receive() - unrecognized signal {0}", signal);
 					break;
 			}
 		}
+
 
 		public function get view3D():View3D  { return view; }
 
@@ -130,6 +139,7 @@ package mteb.view.scene
 
 			// configure viewport and add it to the stage
 			view.backgroundColor = 0x333333;
+			view.camera.lens.far = 1024 * 8;
 			addChild(view);
 
 			// set camera at origin
@@ -239,6 +249,17 @@ package mteb.view.scene
 				artifactGeo.addEventListener(MouseEvent3D.CLICK, onGeoClicked);
 				sceneGeo.addChild(artifactGeo);
 			}
+		}
+
+		protected function onPreferencesChanged(config:IConfig):void
+		{
+			const starsShowing:Boolean = sceneGeo.contains(skyGeo);
+			debug(this, "onPreferencesChanged() - show stars? {0}, stars showing? {1}", config.showStars, starsShowing);
+
+			if (config.showStars && !starsShowing)
+				sceneGeo.addChild(skyGeo);
+			else if (!config.showStars && starsShowing)
+				sceneGeo.removeChild(skyGeo);
 		}
 
 		protected function onStageResized(stage:Stage):void
