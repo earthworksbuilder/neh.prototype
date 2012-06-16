@@ -35,5 +35,16 @@ package mteb.data.config
 
 		/** @inheritDoc */
 		public function set spinRate(value:Number):void  { _spinRate = value; }
+
+		public function toString():String
+		{
+			const a:Array = [];
+			a.push("moveRate: " + moveRate);
+			a.push("showHotspots: " + showHotspots);
+			a.push("showStars: " + showStars);
+			a.push("spinRate: " + spinRate);
+
+			return a.join("\n");
+		}
 	}
 }

@@ -6,8 +6,10 @@ package mteb.data
 	import mteb.data.input.UserOrientationTransform;
 	import mteb.data.map.IMap;
 	import mteb.data.map.Map;
-	import mteb.data.stats.IStats;
-	import mteb.data.stats.Stats;
+	import mteb.data.player.IInventory;
+	import mteb.data.player.IStats;
+	import mteb.data.player.Inventory;
+	import mteb.data.player.Stats;
 	import mteb.data.time.ITime;
 	import mteb.data.time.Time;
 
@@ -27,6 +29,8 @@ package mteb.data
 
 		private var _map:IMap;
 
+		private var _inventory:IInventory;
+
 		private var _stats:IStats;
 
 		private var _time:ITime = new Time(); // no lazy loading for this one
@@ -39,6 +43,8 @@ package mteb.data
 		}
 
 		public function get config():IConfig  { return _config || (_config = new Config); }
+
+		public function get inventory():IInventory  { return _inventory || (_inventory = new Inventory()); }
 
 		public function get look():IOrientationTransform  { return _look || (_look = new UserOrientationTransform()); }
 

@@ -3,7 +3,7 @@ package mteb.control
 	import mteb.control.commands.ChangePreferences;
 	import mteb.control.commands.IExecutableCommand;
 	import mteb.control.commands.JumpToNode;
-	import mteb.control.commands.ListCommands;
+	import mteb.control.commands.ListThings;
 	import mteb.control.commands.ToggleHotspots;
 	import mteb.control.interpreters.ICommandInterpreter;
 
@@ -12,7 +12,7 @@ package mteb.control
 	{
 		public static function execute(interpreter:ICommandInterpreter):void
 		{
-			add(interpreter, ListCommands);
+			add(interpreter, ListThings);
 			add(interpreter, JumpToNode);
 			add(interpreter, ToggleHotspots);
 			add(interpreter, ChangePreferences);

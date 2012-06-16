@@ -3,13 +3,16 @@ package mteb.data
 	import mteb.data.config.IConfig;
 	import mteb.data.input.IOrientationTransform;
 	import mteb.data.map.IMap;
-	import mteb.data.stats.IStats;
+	import mteb.data.player.IInventory;
+	import mteb.data.player.IStats;
 	import mteb.data.time.ITime;
 
 
 	public interface IDataLocator
 	{
 		function get config():IConfig;
+
+		function get inventory():IInventory;
 
 		function get look():IOrientationTransform;
 
