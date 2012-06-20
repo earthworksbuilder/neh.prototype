@@ -1,4 +1,4 @@
-package mteb.view.scene
+package mteb.view.scene.sky
 {
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
@@ -9,11 +9,13 @@ package mteb.view.scene
 	import away3d.textures.BitmapTexture;
 
 	import mteb.assets.Textures;
+	import mteb.data.time.ITimeDriven;
+	import mteb.view.scene.GeometryFactory;
 
 	use namespace arcane;
 
 
-	public class SkyGeometry extends ObjectContainer3D
+	public class SkyGeometry extends ObjectContainer3D implements ITimeDriven
 	{
 
 		/** How many degrees per second the sky spins */
@@ -32,6 +34,11 @@ package mteb.view.scene
 		{
 			super();
 			initialize();
+		}
+
+		public function animate(secondsElapsed:Number):void
+		{
+			spin += speed * secondsElapsed;
 		}
 
 		public function get shift():Number
@@ -74,11 +81,6 @@ package mteb.view.scene
 			TILT.appendRotation(_tilt, Vector3D.X_AXIS);
 
 			super.arcane::invalidateTransform();
-		}
-
-		public function travel(secondsElapsed:Number):void
-		{
-			spin += speed * secondsElapsed;
 		}
 
 		protected function initialize(r:Number = 2048):void

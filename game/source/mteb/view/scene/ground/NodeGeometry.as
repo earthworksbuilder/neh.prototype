@@ -1,4 +1,4 @@
-package mteb.view.scene
+package mteb.view.scene.ground
 {
 	import flash.display.BitmapData;
 	import flash.geom.Vector3D;
@@ -7,6 +7,7 @@ package mteb.view.scene
 	import away3d.core.raycast.MouseHitMethod;
 	import away3d.entities.Mesh;
 	import away3d.textures.BitmapTexture;
+	import mteb.view.scene.GeometryFactory;
 
 
 	public class NodeGeometry extends ObjectContainer3D

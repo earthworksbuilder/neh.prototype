@@ -1,4 +1,4 @@
-package mteb.view.scene
+package mteb.view.scene.compass
 {
 	import flash.geom.Vector3D;
 
@@ -10,13 +10,16 @@ package mteb.view.scene
 
 	import mteb.control.SignalBus;
 	import mteb.control.signals.AzimuthChanged;
+	import mteb.control.signals.FrameEntered;
 	import mteb.data.map.ICompass;
+	import mteb.data.time.ITime;
 
 
 	public class CompassControl extends ObjectContainer3D implements ISignalReceiver
 	{
 
-		protected const compassGeo:ObjectContainer3D = new CompassGeometry();
+		protected const compassGeo:CompassGeometry = new CompassGeometry();
+		protected const textureSprite:CompassSprite = new CompassSprite();
 
 
 		public function CompassControl()
@@ -26,6 +29,7 @@ package mteb.view.scene
 
 			const signalBus:ISignalBus = SignalBus.getInstance();
 			signalBus.addReceiver(AzimuthChanged, this);
+			signalBus.addReceiver(FrameEntered, this);
 		}
 
 		public function receive(signal:ISignal, authority:* = null):void
@@ -34,6 +38,10 @@ package mteb.view.scene
 			{
 				case (signal is AzimuthChanged):
 					onAzimuthChanged(authority as ICompass);
+					break;
+
+				case (signal is FrameEntered):
+					onFrameEntered(authority as ITime);
 					break;
 
 				default:
@@ -55,6 +63,12 @@ package mteb.view.scene
 
 			rotationY = correctedAzimuth;
 			compassGeo.rotationY = -1 * correctedAzimuth;
+		}
+
+		protected function onFrameEntered(time:ITime):void
+		{
+			textureSprite.animate(time.secondsElapsed);
+			compassGeo.texture = textureSprite.texture;
 		}
 	}
 }

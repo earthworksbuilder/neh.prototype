@@ -1,4 +1,4 @@
-package mteb.view.scene
+package mteb.view.scene.moon
 {
 	import flash.display.BlendMode;
 	import flash.geom.Vector3D;

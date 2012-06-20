@@ -1,12 +1,14 @@
-package mteb.view.scene
+package mteb.view.scene.moon
 {
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 
 	import away3d.containers.ObjectContainer3D;
 
+	import mteb.data.time.ITimeDriven;
 
-	public class Orbit extends ObjectContainer3D
+
+	public class Orbit extends ObjectContainer3D implements ITimeDriven
 	{
 		/** How many degrees per second the subject moves */
 		public var speed:Number = 360 / (24.88 * 60 * 60); // 24.88hrs for one revolution; see http://www.astronomycafe.net/qadir/q1038.html
@@ -37,19 +39,7 @@ package mteb.view.scene
 		{
 		}
 
-		public function setSubject(value:ObjectContainer3D, distance:Number, scale:Number = 1):void
-		{
-			subject = value;
-			addChild(subject);
-
-			T1.identity();
-			T1.appendTranslation(0, 0, distance);
-
-			S.identity();
-			S.appendScale(scale, scale, scale);
-		}
-
-		public function travel(secondsElapsed:Number):void
+		public function animate(secondsElapsed:Number):void
 		{
 			R.identity();
 			angle += speed * secondsElapsed;
@@ -68,6 +58,18 @@ package mteb.view.scene
 			orbit.append(T2);
 
 			transform = orbit;
+		}
+
+		public function setSubject(value:ObjectContainer3D, distance:Number, scale:Number = 1):void
+		{
+			subject = value;
+			addChild(subject);
+
+			T1.identity();
+			T1.appendTranslation(0, 0, distance);
+
+			S.identity();
+			S.appendScale(scale, scale, scale);
 		}
 	}
 }

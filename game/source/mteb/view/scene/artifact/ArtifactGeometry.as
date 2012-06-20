@@ -1,4 +1,4 @@
-package mteb.view.scene
+package mteb.view.scene.artifact
 {
 	import away3d.containers.ObjectContainer3D;
 	import away3d.core.raycast.MouseHitMethod;
@@ -6,6 +6,7 @@ package mteb.view.scene
 	import away3d.textures.BitmapTexture;
 
 	import mteb.assets.Textures;
+	import mteb.view.scene.GeometryFactory;
 
 
 	public class ArtifactGeometry extends ObjectContainer3D

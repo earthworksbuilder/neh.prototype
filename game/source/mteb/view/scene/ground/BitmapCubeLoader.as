@@ -1,4 +1,4 @@
-package mteb.view.scene
+package mteb.view.scene.ground
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;

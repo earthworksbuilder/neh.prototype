@@ -34,6 +34,15 @@ package mteb.view.scene
 	import mteb.data.map.IMap;
 	import mteb.data.map.Node;
 	import mteb.data.time.ITime;
+	import mteb.view.scene.artifact.ArtifactGeometry;
+	import mteb.view.scene.compass.CompassControl;
+	import mteb.view.scene.ground.BitmapCubeLoader;
+	import mteb.view.scene.ground.NodeGeometry;
+	import mteb.view.scene.ground.SkyBoxFaceEnum;
+	import mteb.view.scene.moon.MoonGeometry;
+	import mteb.view.scene.moon.MoonTrail;
+	import mteb.view.scene.moon.Orbit;
+	import mteb.view.scene.sky.SkyGeometry;
 
 
 	public class SceneLayer extends Sprite implements ISceneLayer, ISignalReceiver, ICompass
@@ -52,6 +61,7 @@ package mteb.view.scene
 		protected const moonGeo:ObjectContainer3D = new MoonGeometry() as ObjectContainer3D;
 		protected const moonTrail:MoonTrail = new MoonTrail();
 		protected const moonTrailFrameSkip:uint = 4;
+		protected const compassControl:ObjectContainer3D = new CompassControl();
 		protected const sceneGeo:ObjectContainer3D = new ObjectContainer3D();
 		protected const view:View3D = new View3D();
 
@@ -59,8 +69,7 @@ package mteb.view.scene
 		protected const actionTriggered:IProtectedSignal = new ActionTriggered();
 
 		protected var moonTrailFrame:uint = moonTrailFrameSkip;
-
-		protected const compassControl:ObjectContainer3D = new CompassControl();
+		protected var lastAzimuth:Number;
 
 
 		public function SceneLayer()
@@ -80,26 +89,7 @@ package mteb.view.scene
 
 		public function get currentAzimuth():Number
 		{
-			var a:Number;
-			const forward:Vector3D = view.camera.forwardVector;
-			const ry:Number = view.camera.rotationY;
-
-			if (forward.x >= 0)
-			{
-				if (forward.z >= 0)
-					a = ry;
-				else
-					a = 180 - ry;
-			}
-			else
-			{
-				if (forward.z < 0)
-					a = 180 - ry;
-				else
-					a = 360 + ry;
-			}
-
-			return (a + STARTING_AZIMUTH) % 360;
+			return lastAzimuth;
 		}
 
 		public function get displayObject():DisplayObject  { return this as DisplayObject; }
@@ -133,6 +123,30 @@ package mteb.view.scene
 
 		public function get view3D():View3D  { return view; }
 
+		protected function computeAzimuth():Number
+		{
+			var a:Number;
+			const forward:Vector3D = view.camera.forwardVector;
+			const ry:Number = view.camera.rotationY;
+
+			if (forward.x >= 0)
+			{
+				if (forward.z >= 0)
+					a = ry;
+				else
+					a = 180 - ry;
+			}
+			else
+			{
+				if (forward.z < 0)
+					a = 180 - ry;
+				else
+					a = 360 + ry;
+			}
+
+			return (a + STARTING_AZIMUTH) % 360;
+		}
+
 		protected function initScene():void
 		{
 			debug(this, "initScene()");
@@ -164,6 +178,7 @@ package mteb.view.scene
 
 		protected function onFrameEntered(time:ITime):void
 		{
+			// bail if textures aren't ready
 			if (!bitmapCubeLoader.isLoaded || !hotSpotLoader.isLoaded)
 				return;
 
@@ -171,20 +186,21 @@ package mteb.view.scene
 			view.camera.transform = dataLocator.look.value;
 
 			// spin the sky
-			skyGeo.travel(time.secondsElapsedScaled);
+			skyGeo.animate(time.secondsElapsedScaled);
 
 			// revolve the moon
-			moonOrbit.travel(time.secondsElapsedScaled);
+			moonOrbit.animate(time.secondsElapsedScaled);
 			if (--moonTrailFrame == 0)
 			{
 				moonTrail.setNextPoint(moonGeo.scenePosition);
 				moonTrailFrame = moonTrailFrameSkip;
 			}
 
+			// compute azimuth and send notification of any change
+			setAzimuth(computeAzimuth());
+
 			// render the view
 			view.render();
-
-			azimuthChanged.send(this);
 		}
 
 		protected function onGeoClicked(event:MouseEvent3D):void
@@ -267,6 +283,15 @@ package mteb.view.scene
 			debug(this, "onStageResized() - adjusting to new dimensions: {0}x{1}", stage.stageWidth, stage.stageHeight);
 			view.width = stage.stageWidth;
 			view.height = stage.stageHeight;
+		}
+
+		protected function setAzimuth(value:Number):void
+		{
+			if (value != lastAzimuth)
+			{
+				lastAzimuth = value;
+				azimuthChanged.send(this);
+			}
 		}
 
 		protected function updateTextures():void
