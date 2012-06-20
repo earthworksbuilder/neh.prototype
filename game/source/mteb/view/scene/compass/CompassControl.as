@@ -11,6 +11,7 @@ package mteb.view.scene.compass
 	import mteb.control.SignalBus;
 	import mteb.control.signals.AzimuthChanged;
 	import mteb.control.signals.FrameEntered;
+	import mteb.data.map.AzimuthTable;
 	import mteb.data.map.ICompass;
 	import mteb.data.time.ITime;
 
@@ -58,11 +59,8 @@ package mteb.view.scene.compass
 
 		protected function onAzimuthChanged(compass:ICompass):void
 		{
-			// FIXME: hide this away inside ICompass
-			const correctedAzimuth:Number = compass.currentAzimuth - 51.5;
-
-			rotationY = correctedAzimuth;
-			compassGeo.rotationY = -1 * correctedAzimuth;
+			rotationY = compass.currentAzimuth - AzimuthTable.northMaxRise;
+			compassGeo.rotationY = -1 * compass.currentAzimuth;
 		}
 
 		protected function onFrameEntered(time:ITime):void

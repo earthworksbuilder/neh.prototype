@@ -30,6 +30,7 @@ package mteb.view.scene
 	import mteb.data.config.IConfig;
 	import mteb.data.map.ActionTrigger;
 	import mteb.data.map.ActionTypeEnum;
+	import mteb.data.map.AzimuthTable;
 	import mteb.data.map.ICompass;
 	import mteb.data.map.IMap;
 	import mteb.data.map.Node;
@@ -47,7 +48,7 @@ package mteb.view.scene
 
 	public class SceneLayer extends Sprite implements ISceneLayer, ISignalReceiver, ICompass
 	{
-		protected const STARTING_AZIMUTH:Number = 51.5; // azimuth of initial node view
+		protected var STARTING_AZIMUTH:Number; // azimuth of initial node view
 		protected const TO_DEGREES:Number = 180 / Math.PI;
 
 		protected const dataLocator:IDataLocator = DataLocator.getInstance();
@@ -76,6 +77,7 @@ package mteb.view.scene
 		{
 			super();
 
+			STARTING_AZIMUTH = AzimuthTable.northMaxRise;
 			initScene();
 
 			const signalBus:ISignalBus = SignalBus.getInstance();
