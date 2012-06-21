@@ -36,6 +36,25 @@ package mteb.view.scene.compass
 
 		public function animate(secondsElapsed:Number):void
 		{
+			var n:uint, i:uint;
+
+			n = AzimuthTable.MOON_RISES_MIN.length;
+			for (i = 0; i < n; i++)
+				risePoints[i].animate(secondsElapsed);
+
+			n = AzimuthTable.MOON_SETS_MIN.length;
+			for (i = 0; i < n; i++)
+				setPoints[i].animate(secondsElapsed);
+		}
+
+		public function changeRisePointState(which:uint, value:CompassLightEnum):void
+		{
+			risePoints[which].state = value;
+		}
+
+		public function changeSetPointState(which:uint, value:CompassLightEnum):void
+		{
+			setPoints[which].state = value;
 		}
 
 		public function get texture():BitmapData

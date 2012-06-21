@@ -1,5 +1,7 @@
 package mteb.control
 {
+	import mteb.control.commands.AnnounceRise;
+	import mteb.control.commands.AnnounceSet;
 	import mteb.control.commands.ChangePreferences;
 	import mteb.control.commands.IExecutableCommand;
 	import mteb.control.commands.JumpToNode;
@@ -16,6 +18,8 @@ package mteb.control
 			add(interpreter, JumpToNode);
 			add(interpreter, ToggleHotspots);
 			add(interpreter, ChangePreferences);
+			add(interpreter, AnnounceRise);
+			add(interpreter, AnnounceSet);
 		}
 
 		private static function add(interpreter:ICommandInterpreter, Impl:Class):void
