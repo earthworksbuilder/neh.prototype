@@ -12,41 +12,14 @@ package mteb.control
 	import mteb.view.scene.compass.CompassLightEnum;
 
 
-	public final class MCP implements IGameStateMachine /*, ISignalReceiver*/
+	public final class MCP implements IGameStateMachine
 	{
 
 		private var lastState:GameStateEnum = GameStateEnum.WAITING;
 		private var currentState:GameStateEnum = GameStateEnum.WAITING;
 		private var pendingState:GameStateEnum;
-		//private var stateInvalidated:Boolean = false;
 		private var gameStarted:Boolean = false;
 
-		/*
-		public function MCP()
-		{
-			const signalBus:ISignalBus = SignalBus.getInstance();
-			signalBus.addReceiver(FrameEntered, this);
-		}
-
-		public function receive(signal:ISignal, authority:* = null):void
-		{
-			switch (true)
-			{
-				case (signal is FrameEntered):
-					onFrameEntered(authority as ITime);
-					break;
-			}
-		}
-
-		private function onFrameEntered(time:ITime):void
-		{
-		if (stateInvalidated)
-		{
-		stateInvalidated = false;
-		updateState();
-		}
-		}
-*/
 		public function get state():GameStateEnum
 		{
 			return currentState;
@@ -57,7 +30,6 @@ package mteb.control
 			if (value != currentState)
 			{
 				pendingState = value;
-				//stateInvalidated = true;
 				updateState();
 			}
 		}
@@ -104,6 +76,7 @@ package mteb.control
 
 			lastState = currentState;
 			currentState = pendingState;
+
 			if (nextState)
 				state = nextState;
 		}
