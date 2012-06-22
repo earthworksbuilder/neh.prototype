@@ -11,7 +11,7 @@ package mteb.control.commands
 	{
 		protected const _command:String = "?";
 
-		protected const _usage:String = "? name (lists all types of name)\n  name: commands|config|inventory";
+		protected const _usage:String = "? commands|config|inventory (list all the things!)";
 
 		public function get command():String  { return _command; }
 
@@ -37,7 +37,7 @@ package mteb.control.commands
 					break;
 
 				default:
-					debug(this, "(?) - Missing or unknown name parameter. Try one of the following:\n  commands|config|inventory");
+					debug(this, "{0}(?) - Missing or unknown name parameter.{0}Try one of the following:{0}commands|config|inventory", "\n  ");
 					break;
 			}
 		}

@@ -16,15 +16,15 @@ package mteb.control.commands
 
 		protected const _command:String = "set";
 
-		protected const _usage:String = "set start|end index (updates moonpoint #index)";
+		protected const _usage:String = "set index start|end (updates compass moonpoint #index)";
 
 		public function get command():String  { return _command; }
 
 		public function execute(args:Array):void
 		{
 			const signalBus:ISignalBus = SignalBus.getInstance();
-			const action:String = String(args[0]).toLowerCase();
-			const index:uint = parseInt(args[1]);
+			const index:uint = parseInt(args[0]);
+			const action:String = String(args[1]).toLowerCase();
 
 			var announcement:IProtectedSignal;
 			var authority:ICompassLightStateProvider;
@@ -45,6 +45,10 @@ package mteb.control.commands
 					end.pointState = CompassLightEnum.ENABLED;
 					announcement = end as IProtectedSignal;
 					authority = end as ICompassLightStateProvider;
+					break;
+
+				default:
+					debug(this, "\n  unrecognized action. try 'start' or 'end'");
 					break;
 			}
 

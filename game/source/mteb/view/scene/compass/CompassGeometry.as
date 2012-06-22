@@ -32,7 +32,7 @@ package mteb.view.scene.compass
 			meshTexture.bitmapData = value.clone();
 		}
 
-		protected function initialize(r:Number = 128):void
+		protected function initialize(r:Number = 200):void
 		{
 			const mesh:Mesh = GeometryFactory.createPlane(meshTexture, r, r, 10, true, false, true, MouseHitMethod.MESH_ANY_HIT);
 			mesh.name = "Compass";

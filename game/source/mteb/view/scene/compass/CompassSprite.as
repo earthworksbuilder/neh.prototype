@@ -10,6 +10,7 @@ package mteb.view.scene.compass
 
 	import pixeldroid.signals.ProtectedSignal;
 
+	import mteb.assets.Textures;
 	import mteb.data.map.AzimuthTable;
 	import mteb.data.time.ITime;
 	import mteb.data.time.ITimeDriven;
@@ -26,6 +27,7 @@ package mteb.view.scene.compass
 		protected const northArrow:Shape = new Shape();
 		protected const risePoints:Vector.<MoonPoint> = new <MoonPoint>[];
 		protected const setPoints:Vector.<MoonPoint> = new <MoonPoint>[];
+		protected const artifactPoints:Vector.<ArtifactPoint> = new <ArtifactPoint>[];
 
 
 		public function CompassSprite()
@@ -45,6 +47,15 @@ package mteb.view.scene.compass
 			n = AzimuthTable.MOON_SETS_MIN.length;
 			for (i = 0; i < n; i++)
 				setPoints[i].animate(secondsElapsed);
+
+			n = artifactPoints.length;
+			for (i = 0; i < n; i++)
+				artifactPoints[i].animate(secondsElapsed);
+		}
+
+		public function changeArtifactPointState(which:uint, value:CompassLightEnum):void
+		{
+			artifactPoints[which].state = value;
 		}
 
 		public function changeRisePointState(which:uint, value:CompassLightEnum):void
@@ -70,7 +81,7 @@ package mteb.view.scene.compass
 			var r:Number;
 
 			g = groundPlane.graphics;
-			r = RADIUS * .9;
+			r = RADIUS * .75;
 			g.beginFill(0x000000);
 			g.drawCircle(0, 0, r);
 			g.endFill();
@@ -83,7 +94,7 @@ package mteb.view.scene.compass
 
 			g = northArrow.graphics;
 			r = RADIUS * .2;
-			g.beginFill(0xffffff);
+			g.beginFill(0xffffff, .6);
 			g.moveTo(0, 0);
 			g.lineTo(-r / 2, r);
 			g.lineTo(r / 2, r);
@@ -113,6 +124,32 @@ package mteb.view.scene.compass
 				addChild(m);
 				setAzimuthPosition(AzimuthTable.MOON_SETS_MIN[i], gr - m.width, m);
 			}
+
+			var a:ArtifactPoint;
+
+			a = new ArtifactPoint();
+			a.icon = Textures.artifact1PointBitmap.bitmapData;
+			artifactPoints.push(a);
+			addChild(a);
+			setAzimuthPosition(AzimuthTable.northMinRise, gr + a.width * .5, a);
+
+			a = new ArtifactPoint();
+			a.icon = Textures.artifact2PointBitmap.bitmapData;
+			artifactPoints.push(a);
+			addChild(a);
+			setAzimuthPosition(AzimuthTable.northMinSet, gr + a.width * .5, a);
+
+			a = new ArtifactPoint();
+			a.icon = Textures.artifact3PointBitmap.bitmapData;
+			artifactPoints.push(a);
+			addChild(a);
+			setAzimuthPosition(AzimuthTable.southMinRise, gr + a.width * .5, a);
+
+			a = new ArtifactPoint();
+			a.icon = Textures.artifact4PointBitmap.bitmapData;
+			artifactPoints.push(a);
+			addChild(a);
+			setAzimuthPosition(AzimuthTable.southMinSet, gr + a.width * .5, a);
 		}
 
 		protected function setAzimuthPosition(azimuth:Number, radius:Number, object:DisplayObject):void

@@ -2,6 +2,7 @@ package mteb.control
 {
 	import mteb.control.commands.AnnounceRise;
 	import mteb.control.commands.AnnounceSet;
+	import mteb.control.commands.ChangeArtifact;
 	import mteb.control.commands.ChangePreferences;
 	import mteb.control.commands.IExecutableCommand;
 	import mteb.control.commands.JumpToNode;
@@ -20,6 +21,7 @@ package mteb.control
 			add(interpreter, ChangePreferences);
 			add(interpreter, AnnounceRise);
 			add(interpreter, AnnounceSet);
+			add(interpreter, ChangeArtifact);
 		}
 
 		private static function add(interpreter:ICommandInterpreter, Impl:Class):void

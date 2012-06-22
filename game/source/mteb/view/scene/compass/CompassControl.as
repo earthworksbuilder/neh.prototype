@@ -9,6 +9,7 @@ package mteb.view.scene.compass
 	import pixeldroid.signals.ISignalReceiver;
 
 	import mteb.control.SignalBus;
+	import mteb.control.signals.ArtifactChanged;
 	import mteb.control.signals.AzimuthChanged;
 	import mteb.control.signals.FrameEntered;
 	import mteb.control.signals.RiseEnded;
@@ -40,6 +41,7 @@ package mteb.view.scene.compass
 			signalBus.addReceiver(RiseEnded, this);
 			signalBus.addReceiver(SetStarted, this);
 			signalBus.addReceiver(SetEnded, this);
+			signalBus.addReceiver(ArtifactChanged, this);
 		}
 
 		public function receive(signal:ISignal, authority:* = null):void
@@ -64,6 +66,10 @@ package mteb.view.scene.compass
 					onSetPointChanged(authority as ICompassLightStateProvider);
 					break;
 
+				case (signal is ArtifactChanged):
+					onArtifactChanged(authority as ICompassLightStateProvider);
+					break;
+
 				default:
 					debug(this, "receive() - unrecognized signal {0}", signal);
 					break;
@@ -73,7 +79,13 @@ package mteb.view.scene.compass
 		protected function initialize():void
 		{
 			addChild(compassGeo);
-			compassGeo.position = new Vector3D(0, -72, 128);
+			compassGeo.position = new Vector3D(0, -100, 64);
+		}
+
+		protected function onArtifactChanged(authority:ICompassLightStateProvider):void
+		{
+			debug(this, "onArtifactChanged() - change state of artifact light {0} to {1}", authority.pointIndex, authority.pointState);
+			textureSprite.changeArtifactPointState(authority.pointIndex, authority.pointState);
 		}
 
 		protected function onAzimuthChanged(compass:ICompass):void
