@@ -18,10 +18,11 @@ package mteb.view.scene.compass
 
 	public class CompassSprite extends Sprite implements ITimeDriven
 	{
+		protected const EMPTY:uint = 0x00ffffff;
 		protected const RADIUS:uint = 512;
 		protected const DIAMETER:uint = RADIUS + RADIUS;
 		protected const center:Point = new Point(RADIUS, RADIUS);
-		protected const _texture:BitmapData = new BitmapData(DIAMETER, DIAMETER, true, 0x00ffffff);
+		protected const _texture:BitmapData = new BitmapData(DIAMETER, DIAMETER, true, EMPTY);
 
 		protected const groundPlane:Shape = new Shape();
 		protected const northArrow:Shape = new Shape();
@@ -70,7 +71,8 @@ package mteb.view.scene.compass
 
 		public function get texture():BitmapData
 		{
-			_texture.draw(this, null, null, BlendMode.NORMAL);
+			_texture.fillRect(_texture.rect, EMPTY);
+			_texture.draw(this);
 
 			return _texture;
 		}
@@ -82,7 +84,7 @@ package mteb.view.scene.compass
 
 			g = groundPlane.graphics;
 			r = RADIUS * .75;
-			g.beginFill(0x000000);
+			g.beginFill(0xffffff, .2);
 			g.drawCircle(0, 0, r);
 			g.endFill();
 

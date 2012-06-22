@@ -1,6 +1,7 @@
 package mteb.view.scene.compass
 {
 	import flash.display.BitmapData;
+	import flash.display.BlendMode;
 
 	import away3d.containers.ObjectContainer3D;
 	import away3d.core.raycast.MouseHitMethod;
@@ -36,6 +37,7 @@ package mteb.view.scene.compass
 		{
 			const mesh:Mesh = GeometryFactory.createPlane(meshTexture, r, r, 10, true, false, true, MouseHitMethod.MESH_ANY_HIT);
 			mesh.name = "Compass";
+			mesh.material.blendMode = BlendMode.ADD;
 			addChild(mesh);
 		}
 	}
