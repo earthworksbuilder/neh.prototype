@@ -10,6 +10,7 @@ package mteb
 	import pixeldroid.signals.ISignal;
 	import pixeldroid.signals.ISignalBus;
 
+	import mteb.control.GameStateEnum;
 	import mteb.control.SignalBus;
 	import mteb.control.signals.StageResized;
 	import mteb.data.DataLocator;
@@ -52,6 +53,7 @@ package mteb
 			addChild(layers.ui);
 			addChild(layers.debug.displayObject); // needs to be last so on top
 
+			data.mcp.state = GameStateEnum.INITIALIZING;
 			layers.debug.view3D = layers.scene.view3D;
 
 			data.map.load("nodes/nodes.xml");

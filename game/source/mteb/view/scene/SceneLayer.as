@@ -18,6 +18,7 @@ package mteb.view.scene
 	import pixeldroid.signals.ISignalBus;
 	import pixeldroid.signals.ISignalReceiver;
 
+	import mteb.control.GameStateEnum;
 	import mteb.control.SignalBus;
 	import mteb.control.signals.ActionTriggered;
 	import mteb.control.signals.AzimuthChanged;
@@ -229,13 +230,20 @@ package mteb.view.scene
 
 		protected function onHotspotsLoaded():void
 		{
+			if (!hotSpotLoader.isLoaded)
+				return error(this, "onHotspotsLoaded() - there was an error loading the hotspots");
+
+			if (!bitmapCubeLoader.isLoaded)
+				return debug(this, "onHotspotsLoaded() - still waiting for textures...");
+
 			debug(this, "onHotspotsLoaded() - currentNode hotspots are loaded.");
-			if (bitmapCubeLoader.isLoaded && hotSpotLoader.isLoaded)
-				updateTextures();
+			updateTextures();
 		}
 
 		protected function onNodeChanged(map:IMap):void
 		{
+			DataLocator.getInstance().mcp.state = GameStateEnum.NODE_TRAVELING;
+
 			const node:Node = map.currentNode;
 			hotSpotLoader.setUrls(node.hotspotPosX, node.hotspotNegX, node.hotspotPosY, node.hotspotNegY, node.hotspotPosZ, node.hotspotNegZ);
 			hotSpotLoader.load(onHotspotsLoaded);
@@ -247,9 +255,14 @@ package mteb.view.scene
 
 		protected function onNodeTraveled():void
 		{
+			if (!bitmapCubeLoader.isLoaded)
+				return error(this, "onNodeTraveled() - there was an error loading the textures");
+
+			if (!hotSpotLoader.isLoaded)
+				return debug(this, "onNodeTraveled() - still waiting for hotspots...");
+
 			debug(this, "onNodeTraveled() - currentNode textures are loaded.");
-			if (bitmapCubeLoader.isLoaded && hotSpotLoader.isLoaded)
-				updateTextures();
+			updateTextures();
 
 			if (artifactGeo && sceneGeo.contains(artifactGeo))
 			{
@@ -298,7 +311,8 @@ package mteb.view.scene
 
 		protected function updateTextures():void
 		{
-			debug(this, "updateTextures() - currentNode textures and hotspots are loaded; updating bitmapdata...");
+			debug(this, "updateTextures() - currentNode textures and hotspots are loaded; updating bitmapdata and updating game state");
+
 			var showHotspots:Boolean = dataLocator.config.showHotspots;
 			var bd:BitmapData;
 			for (var i:uint = 0; i < 6; i++)
@@ -308,6 +322,8 @@ package mteb.view.scene
 					bd.copyPixels(hotSpotLoader.getBitmapDataAt(i), bd.rect, (new Point(0, 0)), null, null, true);
 				groundGeo.setTextureData(bd, i);
 			}
+
+			DataLocator.getInstance().mcp.state = GameStateEnum.NODE_ARRIVED;
 		}
 	}
 }

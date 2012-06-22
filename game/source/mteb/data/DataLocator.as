@@ -1,5 +1,7 @@
 package mteb.data
 {
+	import mteb.control.IGameStateMachine;
+	import mteb.control.MCP;
 	import mteb.data.config.Config;
 	import mteb.data.config.IConfig;
 	import mteb.data.input.IOrientationTransform;
@@ -29,6 +31,8 @@ package mteb.data
 
 		private var _map:IMap;
 
+		private var _mcp:IGameStateMachine;
+
 		private var _inventory:IInventory;
 
 		private var _stats:IStats;
@@ -49,6 +53,8 @@ package mteb.data
 		public function get look():IOrientationTransform  { return _look || (_look = new UserOrientationTransform()); }
 
 		public function get map():IMap  { return _map || (_map = new Map()); }
+
+		public function get mcp():IGameStateMachine  { return _mcp || (_mcp = new MCP()); }
 
 		public function get stats():IStats  { return _stats || (_stats = new Stats()); }
 
