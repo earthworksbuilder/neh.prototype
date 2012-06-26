@@ -11,6 +11,12 @@ package mteb.control
 		public static const STARTED:GameStateEnum = new GameStateEnum("STARTED");
 		public static const WAITING:GameStateEnum = new GameStateEnum("WAITING");
 
+		public static const NORTH_MIN_RISE_UNLOCKED:GameStateEnum = new GameStateEnum("NORTH_MIN_RISE_UNLOCKED");
+		public static const NORTH_MIN_RISE_CAPTURED:GameStateEnum = new GameStateEnum("NORTH_MIN_RISE_CAPTURED");
+
+		public static const NORTH_MIN_SET_UNLOCKED:GameStateEnum = new GameStateEnum("NORTH_MIN_SET_UNLOCKED");
+		public static const NORTH_MIN_SET_CAPTURED:GameStateEnum = new GameStateEnum("NORTH_MIN_SET_CAPTURED");
+
 		private var _label:String = "";
 
 

@@ -10,6 +10,7 @@ package mteb.view.scene.compass
 
 	import mteb.control.SignalBus;
 	import mteb.control.signals.ArtifactChanged;
+	import mteb.control.signals.ArtifactCollected;
 	import mteb.control.signals.AzimuthChanged;
 	import mteb.control.signals.FrameEntered;
 	import mteb.control.signals.RiseEnded;
@@ -42,6 +43,7 @@ package mteb.view.scene.compass
 			signalBus.addReceiver(SetStarted, this);
 			signalBus.addReceiver(SetEnded, this);
 			signalBus.addReceiver(ArtifactChanged, this);
+			signalBus.addReceiver(ArtifactCollected, this);
 		}
 
 		public function receive(signal:ISignal, authority:* = null):void
@@ -70,6 +72,10 @@ package mteb.view.scene.compass
 					onArtifactChanged(authority as ICompassLightStateProvider);
 					break;
 
+				case (signal is ArtifactCollected):
+					onArtifactCollected(authority as uint);
+					break;
+
 				default:
 					debug(this, "receive() - unrecognized signal {0}", signal);
 					break;
@@ -86,6 +92,11 @@ package mteb.view.scene.compass
 		{
 			debug(this, "onArtifactChanged() - change state of artifact light {0} to {1}", authority.pointIndex, authority.pointState);
 			textureSprite.changeArtifactPointState(authority.pointIndex, authority.pointState);
+		}
+
+		protected function onArtifactCollected(index:uint):void
+		{
+			debug(this, "onArtifactCollected() - index: {0}. TODO: sort out authority and determine if artifact rise/set is now targeted", index);
 		}
 
 		protected function onAzimuthChanged(compass:ICompass):void

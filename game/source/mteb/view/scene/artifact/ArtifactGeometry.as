@@ -1,54 +1,79 @@
 package mteb.view.scene.artifact
 {
-	import away3d.containers.ObjectContainer3D;
+	import flash.display.BitmapData;
+
 	import away3d.core.raycast.MouseHitMethod;
 	import away3d.entities.Mesh;
+	import away3d.materials.TextureMaterial;
+	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
 
 	import mteb.assets.Textures;
 	import mteb.view.scene.GeometryFactory;
 
 
-	public class ArtifactGeometry extends ObjectContainer3D
+	public class ArtifactGeometry extends Mesh
 	{
+
+		protected const namePrefix:String = "Artifact ";
+		protected var _id:uint = 0;
+		protected var texture:BitmapTexture;
 
 
 		public function ArtifactGeometry(which:uint)
 		{
-			super();
+			_id = which;
 
-			initialize(which);
+			texture = new BitmapTexture(artifactBitmapData);
+			const r:Number = 32;
+			const geometry:PlaneGeometry = new PlaneGeometry(r, r, 1, 1, false);
+			const material:TextureMaterial = GeometryFactory.createTextureMaterial(texture, false, true);
+
+			super(geometry, material);
+
+			name = namePrefix + _id;
+			mouseEnabled = true;
+			mouseHitMethod = MouseHitMethod.MESH_ANY_HIT;
 		}
 
-		protected function initialize(which:uint, r:Number = 32):void
+		public function changeId(value:uint):void
 		{
-			var texture:BitmapTexture;
-			switch (which)
+			_id = value;
+			name = namePrefix + _id;
+			texture.bitmapData = artifactBitmapData;
+		}
+
+		public function get id():uint  { return _id; }
+
+		public function get index():uint  { return _id - 1; }
+
+		protected function get artifactBitmapData():BitmapData
+		{
+			var bitmapData:BitmapData;
+
+			switch (_id)
 			{
 				case 1:
-					texture = new BitmapTexture(Textures.artifact1TextureBitmap.bitmapData);
+					bitmapData = Textures.artifact1TextureBitmap.bitmapData;
 					break;
 
 				case 2:
-					texture = new BitmapTexture(Textures.artifact2TextureBitmap.bitmapData);
+					bitmapData = Textures.artifact2TextureBitmap.bitmapData;
 					break;
 
 				case 3:
-					texture = new BitmapTexture(Textures.artifact3TextureBitmap.bitmapData);
+					bitmapData = Textures.artifact3TextureBitmap.bitmapData;
 					break;
 
 				case 4:
-					texture = new BitmapTexture(Textures.artifact4TextureBitmap.bitmapData);
+					bitmapData = Textures.artifact4TextureBitmap.bitmapData;
 					break;
 
 				default:
-					throw new ArgumentError("artifact must be constructed with 1,2,3 or 4 (got " + which + ")");
+					throw new ArgumentError("artifact must be constructed with 1,2,3 or 4 (got " + _id + ")");
 			}
 
-			const plane:Mesh = GeometryFactory.createPlane(texture, r, r, 1, false, false, true, MouseHitMethod.MESH_ANY_HIT);
-			plane.name = "Artifact " + which;
-			addChild(plane);
+			return bitmapData;
 		}
-		// TODO: add method to update texture by id
 	}
 }

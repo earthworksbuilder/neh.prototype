@@ -10,7 +10,6 @@ package mteb
 	import pixeldroid.signals.ISignal;
 	import pixeldroid.signals.ISignalBus;
 
-	import mteb.control.GameStateEnum;
 	import mteb.control.SignalBus;
 	import mteb.control.signals.StageResized;
 	import mteb.data.DataLocator;
@@ -36,12 +35,15 @@ package mteb
 
 		protected function initialize():void
 		{
+			// notify mcp that initialization has commenced
+			const data:IDataLocator = DataLocator.getInstance();
+			data.mcp.onInitializationStarted();
+
 			// register signals
 			const signalBus:ISignalBus = SignalBus.getInstance();
 			signalBus.addSignal(stageResized as ISignal);
 
 			// connect event driven data to events
-			const data:IDataLocator = DataLocator.getInstance();
 			addEventListener(Event.ENTER_FRAME, data.time.onFrame);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, data.look.onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, data.look.onKeyUp);
@@ -53,9 +55,10 @@ package mteb
 			addChild(layers.ui);
 			addChild(layers.debug.displayObject); // needs to be last so on top
 
-			data.mcp.state = GameStateEnum.INITIALIZING;
+			// connect debug stats monitor to 3d view
 			layers.debug.view3D = layers.scene.view3D;
 
+			// kick things off by loading the map
 			data.map.load("nodes/nodes.xml");
 		}
 

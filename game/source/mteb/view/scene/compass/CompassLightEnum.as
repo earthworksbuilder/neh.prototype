@@ -4,9 +4,9 @@ package mteb.view.scene.compass
 
 	public class CompassLightEnum
 	{
-		public static const DISABLED:CompassLightEnum = new CompassLightEnum("DISABLED");
-		public static const ENABLED:CompassLightEnum = new CompassLightEnum("ENABLED");
-		public static const ON:CompassLightEnum = new CompassLightEnum("ON");
+		public static const LOCKED:CompassLightEnum = new CompassLightEnum("LOCKED");
+		public static const UNLOCKED:CompassLightEnum = new CompassLightEnum("UNLOCKED");
+		public static const CAPTURED:CompassLightEnum = new CompassLightEnum("CAPTURED");
 
 		private var label:String;
 

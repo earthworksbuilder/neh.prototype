@@ -19,8 +19,11 @@ package mteb.view.scene
 	import pixeldroid.signals.ISignalReceiver;
 
 	import mteb.control.GameStateEnum;
+	import mteb.control.IGameStateMachine;
 	import mteb.control.SignalBus;
 	import mteb.control.signals.ActionTriggered;
+	import mteb.control.signals.ArtifactChanged;
+	import mteb.control.signals.ArtifactCollected;
 	import mteb.control.signals.AzimuthChanged;
 	import mteb.control.signals.FrameEntered;
 	import mteb.control.signals.NodeChanged;
@@ -33,11 +36,13 @@ package mteb.view.scene
 	import mteb.data.map.ActionTypeEnum;
 	import mteb.data.map.AzimuthTable;
 	import mteb.data.map.ICompass;
+	import mteb.data.map.ICompassLightStateProvider;
 	import mteb.data.map.IMap;
 	import mteb.data.map.Node;
 	import mteb.data.time.ITime;
 	import mteb.view.scene.artifact.ArtifactGeometry;
 	import mteb.view.scene.compass.CompassControl;
+	import mteb.view.scene.compass.CompassLightEnum;
 	import mteb.view.scene.ground.BitmapCubeLoader;
 	import mteb.view.scene.ground.NodeGeometry;
 	import mteb.view.scene.ground.SkyBoxFaceEnum;
@@ -53,10 +58,11 @@ package mteb.view.scene
 		protected const TO_DEGREES:Number = 180 / Math.PI;
 
 		protected const dataLocator:IDataLocator = DataLocator.getInstance();
+		protected const mcp:IGameStateMachine = dataLocator.mcp;
 		protected const bitmapCubeLoader:BitmapCubeLoader = new BitmapCubeLoader();
 		protected const hotSpotLoader:BitmapCubeLoader = new BitmapCubeLoader();
 		protected const actionTrigger:ActionTrigger = new ActionTrigger();
-		protected var artifactGeo:ObjectContainer3D;
+		protected var artifactGeo:ArtifactGeometry;
 		protected const groundGeo:NodeGeometry = new NodeGeometry();
 		protected const skyGeo:SkyGeometry = new SkyGeometry();
 		protected const moonOrbit:Orbit = new Orbit();
@@ -69,6 +75,7 @@ package mteb.view.scene
 
 		protected const azimuthChanged:IProtectedSignal = new AzimuthChanged();
 		protected const actionTriggered:IProtectedSignal = new ActionTriggered();
+		protected const artifactCollected:IProtectedSignal = new ArtifactCollected();
 
 		protected var moonTrailFrame:uint = moonTrailFrameSkip;
 		protected var lastAzimuth:Number;
@@ -84,6 +91,7 @@ package mteb.view.scene
 			const signalBus:ISignalBus = SignalBus.getInstance();
 			signalBus.addSignal(azimuthChanged as ISignal);
 			signalBus.addSignal(actionTriggered as ISignal);
+			signalBus.addSignal(artifactCollected as ISignal);
 			signalBus.addReceiver(FrameEntered, this);
 			signalBus.addReceiver(NodeChanged, this);
 			signalBus.addReceiver(StageResized, this);
@@ -125,6 +133,15 @@ package mteb.view.scene
 
 
 		public function get view3D():View3D  { return view; }
+
+		protected function addArtifact():void
+		{
+			debug(this, "addArtifact() - setting position, adding child and event listener");
+			// TODO: add tween to reveal by fade-in
+			artifactGeo.position = new Vector3D(0, -32, 100);
+			artifactGeo.addEventListener(MouseEvent3D.CLICK, onArtifactClicked);
+			sceneGeo.addChild(artifactGeo);
+		}
 
 		protected function computeAzimuth():Number
 		{
@@ -173,10 +190,17 @@ package mteb.view.scene
 
 			moonOrbit.setSubject(moonGeo, 1024 + 512);
 
-			compassControl.addEventListener(MouseEvent3D.CLICK, onGeoClicked);
-
 			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail, compassControl);
 			view.scene.addChild(sceneGeo);
+		}
+
+		protected function onArtifactClicked(event:MouseEvent3D):void
+		{
+			const artifact:ArtifactGeometry = event.object as ArtifactGeometry;
+			debug(this, "onArtifactClicked() - {0} (index {1}); removing from node and announcing collected", artifact.name, artifact.index);
+
+			removeArtifact();
+			mcp.onArtifactCollected(artifact.index);
 		}
 
 		protected function onFrameEntered(time:ITime):void
@@ -206,12 +230,6 @@ package mteb.view.scene
 			view.render();
 		}
 
-		protected function onGeoClicked(event:MouseEvent3D):void
-		{
-			const object3d:Object3D = event.object;
-			debug(this, "onGeoClicked() - {0}", object3d.name);
-		}
-
 		protected function onGroundClicked(event:MouseEvent3D):void
 		{
 			const object3d:Object3D = event.object;
@@ -233,53 +251,46 @@ package mteb.view.scene
 			if (!hotSpotLoader.isLoaded)
 				return error(this, "onHotspotsLoaded() - there was an error loading the hotspots");
 
+			debug(this, "onHotspotsLoaded() - currentNode hotspots are loaded.");
 			if (!bitmapCubeLoader.isLoaded)
 				return debug(this, "onHotspotsLoaded() - still waiting for textures...");
 
-			debug(this, "onHotspotsLoaded() - currentNode hotspots are loaded.");
 			updateTextures();
 		}
 
 		protected function onNodeChanged(map:IMap):void
 		{
-			DataLocator.getInstance().mcp.state = GameStateEnum.NODE_TRAVELING;
+			mcp.onNodeTravelStarted();
 
 			const node:Node = map.currentNode;
 			hotSpotLoader.setUrls(node.hotspotPosX, node.hotspotNegX, node.hotspotPosY, node.hotspotNegY, node.hotspotPosZ, node.hotspotNegZ);
 			hotSpotLoader.load(onHotspotsLoaded);
 			bitmapCubeLoader.setUrls(node.texturePosX, node.textureNegX, node.texturePosY, node.textureNegY, node.texturePosZ, node.textureNegZ);
-			bitmapCubeLoader.load(onNodeTraveled);
+			bitmapCubeLoader.load(onTexturesLoaded);
 
 			debug(this, "onNodeChanged() - map.currentNode is {0}; loading textures and hotspots...", node);
 		}
 
 		protected function onNodeTraveled():void
 		{
-			if (!bitmapCubeLoader.isLoaded)
-				return error(this, "onNodeTraveled() - there was an error loading the textures");
-
-			if (!hotSpotLoader.isLoaded)
-				return debug(this, "onNodeTraveled() - still waiting for hotspots...");
-
-			debug(this, "onNodeTraveled() - currentNode textures are loaded.");
-			updateTextures();
-
-			if (artifactGeo && sceneGeo.contains(artifactGeo))
-			{
-				sceneGeo.removeChild(artifactGeo);
-				artifactGeo.removeEventListener(MouseEvent3D.CLICK, onGeoClicked);
-			}
+			// remove old artifact, if any, and add new, if map indicates one
 			const map:IMap = dataLocator.map;
 			const node:Node = map.currentNode;
+
+			removeArtifact();
 			if (node.hasArtifact)
 			{
 				debug(this, "onNodeTraveled() - currentNode ({0}) has an artifact! Revealing artifact {1}...", node.id, node.artifact);
-				// TODO: add tween to reveal by fade-in
-				artifactGeo = new ArtifactGeometry(node.artifact);
-				artifactGeo.position = new Vector3D(0, -32, 100);
-				artifactGeo.addEventListener(MouseEvent3D.CLICK, onGeoClicked);
-				sceneGeo.addChild(artifactGeo);
+				if (!artifactGeo)
+					artifactGeo = new ArtifactGeometry(node.artifact);
+				else
+					artifactGeo.changeId(node.artifact);
+				addArtifact();
 			}
+			else
+				debug(this, "onNodeTraveled() - no artifact for this node.");
+
+			DataLocator.getInstance().mcp.onNodeTravelCompleted();
 		}
 
 		protected function onPreferencesChanged(config:IConfig):void
@@ -298,6 +309,30 @@ package mteb.view.scene
 			debug(this, "onStageResized() - adjusting to new dimensions: {0}x{1}", stage.stageWidth, stage.stageHeight);
 			view.width = stage.stageWidth;
 			view.height = stage.stageHeight;
+		}
+
+		protected function onTexturesLoaded():void
+		{
+			if (!bitmapCubeLoader.isLoaded)
+				return error(this, "onTexturesLoaded() - there was an error loading the textures");
+
+			debug(this, "onTexturesLoaded() - currentNode textures are loaded.");
+			if (!hotSpotLoader.isLoaded)
+				return debug(this, "onTexturesLoaded() - still waiting for hotspots...");
+
+			updateTextures();
+		}
+
+		protected function removeArtifact():void
+		{
+			if (artifactGeo && sceneGeo.contains(artifactGeo))
+			{
+				debug(this, "removeArtifact() - removing child and event listener");
+				sceneGeo.removeChild(artifactGeo);
+				artifactGeo.removeEventListener(MouseEvent3D.CLICK, onArtifactClicked);
+			}
+			else
+				debug(this, "removeArtifact() - no artifact geo yet");
 		}
 
 		protected function setAzimuth(value:Number):void
@@ -323,7 +358,7 @@ package mteb.view.scene
 				groundGeo.setTextureData(bd, i);
 			}
 
-			DataLocator.getInstance().mcp.state = GameStateEnum.NODE_ARRIVED;
+			onNodeTraveled();
 		}
 	}
 }

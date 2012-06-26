@@ -34,7 +34,7 @@ package mteb.control.commands
 				case "start":
 					var start:RiseStarted = new RiseStarted();
 					start.pointIndex = index;
-					start.pointState = CompassLightEnum.ON;
+					start.pointState = CompassLightEnum.CAPTURED;
 					announcement = start as IProtectedSignal;
 					authority = start as ICompassLightStateProvider;
 					break;
@@ -42,7 +42,7 @@ package mteb.control.commands
 				case "end":
 					var end:RiseEnded = new RiseEnded();
 					end.pointIndex = index;
-					end.pointState = CompassLightEnum.ENABLED;
+					end.pointState = CompassLightEnum.UNLOCKED;
 					announcement = end as IProtectedSignal;
 					authority = end as ICompassLightStateProvider;
 					break;

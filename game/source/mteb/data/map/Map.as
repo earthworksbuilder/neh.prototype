@@ -8,6 +8,7 @@ package mteb.data.map
 	import pixeldroid.signals.ProtectedSignal;
 
 	import mteb.control.GameStateEnum;
+	import mteb.control.IGameStateMachine;
 	import mteb.control.SignalBus;
 	import mteb.control.signals.ActionTriggered;
 	import mteb.control.signals.NodeChanged;
@@ -16,6 +17,7 @@ package mteb.data.map
 
 	public class Map implements IMap, ISignalReceiver
 	{
+		protected const mcp:IGameStateMachine = DataLocator.getInstance().mcp;
 		protected const nodeChanged:ProtectedSignal = new NodeChanged();
 
 		protected const _currentNode:Node = new Node();
@@ -33,7 +35,7 @@ package mteb.data.map
 
 		public function load(file:String):void
 		{
-			DataLocator.getInstance().mcp.state = GameStateEnum.LOADING;
+			mcp.onMapLoadStarted();
 
 			xml = <map startNode="005" startAzimuth="51.5">
 					<node id="001" color="0x369100" mapx="90" mapy="60"/>
@@ -255,6 +257,7 @@ package mteb.data.map
 
 		protected function onMapLoaded():void
 		{
+			mcp.onMapLoadCompleted();
 			changeNode(getStartNode(), getStartAzimuth());
 		}
 

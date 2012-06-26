@@ -12,7 +12,7 @@ package mteb.view.scene.compass
 	{
 		protected const _icon:Bitmap = new Bitmap();
 
-		protected var _state:CompassLightEnum = CompassLightEnum.DISABLED;
+		protected var _state:CompassLightEnum = CompassLightEnum.LOCKED;
 		protected var invalidated:Boolean = false;
 
 
@@ -61,17 +61,17 @@ package mteb.view.scene.compass
 			var color:uint = 0xff0000;
 			switch (_state)
 			{
-				case CompassLightEnum.DISABLED:
+				case CompassLightEnum.LOCKED:
 					color = 0x666666;
 					_icon.alpha = .3;
 					break;
 
-				case CompassLightEnum.ENABLED:
+				case CompassLightEnum.UNLOCKED:
 					color = 0x999999;
 					_icon.alpha = .6;
 					break;
 
-				case CompassLightEnum.ON:
+				case CompassLightEnum.CAPTURED:
 					color = 0xffffff;
 					_icon.alpha = 1;
 					break;

@@ -8,7 +8,7 @@ package mteb.view.scene.compass
 	public class MoonPoint extends Shape implements ITimeDriven
 	{
 		protected var _radius:Number = 10;
-		protected var _state:CompassLightEnum = CompassLightEnum.DISABLED;
+		protected var _state:CompassLightEnum = CompassLightEnum.LOCKED;
 		protected var invalidated:Boolean = false;
 
 
@@ -54,15 +54,15 @@ package mteb.view.scene.compass
 			var color:uint = 0xff0000;
 			switch (_state)
 			{
-				case CompassLightEnum.DISABLED:
+				case CompassLightEnum.LOCKED:
 					color = 0x333333;
 					break;
 
-				case CompassLightEnum.ENABLED:
+				case CompassLightEnum.UNLOCKED:
 					color = 0x999999;
 					break;
 
-				case CompassLightEnum.ON:
+				case CompassLightEnum.CAPTURED:
 					color = 0xffffff;
 					break;
 			}

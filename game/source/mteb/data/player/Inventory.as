@@ -19,7 +19,7 @@ package mteb.data.player
 				debug(this, "addArtifact() - added artifact{0}", which);
 			}
 			else
-				debug(this, "addArtifact() - already in possession of artifact{0}", which);
+				warn(this, "addArtifact() - already in possession of artifact{0}", which);
 		}
 
 		public function hasArtifact(which:uint):Boolean
