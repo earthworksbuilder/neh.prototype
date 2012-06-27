@@ -1,11 +1,12 @@
 package mteb.data.player
 {
+	import mteb.data.map.IArtifact;
 
 
 	public interface IInventory
 	{
-		function addArtifact(which:uint):void;
+		function addArtifact(artifact:IArtifact):void;
 
-		function hasArtifact(which:uint):Boolean;
+		function hasArtifact(index:uint):Boolean;
 	}
 }

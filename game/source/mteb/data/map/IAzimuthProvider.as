@@ -2,7 +2,7 @@ package mteb.data.map
 {
 
 
-	public interface ICompass
+	public interface IAzimuthProvider
 	{
 		function get currentAzimuth():Number;
 	}

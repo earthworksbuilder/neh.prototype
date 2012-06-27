@@ -12,7 +12,7 @@ package mteb.view.ui
 	import mteb.control.signals.StageResized;
 
 
-	public class UiLayer extends Sprite implements ISignalReceiver
+	public final class UiLayer extends Sprite implements ISignalReceiver
 	{
 		protected var heading:HeadingDisplay;
 		protected var timeControl:TimeControl;

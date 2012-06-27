@@ -11,7 +11,7 @@ package mteb.view.ui
 
 	import mteb.control.SignalBus;
 	import mteb.control.signals.AzimuthChanged;
-	import mteb.data.map.ICompass;
+	import mteb.data.map.IAzimuthProvider;
 
 
 	public class HeadingDisplay extends Sprite implements ISignalReceiver
@@ -33,7 +33,7 @@ package mteb.view.ui
 			switch (true)
 			{
 				case (signal is AzimuthChanged):
-					onAzimuthChanged(authority as ICompass);
+					onAzimuthChanged(authority as IAzimuthProvider);
 					break;
 
 				default:
@@ -58,7 +58,7 @@ package mteb.view.ui
 			textField.text = "Azimuth: - - - -";
 		}
 
-		protected function onAzimuthChanged(compass:ICompass):void
+		protected function onAzimuthChanged(compass:IAzimuthProvider):void
 		{
 			textField.text = "Azimuth: " + compass.currentAzimuth.toFixed(2);
 		}

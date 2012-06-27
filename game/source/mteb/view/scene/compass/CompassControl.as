@@ -18,7 +18,7 @@ package mteb.view.scene.compass
 	import mteb.control.signals.SetEnded;
 	import mteb.control.signals.SetStarted;
 	import mteb.data.map.AzimuthTable;
-	import mteb.data.map.ICompass;
+	import mteb.data.map.IAzimuthProvider;
 	import mteb.data.map.ICompassLightStateProvider;
 	import mteb.data.time.ITime;
 
@@ -51,7 +51,7 @@ package mteb.view.scene.compass
 			switch (true)
 			{
 				case (signal is AzimuthChanged):
-					onAzimuthChanged(authority as ICompass);
+					onAzimuthChanged(authority as IAzimuthProvider);
 					break;
 
 				case (signal is FrameEntered):
@@ -99,7 +99,7 @@ package mteb.view.scene.compass
 			debug(this, "onArtifactCollected() - index: {0}. TODO: sort out authority and determine if artifact rise/set is now targeted", index);
 		}
 
-		protected function onAzimuthChanged(compass:ICompass):void
+		protected function onAzimuthChanged(compass:IAzimuthProvider):void
 		{
 			rotationY = compass.currentAzimuth - AzimuthTable.northMaxRise;
 			compassGeo.rotationY = -1 * compass.currentAzimuth;

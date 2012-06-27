@@ -1,6 +1,6 @@
 package mteb.data
 {
-	import mteb.control.IGameStateMachine;
+	import mteb.control.gamestate.IGameStateMachine;
 	import mteb.data.config.IConfig;
 	import mteb.data.input.IOrientationTransform;
 	import mteb.data.map.IMap;

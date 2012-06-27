@@ -7,15 +7,15 @@ package mteb.data.map
 	import pixeldroid.signals.ISignalReceiver;
 	import pixeldroid.signals.ProtectedSignal;
 
-	import mteb.control.GameStateEnum;
-	import mteb.control.IGameStateMachine;
 	import mteb.control.SignalBus;
+	import mteb.control.gamestate.GameStateEnum;
+	import mteb.control.gamestate.IGameStateMachine;
 	import mteb.control.signals.ActionTriggered;
 	import mteb.control.signals.NodeChanged;
 	import mteb.data.DataLocator;
 
 
-	public class Map implements IMap, ISignalReceiver
+	public final class Map implements IMap, ISignalReceiver
 	{
 		protected const mcp:IGameStateMachine = DataLocator.getInstance().mcp;
 		protected const nodeChanged:ProtectedSignal = new NodeChanged();

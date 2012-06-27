@@ -9,7 +9,7 @@ package mteb.view
 	import mteb.view.ui.UiLayer;
 
 
-	public class LayerLocator implements ILayerLocator
+	public final class LayerLocator implements ILayerLocator
 	{
 		private static var instance:ILayerLocator;
 

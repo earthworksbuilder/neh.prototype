@@ -1,7 +1,7 @@
 package mteb.data
 {
-	import mteb.control.IGameStateMachine;
-	import mteb.control.MCP;
+	import mteb.control.gamestate.IGameStateMachine;
+	import mteb.control.gamestate.MCP;
 	import mteb.data.config.Config;
 	import mteb.data.config.IConfig;
 	import mteb.data.input.IOrientationTransform;
@@ -16,7 +16,7 @@ package mteb.data
 	import mteb.data.time.Time;
 
 
-	public class DataLocator implements IDataLocator
+	public final class DataLocator implements IDataLocator
 	{
 		private static var instance:IDataLocator;
 

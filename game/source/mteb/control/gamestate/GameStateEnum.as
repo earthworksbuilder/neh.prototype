@@ -1,8 +1,8 @@
-package mteb.control
+package mteb.control.gamestate
 {
 
 
-	public class GameStateEnum
+	public final class GameStateEnum
 	{
 		public static const INITIALIZING:GameStateEnum = new GameStateEnum("INITIALIZING");
 		public static const NODE_TRAVELING:GameStateEnum = new GameStateEnum("NODE_TRAVELING");
@@ -10,6 +10,8 @@ package mteb.control
 		public static const LOADING:GameStateEnum = new GameStateEnum("LOADING");
 		public static const STARTED:GameStateEnum = new GameStateEnum("STARTED");
 		public static const WAITING:GameStateEnum = new GameStateEnum("WAITING");
+		public static const UNLOCKING:GameStateEnum = new GameStateEnum("UNLOCKING");
+		public static const CAPTURING:GameStateEnum = new GameStateEnum("CAPTURING");
 
 		public static const NORTH_MIN_RISE_UNLOCKED:GameStateEnum = new GameStateEnum("NORTH_MIN_RISE_UNLOCKED");
 		public static const NORTH_MIN_RISE_CAPTURED:GameStateEnum = new GameStateEnum("NORTH_MIN_RISE_CAPTURED");

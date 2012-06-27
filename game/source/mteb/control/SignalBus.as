@@ -4,7 +4,7 @@ package mteb.control
 	import pixeldroid.signals.impl.SignalBusBase;
 
 
-	public class SignalBus extends SignalBusBase
+	public final class SignalBus extends SignalBusBase
 	{
 		private static var instance:ISignalBus;
 

@@ -14,6 +14,8 @@ package mteb.view.scene.compass
 
 		protected var _state:CompassLightEnum = CompassLightEnum.LOCKED;
 		protected var invalidated:Boolean = false;
+		protected var timeDependent:Boolean = false;
+		protected var time:Number = 0;
 
 
 		public function ArtifactPoint()
@@ -25,9 +27,10 @@ package mteb.view.scene.compass
 
 		public function animate(secondsElapsed:Number):void
 		{
-			if (invalidated)
+			time += secondsElapsed;
+			if (invalidated || timeDependent)
 			{
-				draw();
+				draw(time);
 				invalidated = false;
 			}
 		}
@@ -54,32 +57,43 @@ package mteb.view.scene.compass
 		{
 			_state = value;
 			invalidated = true;
+			timeDependent = (_state == CompassLightEnum.ACTIVATED);
 		}
 
-		protected function draw():void
+		protected function draw(t:Number):void
 		{
-			var color:uint = 0xff0000;
+			var stroke:uint = 0xffff00;
+			var fill:uint = 0xff0000;
 			switch (_state)
 			{
 				case CompassLightEnum.LOCKED:
-					color = 0x666666;
+					stroke = 0x555555;
+					fill = 0x333333;
 					_icon.alpha = .3;
 					break;
 
 				case CompassLightEnum.UNLOCKED:
-					color = 0x999999;
-					_icon.alpha = .6;
+					stroke = 0x333333;
+					fill = 0xcccccc;
+					_icon.alpha = .85;
+					break;
+
+				case CompassLightEnum.ACTIVATED:
+					stroke = 0x444444;
+					fill = 0xffffff;
+					_icon.alpha = .5 + (.15 * Math.sin(5 * t));
 					break;
 
 				case CompassLightEnum.CAPTURED:
-					color = 0xffffff;
-					_icon.alpha = 1;
+					stroke = 0x999999;
+					fill = 0xffffff;
+					_icon.alpha = .6;
 					break;
 			}
 
 			graphics.clear();
-			graphics.lineStyle(4, 0x555555);
-			graphics.beginFill(color);
+			graphics.lineStyle(4, stroke);
+			graphics.beginFill(fill);
 			graphics.drawCircle(0, 0, (_icon.width * 1.125) * .5);
 			graphics.endFill();
 		}

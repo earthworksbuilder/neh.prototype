@@ -24,7 +24,7 @@ package mteb.view.debug
 	import mteb.view.debug.commandline.CommandLine;
 
 
-	public class DebugLayer extends Sprite implements IDebugLayer, ISignalReceiver
+	public final class DebugLayer extends Sprite implements IDebugLayer, ISignalReceiver
 	{
 		protected const container:Sprite = new Sprite();
 		protected var showing:Boolean = false;

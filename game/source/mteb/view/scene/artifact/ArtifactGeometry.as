@@ -9,10 +9,11 @@ package mteb.view.scene.artifact
 	import away3d.textures.BitmapTexture;
 
 	import mteb.assets.Textures;
+	import mteb.data.map.IArtifact;
 	import mteb.view.scene.GeometryFactory;
 
 
-	public class ArtifactGeometry extends Mesh
+	public class ArtifactGeometry extends Mesh implements IArtifact
 	{
 
 		protected const namePrefix:String = "Artifact ";

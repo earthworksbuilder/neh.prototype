@@ -1,11 +1,12 @@
-package mteb.control
+package mteb.control.gamestate
 {
+	import mteb.data.map.IArtifact;
 
 
 	public interface IGameStateMachine
 	{
 
-		function onArtifactCollected(index:uint):void;
+		function onArtifactCollected(artifact:IArtifact):void;
 
 		function onInitializationStarted():void;
 
@@ -24,6 +25,8 @@ package mteb.control
 		function onNorthMinSetCaptured():void;
 
 		function onNorthMinSetUnlocked():void;
+
+		function onRiseCaptured(index:uint):void;
 
 		function get state():GameStateEnum;
 	}

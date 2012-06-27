@@ -15,7 +15,7 @@ package mteb.control.commands
 
 		protected const _command:String = "artifact";
 
-		protected const _usage:String = "artifact index lock|unlock|capture (updates compass artifact light #index)";
+		protected const _usage:String = "artifact index lock|unlock|activate|capture (updates compass artifact light #index)";
 
 		public function get command():String  { return _command; }
 
@@ -40,12 +40,16 @@ package mteb.control.commands
 					announcement.pointState = CompassLightEnum.UNLOCKED;
 					break;
 
+				case "activate":
+					announcement.pointState = CompassLightEnum.ACTIVATED;
+					break;
+
 				case "capture":
 					announcement.pointState = CompassLightEnum.CAPTURED;
 					break;
 
 				default:
-					debug(this, "\n  unrecognized action. try 'disabled', 'enabled', or 'on'");
+					debug(this, "\n  unrecognized action. try 'lock', 'unlock', 'activate', or 'capture'");
 					ready = false;
 					break;
 			}

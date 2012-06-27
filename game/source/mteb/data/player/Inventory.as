@@ -1,5 +1,6 @@
 package mteb.data.player
 {
+	import mteb.data.map.IArtifact;
 
 
 	public class Inventory implements IInventory
@@ -11,20 +12,20 @@ package mteb.data.player
 		{
 		}
 
-		public function addArtifact(which:uint):void
+		public function addArtifact(artifact:IArtifact):void
 		{
-			if (!artifacts[which])
+			if (!artifacts[artifact.index])
 			{
-				artifacts[which] = true;
-				debug(this, "addArtifact() - added artifact{0}", which);
+				artifacts[artifact.index] = true;
+				debug(this, "addArtifact() - added artifact{0}", artifact.index);
 			}
 			else
-				warn(this, "addArtifact() - already in possession of artifact{0}", which);
+				warn(this, "addArtifact() - already in possession of artifact{0}", artifact.index);
 		}
 
-		public function hasArtifact(which:uint):Boolean
+		public function hasArtifact(index:uint):Boolean
 		{
-			return (artifacts[which] == true);
+			return (artifacts[index] == true);
 		}
 
 		public function toString():String

@@ -10,19 +10,22 @@ package mteb.view.scene.compass
 		protected var _radius:Number = 10;
 		protected var _state:CompassLightEnum = CompassLightEnum.LOCKED;
 		protected var invalidated:Boolean = false;
+		protected var timeDependent:Boolean = false;
+		protected var time:Number = 0;
 
 
 		public function MoonPoint()
 		{
 			super();
-			draw();
+			draw(time);
 		}
 
 		public function animate(secondsElapsed:Number):void
 		{
-			if (invalidated)
+			time += secondsElapsed;
+			if (invalidated || timeDependent)
 			{
-				draw();
+				draw(time);
 				invalidated = false;
 			}
 		}
@@ -47,11 +50,13 @@ package mteb.view.scene.compass
 		{
 			_state = value;
 			invalidated = true;
+			timeDependent = (_state == CompassLightEnum.ACTIVATED);
 		}
 
-		protected function draw():void
+		protected function draw(t:Number):void
 		{
 			var color:uint = 0xff0000;
+			var opacity:Number = 1.0;
 			switch (_state)
 			{
 				case CompassLightEnum.LOCKED:
@@ -59,7 +64,12 @@ package mteb.view.scene.compass
 					break;
 
 				case CompassLightEnum.UNLOCKED:
+					color = 0x666666;
+					break;
+
+				case CompassLightEnum.ACTIVATED:
 					color = 0x999999;
+					opacity = .85 + (.15 * Math.sin(3 * t));
 					break;
 
 				case CompassLightEnum.CAPTURED:
@@ -69,7 +79,7 @@ package mteb.view.scene.compass
 
 			graphics.clear();
 			graphics.lineStyle(2, 0x555555);
-			graphics.beginFill(color);
+			graphics.beginFill(color, opacity);
 			graphics.drawCircle(0, 0, _radius);
 			graphics.endFill();
 		}

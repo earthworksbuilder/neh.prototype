@@ -18,9 +18,9 @@ package mteb.view.scene
 	import pixeldroid.signals.ISignalBus;
 	import pixeldroid.signals.ISignalReceiver;
 
-	import mteb.control.GameStateEnum;
-	import mteb.control.IGameStateMachine;
 	import mteb.control.SignalBus;
+	import mteb.control.gamestate.GameStateEnum;
+	import mteb.control.gamestate.IGameStateMachine;
 	import mteb.control.signals.ActionTriggered;
 	import mteb.control.signals.ArtifactChanged;
 	import mteb.control.signals.ArtifactCollected;
@@ -35,7 +35,8 @@ package mteb.view.scene
 	import mteb.data.map.ActionTrigger;
 	import mteb.data.map.ActionTypeEnum;
 	import mteb.data.map.AzimuthTable;
-	import mteb.data.map.ICompass;
+	import mteb.data.map.IArtifact;
+	import mteb.data.map.IAzimuthProvider;
 	import mteb.data.map.ICompassLightStateProvider;
 	import mteb.data.map.IMap;
 	import mteb.data.map.Node;
@@ -52,7 +53,7 @@ package mteb.view.scene
 	import mteb.view.scene.sky.SkyGeometry;
 
 
-	public class SceneLayer extends Sprite implements ISceneLayer, ISignalReceiver, ICompass
+	public final class SceneLayer extends Sprite implements ISceneLayer, ISignalReceiver, IAzimuthProvider
 	{
 		protected var STARTING_AZIMUTH:Number; // azimuth of initial node view
 		protected const TO_DEGREES:Number = 180 / Math.PI;
@@ -200,7 +201,7 @@ package mteb.view.scene
 			debug(this, "onArtifactClicked() - {0} (index {1}); removing from node and announcing collected", artifact.name, artifact.index);
 
 			removeArtifact();
-			mcp.onArtifactCollected(artifact.index);
+			mcp.onArtifactCollected(artifact as IArtifact);
 		}
 
 		protected function onFrameEntered(time:ITime):void

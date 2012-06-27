@@ -16,7 +16,7 @@ package mteb.view.ui
 	import mteb.control.signals.NodeChanged;
 	import mteb.data.map.ActionTrigger;
 	import mteb.data.map.ActionTypeEnum;
-	import mteb.data.map.ICompass;
+	import mteb.data.map.IAzimuthProvider;
 	import mteb.data.map.IMap;
 
 
@@ -46,7 +46,7 @@ package mteb.view.ui
 			switch (true)
 			{
 				case (signal is AzimuthChanged):
-					onAzimuthChanged(authority as ICompass);
+					onAzimuthChanged(authority as IAzimuthProvider);
 					break;
 
 				case (signal is NodeChanged):
@@ -73,7 +73,7 @@ package mteb.view.ui
 			addChild(container);
 		}
 
-		protected function onAzimuthChanged(compass:ICompass):void
+		protected function onAzimuthChanged(compass:IAzimuthProvider):void
 		{
 			const correctedAzimuth:Number = compass.currentAzimuth - 51.5;
 			container.rotation = -1 * correctedAzimuth;
