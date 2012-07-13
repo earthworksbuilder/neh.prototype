@@ -2,7 +2,7 @@ package mteb.view.scene.artifact
 {
 	import flash.display.BitmapData;
 
-	import away3d.core.raycast.MouseHitMethod;
+	import away3d.core.pick.PickingColliderType;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
@@ -34,7 +34,7 @@ package mteb.view.scene.artifact
 
 			name = namePrefix + _id;
 			mouseEnabled = true;
-			mouseHitMethod = MouseHitMethod.MESH_ANY_HIT;
+			pickingCollider = PickingColliderType.BOUNDS_ONLY;
 		}
 
 		public function changeId(value:uint):void

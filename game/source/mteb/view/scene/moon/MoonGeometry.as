@@ -1,6 +1,7 @@
 package mteb.view.scene.moon
 {
 	import away3d.containers.ObjectContainer3D;
+	import away3d.core.pick.PickingColliderType;
 	import away3d.entities.Mesh;
 	import away3d.textures.BitmapTexture;
 
@@ -20,7 +21,7 @@ package mteb.view.scene.moon
 		protected function initialize(r:Number = 64):void
 		{
 			const texture:BitmapTexture = new BitmapTexture(Textures.moonTextureBitmap.bitmapData);
-			const mesh:Mesh = GeometryFactory.createSphere(texture, r);
+			const mesh:Mesh = GeometryFactory.createSphere(texture, r, false, false, PickingColliderType.BOUNDS_ONLY);
 			mesh.name = "MeshMoon";
 			addChild(mesh);
 		}
