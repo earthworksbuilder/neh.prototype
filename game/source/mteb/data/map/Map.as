@@ -8,11 +8,13 @@ package mteb.data.map
 	import pixeldroid.signals.ProtectedSignal;
 
 	import mteb.control.SignalBus;
-	import mteb.control.gamestate.GameStateEnum;
 	import mteb.control.gamestate.IGameStateMachine;
 	import mteb.control.signals.ActionTriggered;
 	import mteb.control.signals.NodeChanged;
 	import mteb.data.DataLocator;
+	import mteb.util.isFuzzyColorMatch;
+	import mteb.util.isFuzzyPointMatch;
+	import mteb.util.uintToString;
 
 
 	public final class Map implements IMap, ISignalReceiver
@@ -151,7 +153,7 @@ package mteb.data.map
 				for (var i:uint = 0; i < n; i++)
 				{
 					node = nodeList[i];
-					if (isApproximateColorMatch(color, parseInt(node.@color)))
+					if (isFuzzyColorMatch(color, parseInt(node.@color)))
 					{
 						nodeId = node.@id;
 						break;
@@ -175,7 +177,7 @@ package mteb.data.map
 			{
 				node = nodeList[i];
 				nodePoint.setTo(parseInt(node.@mapx), parseInt(node.@mapy));
-				if (isApproximatePointMatch(point, nodePoint))
+				if (isFuzzyPointMatch(point, nodePoint))
 				{
 					nodeId = node.@id;
 					break;
@@ -194,36 +196,6 @@ package mteb.data.map
 		protected function getStartNode():String
 		{
 			return xml.@startNode;
-		}
-
-		protected function isApproximateColorMatch(a:uint, b:uint, fuzz:uint = 3):Boolean
-		{
-			if (a == b)
-				return true;
-
-			const ra:int = (a >> 16) & 0xff;
-			const rb:int = (b >> 16) & 0xff;
-			if (Math.abs(ra - rb) > fuzz)
-				return false;
-
-			const ga:int = (a >> 8) & 0xff;
-			const gb:int = (b >> 8) & 0xff;
-			if (Math.abs(ga - gb) > fuzz)
-				return false;
-
-			const ba:int = a & 0xff;
-			const bb:int = b & 0xff;
-			if (Math.abs(ba - bb) > fuzz)
-				return false;
-
-			return true;
-		}
-
-		protected function isApproximatePointMatch(a:Point, b:Point, fuzz:uint = 6):Boolean
-		{
-			const d:Number = Point.distance(a, b);
-
-			return (d <= fuzz);
 		}
 
 		protected function onActionTriggered(trigger:ActionTrigger):void
@@ -259,19 +231,6 @@ package mteb.data.map
 		{
 			mcp.onMapLoadCompleted();
 			changeNode(getStartNode(), getStartAzimuth());
-		}
-
-		protected function uintToString(value:uint):String
-		{
-			const r:uint = (value >> 16) & 0xff;
-			const g:uint = (value >> 8) & 0xff;
-			const b:uint = value & 0xff;
-
-			const rx:String = ((r < 16) ? "0" : "") + r.toString(16);
-			const gx:String = ((g < 16) ? "0" : "") + g.toString(16);
-			const bx:String = ((b < 16) ? "0" : "") + b.toString(16);
-
-			return "0x" + rx + gx + bx;
 		}
 	}
 }
