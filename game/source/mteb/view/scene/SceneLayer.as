@@ -41,6 +41,7 @@ package mteb.view.scene
 	import mteb.data.map.IMap;
 	import mteb.data.map.Node;
 	import mteb.data.time.ITime;
+	import mteb.util.uintToString;
 	import mteb.view.scene.artifact.ArtifactGeometry;
 	import mteb.view.scene.compass.CompassControl;
 	import mteb.view.scene.compass.CompassLightEnum;
@@ -236,15 +237,23 @@ package mteb.view.scene
 			const object3d:Object3D = event.object;
 			const index:int = SkyBoxFaceEnum.fromString(object3d.name).index;
 			const uv:Point = event.uv;
+			const clickedPixel:uint = hotSpotLoader.getUvColorAt(index, uv, true);
+			const clickedAlpha:uint = (clickedPixel >> 24) & 0xff;
+			const clickedColor:uint = clickedPixel & 0x00ffffff;
 
-			const map:IMap = dataLocator.map;
-			const node:Node = map.currentNode;
-			actionTrigger.type = ActionTypeEnum.JUMP_TO_NODE;
-			actionTrigger.nodeId = null;
-			actionTrigger.hotSpotColor = hotSpotLoader.getUvColorAt(index, uv);
+			if (clickedAlpha > 0)
+			{
+				const map:IMap = dataLocator.map;
+				const node:Node = map.currentNode;
+				actionTrigger.type = ActionTypeEnum.JUMP_TO_NODE;
+				actionTrigger.nodeId = null;
+				actionTrigger.hotSpotColor = clickedColor;
 
-			debug(this, "onGroundClicked() - N{0}.{1} ({2}, {3})", node.id, object3d.name, uv.x.toFixed(3), uv.y.toFixed(3));
-			actionTriggered.send(actionTrigger);
+				debug(this, "onGroundClicked() - N{0}.{1} ({2}, {3}) {4}", node.id, object3d.name, uv.x.toFixed(3), uv.y.toFixed(3), uintToString(clickedColor));
+				actionTriggered.send(actionTrigger);
+			}
+			else
+				onSkyClicked(event);
 		}
 
 		protected function onHotspotsLoaded():void
@@ -303,6 +312,11 @@ package mteb.view.scene
 				sceneGeo.addChild(skyGeo);
 			else if (!config.showStars && starsShowing)
 				sceneGeo.removeChild(skyGeo);
+		}
+
+		protected function onSkyClicked(event:MouseEvent3D):void
+		{
+			debug(this, "onSkyClicked() - TODO: check for moon hit");
 		}
 
 		protected function onStageResized(stage:Stage):void
