@@ -71,5 +71,10 @@ package mteb.view.scene.moon
 			S.identity();
 			S.appendScale(scale, scale, scale);
 		}
+
+		public function get subjectPosition():Vector3D
+		{
+			return transform.transformVector(subject.position);
+		}
 	}
 }

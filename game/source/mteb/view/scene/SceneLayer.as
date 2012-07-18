@@ -7,11 +7,11 @@ package mteb.view.scene
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
 
-	import away3d.cameras.lenses.LensBase;
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
 	import away3d.events.MouseEvent3D;
+	import away3d.tools.utils.Ray;
 
 	import pixeldroid.signals.IProtectedSignal;
 	import pixeldroid.signals.ISignal;
@@ -19,10 +19,8 @@ package mteb.view.scene
 	import pixeldroid.signals.ISignalReceiver;
 
 	import mteb.control.SignalBus;
-	import mteb.control.gamestate.GameStateEnum;
 	import mteb.control.gamestate.IGameStateMachine;
 	import mteb.control.signals.ActionTriggered;
-	import mteb.control.signals.ArtifactChanged;
 	import mteb.control.signals.ArtifactCollected;
 	import mteb.control.signals.AzimuthChanged;
 	import mteb.control.signals.FrameEntered;
@@ -37,14 +35,12 @@ package mteb.view.scene
 	import mteb.data.map.AzimuthTable;
 	import mteb.data.map.IArtifact;
 	import mteb.data.map.IAzimuthProvider;
-	import mteb.data.map.ICompassLightStateProvider;
 	import mteb.data.map.IMap;
 	import mteb.data.map.Node;
 	import mteb.data.time.ITime;
 	import mteb.util.uintToString;
 	import mteb.view.scene.artifact.ArtifactGeometry;
 	import mteb.view.scene.compass.CompassControl;
-	import mteb.view.scene.compass.CompassLightEnum;
 	import mteb.view.scene.ground.BitmapCubeLoader;
 	import mteb.view.scene.ground.NodeGeometry;
 	import mteb.view.scene.ground.SkyBoxFaceEnum;
@@ -58,26 +54,28 @@ package mteb.view.scene
 	{
 		protected var STARTING_AZIMUTH:Number; // azimuth of initial node view
 		protected const TO_DEGREES:Number = 180 / Math.PI;
+		protected const RAY:Ray = new Ray();
+
+		protected const azimuthChanged:IProtectedSignal = new AzimuthChanged();
+		protected const actionTriggered:IProtectedSignal = new ActionTriggered();
+		protected const artifactCollected:IProtectedSignal = new ArtifactCollected();
 
 		protected const dataLocator:IDataLocator = DataLocator.getInstance();
 		protected const mcp:IGameStateMachine = dataLocator.mcp;
 		protected const bitmapCubeLoader:BitmapCubeLoader = new BitmapCubeLoader();
 		protected const hotSpotLoader:BitmapCubeLoader = new BitmapCubeLoader();
 		protected const actionTrigger:ActionTrigger = new ActionTrigger();
+
 		protected var artifactGeo:ArtifactGeometry;
 		protected const groundGeo:NodeGeometry = new NodeGeometry();
 		protected const skyGeo:SkyGeometry = new SkyGeometry();
 		protected const moonOrbit:Orbit = new Orbit();
-		protected const moonGeo:ObjectContainer3D = new MoonGeometry() as ObjectContainer3D;
+		protected const moonGeo:MoonGeometry = new MoonGeometry();
 		protected const moonTrail:MoonTrail = new MoonTrail();
 		protected const moonTrailFrameSkip:uint = 4;
 		protected const compassControl:ObjectContainer3D = new CompassControl();
 		protected const sceneGeo:ObjectContainer3D = new ObjectContainer3D();
 		protected const view:View3D = new View3D();
-
-		protected const azimuthChanged:IProtectedSignal = new AzimuthChanged();
-		protected const actionTriggered:IProtectedSignal = new ActionTriggered();
-		protected const artifactCollected:IProtectedSignal = new ArtifactCollected();
 
 		protected var moonTrailFrame:uint = moonTrailFrameSkip;
 		protected var lastAzimuth:Number;
@@ -188,9 +186,10 @@ package mteb.view.scene
 			skyGeo.tilt = -55; // align polaris for our north america position
 			skyGeo.shift = -227;
 
-			groundGeo.addEventListener(MouseEvent3D.CLICK, onGroundClicked);
-
 			moonOrbit.setSubject(moonGeo, 1024 + 512);
+
+			moonGeo.addEventListener(MouseEvent3D.CLICK, onMoonClicked);
+			groundGeo.addEventListener(MouseEvent3D.CLICK, onGroundClicked);
 
 			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail, compassControl);
 			view.scene.addChild(sceneGeo);
@@ -237,10 +236,10 @@ package mteb.view.scene
 			const object3d:Object3D = event.object;
 			const index:int = SkyBoxFaceEnum.fromString(object3d.name).index;
 			const uv:Point = event.uv;
-			const clickedPixel:uint = hotSpotLoader.getUvColorAt(index, uv, true);
-			const clickedAlpha:uint = (clickedPixel >> 24) & 0xff;
-			const clickedColor:uint = clickedPixel & 0x00ffffff;
 
+			var clickedPixel:uint = hotSpotLoader.getUvColorAt(index, uv, true);
+			var clickedAlpha:uint = (clickedPixel >> 24) & 0xff;
+			var clickedColor:uint = clickedPixel & 0x00ffffff;
 			if (clickedAlpha > 0)
 			{
 				const map:IMap = dataLocator.map;
@@ -253,7 +252,17 @@ package mteb.view.scene
 				actionTriggered.send(actionTrigger);
 			}
 			else
-				onSkyClicked(event);
+			{
+				clickedPixel = bitmapCubeLoader.getUvColorAt(index, uv, true);
+				clickedAlpha = (clickedPixel >> 24) & 0xff;
+				if (clickedAlpha == 0)
+				{
+					debug(this, "onGroundClicked() - pass-thru to sky");
+					onSkyClicked(event);
+				}
+				else
+					debug(this, "onGroundClicked() - no-op");
+			}
 		}
 
 		protected function onHotspotsLoaded():void
@@ -266,6 +275,11 @@ package mteb.view.scene
 				return debug(this, "onHotspotsLoaded() - still waiting for textures...");
 
 			updateTextures();
+		}
+
+		protected function onMoonClicked(event:MouseEvent3D):void
+		{
+			debug(this, "onMoonClicked() - yay-yea!!!");
 		}
 
 		protected function onNodeChanged(map:IMap):void
@@ -316,7 +330,16 @@ package mteb.view.scene
 
 		protected function onSkyClicked(event:MouseEvent3D):void
 		{
-			debug(this, "onSkyClicked() - TODO: check for moon hit");
+			const ray:Vector3D = view.getRay(view.mouseX, view.mouseY);
+			const isMoonClick:Boolean = RAY.intersectsSphere(view.camera.position, ray, moonOrbit.subjectPosition, moonGeo.radius);
+
+			if (isMoonClick)
+			{
+				debug(this, "onSkyClicked() - clicked the moon!");
+				onMoonClicked(event);
+			}
+			else
+				debug(this, "onSkyClicked() - no-op");
 		}
 
 		protected function onStageResized(stage:Stage):void
@@ -363,7 +386,7 @@ package mteb.view.scene
 		{
 			debug(this, "updateTextures() - currentNode textures and hotspots are loaded; updating bitmapdata and updating game state");
 
-			var showHotspots:Boolean = dataLocator.config.showHotspots;
+			const showHotspots:Boolean = dataLocator.config.showHotspots;
 			var bd:BitmapData;
 			for (var i:uint = 0; i < 6; i++)
 			{
