@@ -39,7 +39,7 @@ package mteb.view.scene.ground
 
 		public function dispose():void
 		{
-			var n:uint = imageData.length;
+			const n:uint = imageData.length;
 			for (var i:uint = 0; i < n; i++)
 			{
 				if (imageData[i] != null)
@@ -54,7 +54,7 @@ package mteb.view.scene.ground
 
 		public function getCubeTextureFor():BitmapCubeTexture
 		{
-			var bitmapCubeTexture:BitmapCubeTexture = new BitmapCubeTexture(imageData[POSX], imageData[NEGX], imageData[POSY], imageData[NEGY], imageData[POSZ], imageData[NEGZ]);
+			const bitmapCubeTexture:BitmapCubeTexture = new BitmapCubeTexture(imageData[POSX], imageData[NEGX], imageData[POSY], imageData[NEGY], imageData[POSZ], imageData[NEGZ]);
 
 			return bitmapCubeTexture;
 		}
@@ -64,10 +64,12 @@ package mteb.view.scene.ground
 			return new BitmapTexture(imageData[index]);
 		}
 
-		public function getUvColorAt(index:uint, uv:Point = null):uint
+		public function getUvColorAt(index:uint, uv:Point = null, use32Bits:Boolean = false):uint
 		{
-			var bd:BitmapData = imageData[index];
-			var color:uint = bd.getPixel(Math.round(uv.x * bd.width), Math.round(uv.y * bd.height));
+			const bd:BitmapData = imageData[index];
+			const px:uint = Math.round(uv.x * bd.width);
+			const py:uint = Math.round(uv.y * bd.height);
+			const color:uint = use32Bits ? bd.getPixel32(px, py) : bd.getPixel(px, py);
 
 			return color;
 		}
@@ -75,7 +77,7 @@ package mteb.view.scene.ground
 		public function get isLoaded():Boolean
 		{
 			var imagesLoaded:Boolean = true;
-			var n:uint = loadComplete.length;
+			const n:uint = loadComplete.length;
 			for (var i:uint = 0; i < n; i++)
 			{
 				if (!loadComplete[i])
@@ -91,7 +93,7 @@ package mteb.view.scene.ground
 		{
 			externalCallback = callback;
 
-			var n:uint = imageUrls.length;
+			const n:uint = imageUrls.length;
 			for (var i:uint = 0; i < n; i++)
 			{
 				if (imageUrls[i] == null)
@@ -133,7 +135,7 @@ package mteb.view.scene.ground
 
 		protected function setImage(which:uint, event:Event):void
 		{
-			var bitmap:Bitmap = event.target.content as Bitmap;
+			const bitmap:Bitmap = event.target.content as Bitmap;
 			imageData[which] = bitmap.bitmapData;
 			loadComplete[which] = true;
 
@@ -146,7 +148,7 @@ package mteb.view.scene.ground
 
 		protected function setLoaders():void
 		{
-			var n:uint = loaders.length;
+			const n:uint = loaders.length;
 			for (var i:uint = 0; i < n; i++)
 			{
 				loaders[i] = new Loader();
