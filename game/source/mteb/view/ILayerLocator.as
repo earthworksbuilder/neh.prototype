@@ -12,6 +12,8 @@ package mteb.view
 
 		function get scene():ISceneLayer;
 
+		function get title():DisplayObject;
+
 		function get ui():DisplayObject;
 	}
 }

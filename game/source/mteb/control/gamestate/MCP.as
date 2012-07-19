@@ -8,6 +8,7 @@ package mteb.control.gamestate
 	import mteb.control.SignalBus;
 	import mteb.control.signals.ArtifactChanged;
 	import mteb.control.signals.FrameEntered;
+	import mteb.control.signals.GameStateChanged;
 	import mteb.data.DataLocator;
 	import mteb.data.map.IArtifact;
 	import mteb.data.map.ICompassLightStateProvider;
@@ -22,10 +23,19 @@ package mteb.control.gamestate
 		private const inventory:IInventory = DataLocator.getInstance().inventory;
 		private const compassState:CompassStateMachine = new CompassStateMachine();
 
-		private var lastState:GameStateEnum = GameStateEnum.WAITING;
-		private var currentState:GameStateEnum = GameStateEnum.WAITING;
+		private const gameStateChanged:IProtectedSignal = new GameStateChanged();
+
+		private var lastState:GameStateEnum = GameStateEnum.TITLE_SHOWING;
+		private var currentState:GameStateEnum = GameStateEnum.TITLE_SHOWING;
 		private var pendingState:GameStateEnum;
 		private var gameStarted:Boolean = false;
+
+
+		public function MCP()
+		{
+			const signalBus:ISignalBus = SignalBus.getInstance();
+			signalBus.addSignal(gameStateChanged as ISignal);
+		}
 
 		public function onArtifactCollected(artifact:IArtifact):void
 		{
@@ -37,11 +47,11 @@ package mteb.control.gamestate
 				debug(this, "onArtifactCollected() - doesn't match the currently sought index ({0})", compassState.currentArtifactIndex);
 		}
 
-		public function onInitializationStarted():void  { setState(GameStateEnum.INITIALIZING); }
-
 		public function onMapLoadCompleted():void  { setState(GameStateEnum.WAITING); }
 
 		public function onMapLoadStarted():void  { setState(GameStateEnum.LOADING); }
+
+		public function onNewGameRequested():void  { setState(GameStateEnum.INITIALIZING); }
 
 		public function onNodeTravelCompleted():void  { setState(GameStateEnum.NODE_ARRIVED); }
 
@@ -79,6 +89,11 @@ package mteb.control.gamestate
 			const announcement:IProtectedSignal = artifactChanged as IProtectedSignal;
 			signalBus.addSignal(announcement as ISignal);
 			announcement.send(artifactChanged as ICompassLightStateProvider);
+		}
+
+		private function announceStateChange():void
+		{
+			gameStateChanged.send(this as IGameStateMachine);
 		}
 
 		private function setState(value:GameStateEnum):void
@@ -140,6 +155,8 @@ package mteb.control.gamestate
 
 			lastState = currentState;
 			currentState = pendingState;
+
+			announceStateChange();
 
 			if (nextState)
 				setState(nextState);

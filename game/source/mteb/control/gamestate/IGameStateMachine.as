@@ -8,11 +8,11 @@ package mteb.control.gamestate
 
 		function onArtifactCollected(artifact:IArtifact):void;
 
-		function onInitializationStarted():void;
-
 		function onMapLoadCompleted():void;
 
 		function onMapLoadStarted():void;
+
+		function onNewGameRequested():void;
 
 		function onNodeTravelCompleted():void;
 

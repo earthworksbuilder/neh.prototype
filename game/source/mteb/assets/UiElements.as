@@ -1,5 +1,6 @@
 package mteb.assets
 {
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
 
 
@@ -12,8 +13,13 @@ package mteb.assets
 		[Embed(source="/../assets/ui/map/view-angle.png")]
 		private static const MapViewAngle:Class;
 
+		[Embed(source="/../assets/ui/title.png")]
+		private static const TitleScreen:Class;
+
 		public static function get mapViewAngle():Sprite  { return AssetUtils.createOffsetParent(new MapViewAngle(), -.50, -.76); }
 
 		public static function get nodeMap():Sprite  { return AssetUtils.createOffsetParent(new MapTexture()); }
+
+		public static function get titleScreen():Bitmap  { return new TitleScreen(); }
 	}
 }

@@ -4,6 +4,7 @@ package mteb.control.gamestate
 
 	public final class GameStateEnum
 	{
+		public static const TITLE_SHOWING:GameStateEnum = new GameStateEnum("TITLE_SHOWING");
 		public static const INITIALIZING:GameStateEnum = new GameStateEnum("INITIALIZING");
 		public static const NODE_TRAVELING:GameStateEnum = new GameStateEnum("NODE_TRAVELING");
 		public static const NODE_ARRIVED:GameStateEnum = new GameStateEnum("NODE_ARRIVED");
