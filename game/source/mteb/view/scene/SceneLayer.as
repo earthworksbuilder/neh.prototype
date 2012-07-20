@@ -44,7 +44,8 @@ package mteb.view.scene
 	import mteb.view.scene.ground.BitmapCubeLoader;
 	import mteb.view.scene.ground.NodeGeometry;
 	import mteb.view.scene.ground.SkyBoxFaceEnum;
-	import mteb.view.scene.moon.MoonGeometry;
+	import mteb.view.scene.moon.IMoon;
+	import mteb.view.scene.moon.Moon;
 	import mteb.view.scene.moon.MoonTrail;
 	import mteb.view.scene.moon.Orbit;
 	import mteb.view.scene.sky.SkyGeometry;
@@ -70,7 +71,7 @@ package mteb.view.scene
 		protected const groundGeo:NodeGeometry = new NodeGeometry();
 		protected const skyGeo:SkyGeometry = new SkyGeometry();
 		protected const moonOrbit:Orbit = new Orbit();
-		protected const moonGeo:MoonGeometry = new MoonGeometry();
+		protected const moon:IMoon = new Moon();
 		protected const moonTrail:MoonTrail = new MoonTrail();
 		protected const moonTrailFrameSkip:uint = 4;
 		protected const compassControl:ObjectContainer3D = new CompassControl();
@@ -186,9 +187,9 @@ package mteb.view.scene
 			skyGeo.tilt = -55; // align polaris for our north america position
 			skyGeo.shift = -227;
 
-			moonOrbit.setSubject(moonGeo, 1024 + 512);
+			moonOrbit.setSubject(moon.geometry, 1024 + 512);
 
-			moonGeo.addEventListener(MouseEvent3D.CLICK, onMoonClicked);
+			moon.geometry.addEventListener(MouseEvent3D.CLICK, onMoonClicked);
 			groundGeo.addEventListener(MouseEvent3D.CLICK, onGroundClicked);
 
 			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail, compassControl);
@@ -220,7 +221,7 @@ package mteb.view.scene
 			moonOrbit.animate(time.secondsElapsedScaled);
 			if (--moonTrailFrame == 0)
 			{
-				moonTrail.setNextPoint(moonGeo.scenePosition);
+				moonTrail.setNextPoint(moon.geometry.scenePosition);
 				moonTrailFrame = moonTrailFrameSkip;
 			}
 
@@ -331,7 +332,7 @@ package mteb.view.scene
 		protected function onSkyClicked(event:MouseEvent3D):void
 		{
 			const ray:Vector3D = view.getRay(view.mouseX, view.mouseY);
-			const isMoonClick:Boolean = RAY.intersectsSphere(view.camera.position, ray, moonOrbit.subjectPosition, moonGeo.radius);
+			const isMoonClick:Boolean = RAY.intersectsSphere(view.camera.position, ray, moonOrbit.subjectPosition, moon.radius);
 
 			if (isMoonClick)
 			{
