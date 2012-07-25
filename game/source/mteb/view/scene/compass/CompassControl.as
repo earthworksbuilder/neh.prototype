@@ -107,7 +107,7 @@ package mteb.view.scene.compass
 
 		protected function onFrameEntered(time:ITime):void
 		{
-			textureSprite.animate(time.secondsElapsed);
+			textureSprite.animate(time.secondsElapsed, time.secondsTotal);
 			compassGeo.texture = textureSprite.texture;
 		}
 

@@ -39,7 +39,7 @@ package mteb.view.scene.moon
 		{
 		}
 
-		public function animate(secondsElapsed:Number):void
+		public function animate(secondsElapsed:Number, secondsTotal:Number):void
 		{
 			R.identity();
 			angle += speed * secondsElapsed;

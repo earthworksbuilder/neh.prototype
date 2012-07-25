@@ -11,21 +11,19 @@ package mteb.view.scene.compass
 		protected var _state:CompassLightEnum = CompassLightEnum.LOCKED;
 		protected var invalidated:Boolean = false;
 		protected var timeDependent:Boolean = false;
-		protected var time:Number = 0;
 
 
 		public function MoonPoint()
 		{
 			super();
-			draw(time);
+			draw(0);
 		}
 
-		public function animate(secondsElapsed:Number):void
+		public function animate(secondsElapsed:Number, secondsTotal:Number):void
 		{
-			time += secondsElapsed;
 			if (invalidated || timeDependent)
 			{
-				draw(time);
+				draw(secondsTotal);
 				invalidated = false;
 			}
 		}

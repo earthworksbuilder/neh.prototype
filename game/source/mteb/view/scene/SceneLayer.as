@@ -11,6 +11,8 @@ package mteb.view.scene
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
 	import away3d.events.MouseEvent3D;
+	import away3d.lights.LightBase;
+	import away3d.tools.helpers.LightsHelper;
 	import away3d.tools.utils.Ray;
 
 	import pixeldroid.signals.IProtectedSignal;
@@ -189,11 +191,17 @@ package mteb.view.scene
 
 			moonOrbit.setSubject(moon.geometry, 1024 + 512);
 
+			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail, compassControl);
+			view.scene.addChild(sceneGeo);
+
+			// add event handlers for interactive geo
 			moon.geometry.addEventListener(MouseEvent3D.CLICK, onMoonClicked);
 			groundGeo.addEventListener(MouseEvent3D.CLICK, onGroundClicked);
 
-			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail, compassControl);
-			view.scene.addChild(sceneGeo);
+			// add lights to the scene (assuming lights already associated to appropriate geo)
+			const lights:Vector.<LightBase> = moon.lights;
+			for (var i:uint = 0; i < lights.length; i++)
+				view.scene.addChild(lights[i]);
 		}
 
 		protected function onArtifactClicked(event:MouseEvent3D):void
@@ -215,15 +223,16 @@ package mteb.view.scene
 			view.camera.transform = dataLocator.look.value;
 
 			// spin the sky
-			skyGeo.animate(time.secondsElapsedScaled);
+			skyGeo.animate(time.secondsElapsedScaled, time.secondsTotalScaled);
 
 			// revolve the moon
-			moonOrbit.animate(time.secondsElapsedScaled);
+			moonOrbit.animate(time.secondsElapsedScaled, time.secondsTotalScaled);
 			if (--moonTrailFrame == 0)
 			{
 				moonTrail.setNextPoint(moon.geometry.scenePosition);
 				moonTrailFrame = moonTrailFrameSkip;
 			}
+			moon.animate(time.secondsElapsed, time.secondsTotal);
 
 			// compute azimuth and send notification of any change
 			setAzimuth(computeAzimuth());
@@ -280,7 +289,8 @@ package mteb.view.scene
 
 		protected function onMoonClicked(event:MouseEvent3D):void
 		{
-			debug(this, "onMoonClicked() - yay-yea!!!");
+			debug(this, "onMoonClicked()");
+			moon.onClicked();
 		}
 
 		protected function onNodeChanged(map:IMap):void

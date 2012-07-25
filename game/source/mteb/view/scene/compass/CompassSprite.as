@@ -37,21 +37,21 @@ package mteb.view.scene.compass
 			initialize()
 		}
 
-		public function animate(secondsElapsed:Number):void
+		public function animate(secondsElapsed:Number, secondsTotal:Number):void
 		{
 			var n:uint, i:uint;
 
 			n = AzimuthTable.MOON_RISES_MIN.length;
 			for (i = 0; i < n; i++)
-				risePoints[i].animate(secondsElapsed);
+				risePoints[i].animate(secondsElapsed, secondsTotal);
 
 			n = AzimuthTable.MOON_SETS_MIN.length;
 			for (i = 0; i < n; i++)
-				setPoints[i].animate(secondsElapsed);
+				setPoints[i].animate(secondsElapsed, secondsTotal);
 
 			n = artifactPoints.length;
 			for (i = 0; i < n; i++)
-				artifactPoints[i].animate(secondsElapsed);
+				artifactPoints[i].animate(secondsElapsed, secondsTotal);
 		}
 
 		public function changeArtifactPointState(which:uint, value:CompassLightEnum):void

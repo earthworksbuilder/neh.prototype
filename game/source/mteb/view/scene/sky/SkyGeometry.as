@@ -36,7 +36,7 @@ package mteb.view.scene.sky
 			initialize();
 		}
 
-		public function animate(secondsElapsed:Number):void
+		public function animate(secondsElapsed:Number, secondsTotal:Number):void
 		{
 			spin += speed * secondsElapsed;
 		}

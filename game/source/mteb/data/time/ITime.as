@@ -9,5 +9,7 @@ package mteb.data.time
 		function set multiplier(value:Number):void;
 		function get secondsElapsed():Number;
 		function get secondsElapsedScaled():Number;
+		function get secondsTotal():Number;
+		function get secondsTotalScaled():Number;
 	}
 }

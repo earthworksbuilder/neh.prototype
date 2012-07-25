@@ -1,13 +1,19 @@
 package mteb.view.scene.moon
 {
 	import away3d.entities.Mesh;
+	import away3d.lights.DirectionalLight;
+	import away3d.lights.LightBase;
+	import away3d.tools.helpers.LightsHelper;
 
 	import pixeldroid.signals.ISignal;
 	import pixeldroid.signals.ISignalBus;
 	import pixeldroid.signals.ISignalReceiver;
 
 	import mteb.control.SignalBus;
+	import mteb.control.gamestate.IGameStateMachine;
+	import mteb.control.gamestate.MCP;
 	import mteb.control.signals.ArtifactChanged;
+	import mteb.data.DataLocator;
 	import mteb.data.map.ICompassLightStateProvider;
 	import mteb.view.scene.compass.CompassLightEnum;
 
@@ -16,6 +22,27 @@ package mteb.view.scene.moon
 	{
 
 		protected static const _geo:MoonGeometry = new MoonGeometry();
+		protected static const _lights:Vector.<LightBase> = createLights();
+
+		protected static function createLights():Vector.<LightBase>
+		{
+			// simple two-point light setup: key, fill
+			const key:DirectionalLight = new DirectionalLight(.5, -1, .75);
+			key.color = 0xffffff;
+			key.ambient = 0;
+			key.ambientColor = 0xeeeeff;
+			key.diffuse = .75;
+			key.specular = .1;
+
+			const fill:DirectionalLight = new DirectionalLight(-1, .5, .75);
+			fill.color = 0xffffff;
+			fill.ambient = 0;
+			fill.diffuse = .25;
+			fill.specular = 0;
+
+			const lights:Vector.<LightBase> = new <LightBase>[key, fill];
+			return lights;
+		}
 
 		protected var _state:MoonStateEnum = MoonStateEnum.WAITING;
 
@@ -24,11 +51,44 @@ package mteb.view.scene.moon
 		{
 			const signalBus:ISignalBus = SignalBus.getInstance();
 			signalBus.addReceiver(ArtifactChanged, this);
+
+			// apply lighting to geometry
+			LightsHelper.addStaticLightsToMaterials(_geo, _lights);
+		}
+
+		public function animate(secondsElapsed:Number, secondsTotal:Number):void
+		{
+			switch (_state)
+			{
+				case MoonStateEnum.ACTIVATED:
+					_geo.scaleX = _geo.scaleY = _geo.scaleZ = 1.00 + (.03 * Math.sin(5 * secondsTotal));
+					_geo.alpha = .90 + (.10 * Math.cos(7 * secondsTotal));
+					break;
+			}
 		}
 
 		public function get geometry():Mesh
 		{
 			return _geo as Mesh;
+		}
+
+		public function get lights():Vector.<LightBase>
+		{
+			return _lights;
+		}
+
+		public function onClicked():void
+		{
+			debug(this, "onClicked() - {0} moon clicked", _state);
+
+			const mcp:IGameStateMachine = DataLocator.getInstance().mcp;
+			switch (_state)
+			{
+				case MoonStateEnum.ACTIVATED:
+					debug(this, "onClicked() - moon captured! TODO: which rise or set is it? tell mcp");
+					_state = MoonStateEnum.TRAVELING;
+					break;
+			}
 		}
 
 		public function get radius():Number
@@ -57,8 +117,20 @@ package mteb.view.scene.moon
 
 		protected function onArtifactChanged(authority:ICompassLightStateProvider):void
 		{
-			if (authority.pointState == CompassLightEnum.ACTIVATED)
-				debug(this, "onArtifactChanged() - activate moon!");
+			switch (authority.pointState)
+			{
+				case CompassLightEnum.ACTIVATED:
+					debug(this, "onArtifactChanged() - activate moon!");
+					_lights[0].ambient = 1;
+					_state = MoonStateEnum.ACTIVATED;
+					break;
+
+				default:
+					debug(this, "onArtifactChanged() - state: {0}", authority.pointState);
+					_lights[0].ambient = 0;
+					_state = MoonStateEnum.WAITING;
+					break;
+			}
 		}
 	}
 }

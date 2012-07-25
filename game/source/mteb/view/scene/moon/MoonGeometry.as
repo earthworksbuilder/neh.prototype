@@ -13,6 +13,7 @@ package mteb.view.scene.moon
 	public class MoonGeometry extends Mesh
 	{
 		private var _radius:Number = 64;
+		private var _material:TextureMaterial;
 
 
 		public function MoonGeometry()
@@ -22,11 +23,16 @@ package mteb.view.scene.moon
 			const material:TextureMaterial = GeometryFactory.createTextureMaterial(texture, false, true);
 
 			super(geometry, material);
+			_material = material;
 
 			name = "MeshMoon";
 			mouseEnabled = true;
 			pickingCollider = PickingColliderType.BOUNDS_ONLY;
 		}
+
+		public function get alpha():Number  { return _material.alpha; }
+
+		public function set alpha(value:Number):void  { _material.alpha = value; }
 
 		public function get radius():Number  { return _radius; }
 	}

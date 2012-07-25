@@ -16,8 +16,10 @@ package mteb.data.time
 	public class Time implements ITime, ISignalReceiver
 	{
 
-		protected var elapsed:Number;
 		protected const frameEntered:IProtectedSignal = new FrameEntered();
+
+		protected var elapsed:Number;
+		protected var total:Number;
 		protected var lastFrame:int;
 		protected var totalFrames:uint;
 		protected var _multiplier:Number = 1;
@@ -25,6 +27,7 @@ package mteb.data.time
 
 		public function Time()
 		{
+			total = 0;
 			totalFrames = 0;
 
 			const signalBus:ISignalBus = SignalBus.getInstance();
@@ -51,6 +54,7 @@ package mteb.data.time
 			elapsed = (lastFrame ? (now - lastFrame) : now) * .001; // convert ms elapsed to seconds
 			lastFrame = now;
 
+			total += elapsed;
 			totalFrames++;
 
 			frameEntered.send(this);
@@ -79,6 +83,16 @@ package mteb.data.time
 		public function get secondsElapsedScaled():Number
 		{
 			return elapsed * _multiplier;
+		}
+
+		public function get secondsTotal():Number
+		{
+			return total;
+		}
+
+		public function get secondsTotalScaled():Number
+		{
+			return total * _multiplier;
 		}
 	}
 }
