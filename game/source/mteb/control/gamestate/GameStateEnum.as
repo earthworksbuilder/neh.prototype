@@ -6,6 +6,7 @@ package mteb.control.gamestate
 	{
 		public static const TITLE_SHOWING:GameStateEnum = new GameStateEnum("TITLE_SHOWING");
 		public static const INITIALIZING:GameStateEnum = new GameStateEnum("INITIALIZING");
+		public static const WAITING_TO_LOAD:GameStateEnum = new GameStateEnum("WAITING_TO_LOAD");
 		public static const NODE_TRAVELING:GameStateEnum = new GameStateEnum("NODE_TRAVELING");
 		public static const NODE_ARRIVED:GameStateEnum = new GameStateEnum("NODE_ARRIVED");
 		public static const LOADING:GameStateEnum = new GameStateEnum("LOADING");

@@ -1,10 +1,11 @@
-package mteb.view.scene.moon
+package mteb.view.scene.models.moon
 {
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 
 	import away3d.containers.ObjectContainer3D;
 
+	import mteb.data.time.ITime;
 	import mteb.data.time.ITimeDriven;
 
 
@@ -39,10 +40,10 @@ package mteb.view.scene.moon
 		{
 		}
 
-		public function animate(secondsElapsed:Number, secondsTotal:Number):void
+		public function onTimeElapsed(time:ITime):void
 		{
 			R.identity();
-			angle += speed * secondsElapsed;
+			angle += speed * time.secondsElapsedScaled;
 			R.appendRotation(-1 * angle, Vector3D.X_AXIS);
 
 			const s:Number = Math.sin((angle / (oscillatePeriod * 3600)) * TO_RADIANS); // not sure what the magic 3600 represents just yet..

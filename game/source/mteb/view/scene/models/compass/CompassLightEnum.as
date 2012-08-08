@@ -1,4 +1,4 @@
-package mteb.view.scene.compass
+package mteb.view.scene.models.compass
 {
 
 

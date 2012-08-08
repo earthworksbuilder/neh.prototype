@@ -8,6 +8,8 @@ package mteb.control.gamestate
 
 		function onArtifactCollected(artifact:IArtifact):void;
 
+		function onDebugLayerReady():void;
+
 		function onMapLoadCompleted():void;
 
 		function onMapLoadStarted():void;
@@ -27,6 +29,10 @@ package mteb.control.gamestate
 		function onNorthMinSetUnlocked():void;
 
 		function onRiseCaptured(index:uint):void;
+
+		function onSceneLayerReady():void;
+
+		function onUiLayerReady():void;
 
 		function get state():GameStateEnum;
 	}

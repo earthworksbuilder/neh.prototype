@@ -1,10 +1,11 @@
-package mteb.view.scene.compass
+package mteb.view.scene.models.compass
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 
+	import mteb.data.time.ITime;
 	import mteb.data.time.ITimeDriven;
 
 
@@ -24,15 +25,6 @@ package mteb.view.scene.compass
 			addChild(_icon);
 		}
 
-		public function animate(secondsElapsed:Number, secondsTotal:Number):void
-		{
-			if (invalidated || timeDependent)
-			{
-				draw(secondsTotal);
-				invalidated = false;
-			}
-		}
-
 		public function get icon():BitmapData
 		{
 			return _icon.bitmapData;
@@ -44,6 +36,15 @@ package mteb.view.scene.compass
 			_icon.x = _icon.width * -.5;
 			_icon.y = _icon.height * -.5;
 			invalidated = true;
+		}
+
+		public function onTimeElapsed(time:ITime):void
+		{
+			if (invalidated || timeDependent)
+			{
+				draw(time.secondsTotal);
+				invalidated = false;
+			}
 		}
 
 		public function get state():CompassLightEnum

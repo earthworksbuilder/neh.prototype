@@ -1,7 +1,8 @@
-package mteb.view.scene.compass
+package mteb.view.scene.models.compass
 {
 	import flash.display.Shape;
 
+	import mteb.data.time.ITime;
 	import mteb.data.time.ITimeDriven;
 
 
@@ -19,11 +20,11 @@ package mteb.view.scene.compass
 			draw(0);
 		}
 
-		public function animate(secondsElapsed:Number, secondsTotal:Number):void
+		public function onTimeElapsed(time:ITime):void
 		{
 			if (invalidated || timeDependent)
 			{
-				draw(secondsTotal);
+				draw(time.secondsTotal);
 				invalidated = false;
 			}
 		}

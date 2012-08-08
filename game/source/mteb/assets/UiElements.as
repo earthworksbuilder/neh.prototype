@@ -7,13 +7,13 @@ package mteb.assets
 	public final class UiElements
 	{
 
-		[Embed(source="/../assets/ui/map/nodemap-256x256.png")]
+		[Embed(source="/../assets/ui/map/nodemap-256x256.png", mimeType="image/png")]
 		private static const MapTexture:Class;
 
-		[Embed(source="/../assets/ui/map/view-angle.png")]
+		[Embed(source="/../assets/ui/map/view-angle.png", mimeType="image/png")]
 		private static const MapViewAngle:Class;
 
-		[Embed(source="/../assets/ui/title.png")]
+		[Embed(source="/../assets/ui/title.png", mimeType="image/png")]
 		private static const TitleScreen:Class;
 
 		public static function get mapViewAngle():Sprite  { return AssetUtils.createOffsetParent(new MapViewAngle(), -.50, -.76); }

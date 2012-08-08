@@ -1,4 +1,4 @@
-package mteb.view.scene.sky
+package mteb.view.scene.models.sky
 {
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
@@ -9,8 +9,9 @@ package mteb.view.scene.sky
 	import away3d.textures.BitmapTexture;
 
 	import mteb.assets.Textures;
+	import mteb.data.time.ITime;
 	import mteb.data.time.ITimeDriven;
-	import mteb.view.scene.GeometryFactory;
+	import mteb.view.scene.models.GeometryFactory;
 
 	use namespace arcane;
 
@@ -36,9 +37,9 @@ package mteb.view.scene.sky
 			initialize();
 		}
 
-		public function animate(secondsElapsed:Number, secondsTotal:Number):void
+		public function onTimeElapsed(time:ITime):void
 		{
-			spin += speed * secondsElapsed;
+			spin += speed * time.secondsElapsedScaled;
 		}
 
 		public function get shift():Number

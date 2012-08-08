@@ -1,4 +1,4 @@
-package mteb.view.scene
+package mteb.view.scene.models
 {
 	import away3d.core.base.Geometry;
 	import away3d.core.pick.IPickingCollider;

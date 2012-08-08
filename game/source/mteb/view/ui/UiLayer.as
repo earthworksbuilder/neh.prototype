@@ -10,6 +10,8 @@ package mteb.view.ui
 
 	import mteb.control.SignalBus;
 	import mteb.control.signals.StageResized;
+	import mteb.data.DataLocator;
+	import mteb.data.IDataLocator;
 
 
 	public final class UiLayer extends Sprite implements ISignalReceiver
@@ -57,7 +59,10 @@ package mteb.view.ui
 			addChild(mapControl);
 
 			onStageResized(stage);
-			debug(this, "ui layer added to stage");
+
+			debug(this, "ui layer ready...");
+			const dataLocator:IDataLocator = DataLocator.getInstance();
+			dataLocator.mcp.onUiLayerReady();
 		}
 
 		protected function onStageResized(stage:Stage):void

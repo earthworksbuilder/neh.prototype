@@ -1,4 +1,4 @@
-package mteb.view.scene.moon
+package mteb.view.scene.models.moon
 {
 
 

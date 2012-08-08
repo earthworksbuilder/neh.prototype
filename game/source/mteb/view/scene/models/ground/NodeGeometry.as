@@ -1,4 +1,4 @@
-package mteb.view.scene.ground
+package mteb.view.scene.models.ground
 {
 	import flash.display.BitmapData;
 	import flash.geom.Vector3D;
@@ -9,7 +9,7 @@ package mteb.view.scene.ground
 	import away3d.entities.Mesh;
 	import away3d.textures.BitmapTexture;
 
-	import mteb.view.scene.GeometryFactory;
+	import mteb.view.scene.models.GeometryFactory;
 
 
 	public class NodeGeometry extends ObjectContainer3D

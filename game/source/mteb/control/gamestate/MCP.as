@@ -14,7 +14,7 @@ package mteb.control.gamestate
 	import mteb.data.map.ICompassLightStateProvider;
 	import mteb.data.player.IInventory;
 	import mteb.data.time.ITime;
-	import mteb.view.scene.compass.CompassLightEnum;
+	import mteb.view.scene.models.compass.CompassLightEnum;
 
 
 	public final class MCP implements IGameStateMachine
@@ -24,6 +24,10 @@ package mteb.control.gamestate
 		private const compassState:CompassStateMachine = new CompassStateMachine();
 
 		private const gameStateChanged:IProtectedSignal = new GameStateChanged();
+
+		private var layerUiReady:Boolean = false;
+		private var layerSceneReady:Boolean = false;
+		private var layerDebugReady:Boolean = false;
 
 		private var lastState:GameStateEnum = GameStateEnum.TITLE_SHOWING;
 		private var currentState:GameStateEnum = GameStateEnum.TITLE_SHOWING;
@@ -47,6 +51,8 @@ package mteb.control.gamestate
 				debug(this, "onArtifactCollected() - doesn't match the currently sought index ({0})", compassState.currentArtifactIndex);
 		}
 
+		public function onDebugLayerReady():void  { layerDebugReady = true; assessReadiness(); }
+
 		public function onMapLoadCompleted():void  { setState(GameStateEnum.WAITING); }
 
 		public function onMapLoadStarted():void  { setState(GameStateEnum.LOADING); }
@@ -69,6 +75,10 @@ package mteb.control.gamestate
 		{
 			debug(this, "onRiseCaptured() - player captured rise {0}", index);
 		}
+
+		public function onSceneLayerReady():void  { layerSceneReady = true; assessReadiness(); }
+
+		public function onUiLayerReady():void  { layerUiReady = true; assessReadiness(); }
 
 		public function get state():GameStateEnum
 		{
@@ -94,6 +104,15 @@ package mteb.control.gamestate
 		private function announceStateChange():void
 		{
 			gameStateChanged.send(this as IGameStateMachine);
+		}
+
+		private function assessReadiness():void
+		{
+			if (currentState == GameStateEnum.INITIALIZING)
+			{
+				if (layerUiReady && layerSceneReady && layerDebugReady)
+					setState(GameStateEnum.WAITING_TO_LOAD);
+			}
 		}
 
 		private function setState(value:GameStateEnum):void

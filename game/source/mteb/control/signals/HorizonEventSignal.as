@@ -3,7 +3,7 @@ package mteb.control.signals
 	import pixeldroid.signals.ProtectedSignal;
 
 	import mteb.data.map.ICompassLightStateProvider;
-	import mteb.view.scene.compass.CompassLightEnum;
+	import mteb.view.scene.models.compass.CompassLightEnum;
 
 
 	public class HorizonEventSignal extends ProtectedSignal implements ICompassLightStateProvider

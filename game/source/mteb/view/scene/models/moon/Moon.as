@@ -1,6 +1,7 @@
-package mteb.view.scene.moon
+package mteb.view.scene.models.moon
 {
 	import away3d.entities.Mesh;
+	import away3d.events.MouseEvent3D;
 	import away3d.lights.DirectionalLight;
 	import away3d.lights.LightBase;
 	import away3d.tools.helpers.LightsHelper;
@@ -11,11 +12,11 @@ package mteb.view.scene.moon
 
 	import mteb.control.SignalBus;
 	import mteb.control.gamestate.IGameStateMachine;
-	import mteb.control.gamestate.MCP;
 	import mteb.control.signals.ArtifactChanged;
 	import mteb.data.DataLocator;
 	import mteb.data.map.ICompassLightStateProvider;
-	import mteb.view.scene.compass.CompassLightEnum;
+	import mteb.data.time.ITime;
+	import mteb.view.scene.models.compass.CompassLightEnum;
 
 
 	public class Moon implements IMoon, ISignalReceiver
@@ -56,17 +57,6 @@ package mteb.view.scene.moon
 			LightsHelper.addStaticLightsToMaterials(_geo, _lights);
 		}
 
-		public function animate(secondsElapsed:Number, secondsTotal:Number):void
-		{
-			switch (_state)
-			{
-				case MoonStateEnum.ACTIVATED:
-					_geo.scaleX = _geo.scaleY = _geo.scaleZ = 1.00 + (.03 * Math.sin(5 * secondsTotal));
-					_geo.alpha = .90 + (.10 * Math.cos(7 * secondsTotal));
-					break;
-			}
-		}
-
 		public function get geometry():Mesh
 		{
 			return _geo as Mesh;
@@ -77,9 +67,10 @@ package mteb.view.scene.moon
 			return _lights;
 		}
 
-		public function onClicked():void
+		public function onClicked(event:MouseEvent3D):void
 		{
 			debug(this, "onClicked() - {0} moon clicked", _state);
+			// TODO: request point splash
 
 			const mcp:IGameStateMachine = DataLocator.getInstance().mcp;
 			switch (_state)
@@ -87,6 +78,17 @@ package mteb.view.scene.moon
 				case MoonStateEnum.ACTIVATED:
 					debug(this, "onClicked() - moon captured! TODO: which rise or set is it? tell mcp");
 					_state = MoonStateEnum.TRAVELING;
+					break;
+			}
+		}
+
+		public function onTimeElapsed(time:ITime):void
+		{
+			switch (_state)
+			{
+				case MoonStateEnum.ACTIVATED:
+					_geo.scaleX = _geo.scaleY = _geo.scaleZ = 1.00 + (.03 * Math.sin(5 * time.secondsTotal));
+					_geo.alpha = .90 + (.10 * Math.cos(7 * time.secondsTotal));
 					break;
 			}
 		}

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <actionScriptProperties analytics="false" mainApplicationPath="mteb/Main.as" projectUUID="ef644675-b261-4641-af91-89ade17d3370" version="10">
   <compiler additionalCompilerArguments="-locale en_US&#10;-swf-version=15" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="true" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="target" removeUnusedRSL="true" sourceFolderPath="source" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
-    <compilerSourcePath/>
+    <compilerSourcePath>
+      <compilerSourcePathEntry kind="1" linkType="1" path="${DOCUMENTS}/neh.prototype/tools/starling-particles/src"/>
+    </compilerSourcePath>
     <libraryPath defaultLinkType="0">
       <libraryPathEntry kind="4" path="">
         <excludedEntries>
@@ -31,6 +33,7 @@
       <libraryPathEntry kind="1" linkType="1" path="${DOCUMENTS}/neh.prototype/tools/away3d"/>
       <libraryPathEntry kind="1" linkType="1" path="${DOCUMENTS}/neh.prototype/tools/simplesignals-as3"/>
       <libraryPathEntry kind="1" linkType="1" path="${DOCUMENTS}/neh.prototype/tools/log-as3"/>
+      <libraryPathEntry kind="1" linkType="1" path="${DOCUMENTS}/neh.prototype/tools/starling"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>

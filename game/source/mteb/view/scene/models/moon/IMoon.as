@@ -1,6 +1,7 @@
-package mteb.view.scene.moon
+package mteb.view.scene.models.moon
 {
 	import away3d.entities.Mesh;
+	import away3d.events.MouseEvent3D;
 	import away3d.lights.LightBase;
 
 	import mteb.data.time.ITimeDriven;
@@ -12,7 +13,7 @@ package mteb.view.scene.moon
 
 		function get lights():Vector.<LightBase>;
 
-		function onClicked():void;
+		function onClicked(event:MouseEvent3D):void;
 
 		function get radius():Number;
 

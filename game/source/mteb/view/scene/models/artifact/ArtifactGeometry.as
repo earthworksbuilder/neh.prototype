@@ -1,4 +1,4 @@
-package mteb.view.scene.artifact
+package mteb.view.scene.models.artifact
 {
 	import flash.display.BitmapData;
 
@@ -10,7 +10,7 @@ package mteb.view.scene.artifact
 
 	import mteb.assets.Textures;
 	import mteb.data.map.IArtifact;
-	import mteb.view.scene.GeometryFactory;
+	import mteb.view.scene.models.GeometryFactory;
 
 
 	public class ArtifactGeometry extends Mesh implements IArtifact

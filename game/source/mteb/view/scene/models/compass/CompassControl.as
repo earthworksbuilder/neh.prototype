@@ -1,4 +1,4 @@
-package mteb.view.scene.compass
+package mteb.view.scene.models.compass
 {
 	import flash.geom.Vector3D;
 
@@ -107,7 +107,7 @@ package mteb.view.scene.compass
 
 		protected function onFrameEntered(time:ITime):void
 		{
-			textureSprite.animate(time.secondsElapsed, time.secondsTotal);
+			textureSprite.onTimeElapsed(time);
 			compassGeo.texture = textureSprite.texture;
 		}
 

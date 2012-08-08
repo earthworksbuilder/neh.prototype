@@ -60,6 +60,7 @@ package mteb
 
 		protected function initialize():void
 		{
+			debug(this, "initialize");
 			const data:IDataLocator = DataLocator.getInstance();
 			const layers:ILayerLocator = LayerLocator.getInstance();
 
@@ -70,21 +71,29 @@ package mteb
 
 			// remove title and add display object layers to stage
 			removeChild(layers.title);
-			addChild(layers.scene.displayObject);
-			addChild(layers.ui);
-			addChild(layers.debug.displayObject); // needs to be last so on top
-
-			// connect debug stats monitor to 3d view
-			layers.debug.view3D = layers.scene.view3D;
-
-			// kick things off by loading the map
-			data.map.load("nodes/nodes.xml");
+			addChild(layers.debug.displayObject); // needs to be first to create console, but keep on top for visibility
+			addChildAt(layers.ui, 0); // add ui under debug
+			addChildAt(layers.scene.displayObject, 0); // add scene under ui
 		}
 
 		protected function onGameStateChanged(mcp:IGameStateMachine):void
 		{
-			if (mcp.state == GameStateEnum.INITIALIZING)
-				initialize();
+			switch (mcp.state)
+			{
+				case GameStateEnum.INITIALIZING:
+					initialize();
+					break;
+
+				case GameStateEnum.WAITING_TO_LOAD:
+					// connect debug stats monitor to 3d view
+					const layers:ILayerLocator = LayerLocator.getInstance();
+					layers.debug.view3D = layers.scene.view3D;
+
+					// kick off the map load
+					const data:IDataLocator = DataLocator.getInstance();
+					data.map.load("nodes/nodes.xml");
+					break;
+			}
 		}
 
 		protected function onStageResized(event:Event):void

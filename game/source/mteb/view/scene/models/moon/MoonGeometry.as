@@ -1,4 +1,4 @@
-package mteb.view.scene.moon
+package mteb.view.scene.models.moon
 {
 	import away3d.core.pick.PickingColliderType;
 	import away3d.entities.Mesh;
@@ -7,7 +7,7 @@ package mteb.view.scene.moon
 	import away3d.textures.BitmapTexture;
 
 	import mteb.assets.Textures;
-	import mteb.view.scene.GeometryFactory;
+	import mteb.view.scene.models.GeometryFactory;
 
 
 	public class MoonGeometry extends Mesh

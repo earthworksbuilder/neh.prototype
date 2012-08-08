@@ -8,7 +8,7 @@ package mteb.control.commands
 	import mteb.control.signals.SetEnded;
 	import mteb.control.signals.SetStarted;
 	import mteb.data.map.ICompassLightStateProvider;
-	import mteb.view.scene.compass.CompassLightEnum;
+	import mteb.view.scene.models.compass.CompassLightEnum;
 
 
 	public class AnnounceSet implements IExecutableCommand

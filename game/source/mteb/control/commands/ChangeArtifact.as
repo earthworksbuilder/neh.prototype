@@ -7,7 +7,7 @@ package mteb.control.commands
 	import mteb.control.signals.ArtifactChanged;
 	import mteb.control.signals.HorizonEventSignal;
 	import mteb.data.map.ICompassLightStateProvider;
-	import mteb.view.scene.compass.CompassLightEnum;
+	import mteb.view.scene.models.compass.CompassLightEnum;
 
 
 	public class ChangeArtifact implements IExecutableCommand

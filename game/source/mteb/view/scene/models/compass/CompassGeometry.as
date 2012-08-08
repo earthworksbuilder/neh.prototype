@@ -1,4 +1,4 @@
-package mteb.view.scene.compass
+package mteb.view.scene.models.compass
 {
 	import flash.display.BitmapData;
 	import flash.display.BlendMode;
@@ -9,7 +9,7 @@ package mteb.view.scene.compass
 	import away3d.textures.BitmapTexture;
 
 	import mteb.assets.Textures;
-	import mteb.view.scene.GeometryFactory;
+	import mteb.view.scene.models.GeometryFactory;
 
 
 	public class CompassGeometry extends ObjectContainer3D

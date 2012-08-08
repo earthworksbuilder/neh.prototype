@@ -11,9 +11,11 @@ Builds the game prototype.
 
 	<property name="dir.config" location="${dir.root}/tools/mxmlc"/>
 	<property name="dir.source" location="${basedir}/source"/>
+	<property name="dir.source.starling-particles" location="${dir.root}/tools/starling-particles/src"/>
 	<property name="dir.libs.away3d" location="${dir.root}/tools/away3d"/>
 	<property name="dir.libs.log-as3" location="${dir.root}/tools/log-as3"/>
 	<property name="dir.libs.simplesignals-as3" location="${dir.root}/tools/simplesignals-as3"/>
+	<property name="dir.libs.starling" location="${dir.root}/tools/starling"/>
 	<property name="dir.target" location="${basedir}/target"/>
 	<property name="dir.release" location="${basedir}/release"/>
 	<property name="exe.flashplayer" location="${dir.root}/tools/flashplayer/debug/flashplayer${exe}"/>
@@ -38,9 +40,9 @@ Builds the game prototype.
 			<local name="filepath"/>
 			<property name="filepath" value="@{path}"/>
 			<local name="source-path"/>
-			<property name="source-path" value="-source-path=${dir.source}"/>
+			<property name="source-path" value="-source-path=${dir.source} -source-path+=${dir.source.starling-particles}"/>
 			<local name="library-path"/>
-			<property name="library-path" value="-library-path+=${dir.libs.away3d} -library-path+=${dir.libs.log-as3} -library-path+=${dir.libs.simplesignals-as3}"/>
+			<property name="library-path" value="-library-path+=${dir.libs.away3d} -library-path+=${dir.libs.log-as3} -library-path+=${dir.libs.simplesignals-as3} -library-path+=${dir.libs.starling}"/>
 			<local name="swf-version"/>
 			<property name="swf-version" value="-swf-version=15"/>
 			<local name="link-report"/>

@@ -6,6 +6,7 @@ package mteb.view.debug
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 
+	import away3d.Away3D;
 	import away3d.containers.View3D;
 	import away3d.debug.AwayStats;
 
@@ -21,6 +22,8 @@ package mteb.view.debug
 	import mteb.control.interpreters.CommandInterpreter;
 	import mteb.control.interpreters.ICommandInterpreter;
 	import mteb.control.signals.StageResized;
+	import mteb.data.DataLocator;
+	import mteb.data.IDataLocator;
 	import mteb.view.debug.commandline.CommandLine;
 
 
@@ -64,7 +67,11 @@ package mteb.view.debug
 			}
 		}
 
-		public function set view3D(value:View3D):void  { stats.registerView(value); }
+		public function set view3D(value:View3D):void
+		{
+			debug(this, "set view3D() - Away3d v{0}.{1}.{2}", Away3D.MAJOR_VERSION, Away3D.MINOR_VERSION, Away3D.REVISION);
+			stats.registerView(value);
+		}
 
 		protected function onAddedToStage(event:Event):void
 		{
@@ -97,8 +104,11 @@ package mteb.view.debug
 			stats.x = stage.stageWidth - stats.width;
 			stats.y = 0;
 
-			debug(this, "debug layer ready");
 			updateVis();
+
+			debug(this, "debug layer ready...");
+			const dataLocator:IDataLocator = DataLocator.getInstance();
+			dataLocator.mcp.onDebugLayerReady();
 		}
 
 		protected function onKeyDown(event:KeyboardEvent):void

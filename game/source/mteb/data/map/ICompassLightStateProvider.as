@@ -1,6 +1,6 @@
 package mteb.data.map
 {
-	import mteb.view.scene.compass.CompassLightEnum;
+	import mteb.view.scene.models.compass.CompassLightEnum;
 
 
 	public interface ICompassLightStateProvider

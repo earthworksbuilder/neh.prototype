@@ -1,14 +1,11 @@
-package mteb.view.scene.compass
+package mteb.view.scene.models.compass
 {
 	import flash.display.BitmapData;
-	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
 	import flash.display.Graphics;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.geom.Point;
-
-	import pixeldroid.signals.ProtectedSignal;
 
 	import mteb.assets.Textures;
 	import mteb.data.map.AzimuthTable;
@@ -37,23 +34,6 @@ package mteb.view.scene.compass
 			initialize()
 		}
 
-		public function animate(secondsElapsed:Number, secondsTotal:Number):void
-		{
-			var n:uint, i:uint;
-
-			n = AzimuthTable.MOON_RISES_MIN.length;
-			for (i = 0; i < n; i++)
-				risePoints[i].animate(secondsElapsed, secondsTotal);
-
-			n = AzimuthTable.MOON_SETS_MIN.length;
-			for (i = 0; i < n; i++)
-				setPoints[i].animate(secondsElapsed, secondsTotal);
-
-			n = artifactPoints.length;
-			for (i = 0; i < n; i++)
-				artifactPoints[i].animate(secondsElapsed, secondsTotal);
-		}
-
 		public function changeArtifactPointState(which:uint, value:CompassLightEnum):void
 		{
 			artifactPoints[which].state = value;
@@ -67,6 +47,23 @@ package mteb.view.scene.compass
 		public function changeSetPointState(which:uint, value:CompassLightEnum):void
 		{
 			setPoints[which].state = value;
+		}
+
+		public function onTimeElapsed(time:ITime):void
+		{
+			var n:uint, i:uint;
+
+			n = AzimuthTable.MOON_RISES_MIN.length;
+			for (i = 0; i < n; i++)
+				risePoints[i].onTimeElapsed(time);
+
+			n = AzimuthTable.MOON_SETS_MIN.length;
+			for (i = 0; i < n; i++)
+				setPoints[i].onTimeElapsed(time);
+
+			n = artifactPoints.length;
+			for (i = 0; i < n; i++)
+				artifactPoints[i].onTimeElapsed(time);
 		}
 
 		public function get texture():BitmapData
