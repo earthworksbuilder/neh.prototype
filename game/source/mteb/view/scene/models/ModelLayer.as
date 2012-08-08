@@ -260,13 +260,13 @@ package mteb.view.scene.models
 			{
 				clickedPixel = bitmapCubeLoader.getUvColorAt(index, uv, true);
 				clickedAlpha = (clickedPixel >> 24) & 0xff;
-				if (clickedAlpha == 0)
+				if (clickedAlpha < 10)
 				{
 					debug(this, "onGroundClicked() - pass-thru to sky");
 					onSkyClicked(event);
 				}
 				else
-					debug(this, "onGroundClicked() - no-op. (clickedAlpha = {0}", uintToString(clickedAlpha));
+					debug(this, "onGroundClicked() - no-op. clickedAlpha = {0} ({1}%)", clickedAlpha, Math.round(clickedAlpha / 255 * 100));
 			}
 		}
 
