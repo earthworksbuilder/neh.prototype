@@ -69,8 +69,7 @@ package mteb
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, data.look.onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, data.look.onKeyUp);
 
-			// remove title and add display object layers to stage
-			removeChild(layers.title);
+			// add display object layers to stage
 			addChild(layers.debug.displayObject); // needs to be first to create console, but keep on top for visibility
 			addChildAt(layers.ui, 0); // add ui under debug
 			addChildAt(layers.scene.displayObject, 0); // add scene under ui
@@ -78,6 +77,7 @@ package mteb
 
 		protected function onGameStateChanged(mcp:IGameStateMachine):void
 		{
+			const layers:ILayerLocator = LayerLocator.getInstance();
 			switch (mcp.state)
 			{
 				case GameStateEnum.INITIALIZING:
@@ -86,12 +86,16 @@ package mteb
 
 				case GameStateEnum.WAITING_TO_LOAD:
 					// connect debug stats monitor to 3d view
-					const layers:ILayerLocator = LayerLocator.getInstance();
 					layers.debug.view3D = layers.scene.view3D;
 
 					// kick off the map load
 					const data:IDataLocator = DataLocator.getInstance();
 					data.map.load("nodes/nodes.xml");
+					break;
+
+				case GameStateEnum.WAITING_TO_SHOW:
+					// remove title
+					removeChild(layers.title);
 					break;
 			}
 		}

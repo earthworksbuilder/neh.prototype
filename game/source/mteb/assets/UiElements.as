@@ -13,7 +13,7 @@ package mteb.assets
 		[Embed(source="/../assets/ui/map/view-angle.png", mimeType="image/png")]
 		private static const MapViewAngle:Class;
 
-		[Embed(source="/../assets/ui/title.png", mimeType="image/png")]
+		[Embed(source="/../assets/ui/title.jpg", mimeType="image/jpeg")]
 		private static const TitleScreen:Class;
 
 		public static function get mapViewAngle():Sprite  { return AssetUtils.createOffsetParent(new MapViewAngle(), -.50, -.76); }

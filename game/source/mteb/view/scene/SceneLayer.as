@@ -65,8 +65,8 @@ package mteb.view.scene
 			stage3DManager = Stage3DManager.getInstance(stage);
 
 			stage3DProxy = stage3DManager.getFreeStage3DProxy();
-			//stage3DProxy.color = 0x000000;
-			//stage3DProxy.antiAlias = 8;
+			stage3DProxy.color = 0x000000;
+			stage3DProxy.antiAlias = 8;
 
 			stage3DProxy.addEventListener(Stage3DEvent.CONTEXT3D_CREATED, onContextCreated);
 		}

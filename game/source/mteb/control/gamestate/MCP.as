@@ -53,7 +53,7 @@ package mteb.control.gamestate
 
 		public function onDebugLayerReady():void  { layerDebugReady = true; assessReadiness(); }
 
-		public function onMapLoadCompleted():void  { setState(GameStateEnum.WAITING); }
+		public function onMapLoadCompleted():void  { setState(GameStateEnum.WAITING_TO_SHOW); }
 
 		public function onMapLoadStarted():void  { setState(GameStateEnum.LOADING); }
 
@@ -147,6 +147,10 @@ package mteb.control.gamestate
 
 			switch (pendingState)
 			{
+				case GameStateEnum.WAITING_TO_SHOW:
+					nextState = GameStateEnum.WAITING;
+					break;
+
 				case GameStateEnum.NODE_ARRIVED:
 					nextState = GameStateEnum.WAITING;
 					break;
