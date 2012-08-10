@@ -8,7 +8,7 @@ package mteb.view.scene.models.compass
 	import flash.geom.Point;
 
 	import mteb.assets.Textures;
-	import mteb.data.map.AzimuthTable;
+	import mteb.data.orbit.Ephemeris;
 	import mteb.data.time.ITime;
 	import mteb.data.time.ITimeDriven;
 
@@ -53,11 +53,11 @@ package mteb.view.scene.models.compass
 		{
 			var n:uint, i:uint;
 
-			n = AzimuthTable.MOON_RISES_MIN.length;
+			n = Ephemeris.MOON_MIN_RISES.length;
 			for (i = 0; i < n; i++)
 				risePoints[i].onTimeElapsed(time);
 
-			n = AzimuthTable.MOON_SETS_MIN.length;
+			n = Ephemeris.MOON_MIN_SETS.length;
 			for (i = 0; i < n; i++)
 				setPoints[i].onTimeElapsed(time);
 
@@ -101,27 +101,27 @@ package mteb.view.scene.models.compass
 			g.endFill();
 
 			addChild(northArrow);
-			setAzimuthPosition(AzimuthTable.NORTH, gr, northArrow);
+			setAzimuthPosition(Ephemeris.NORTH, gr, northArrow);
 
 			var m:MoonPoint;
 			var n:uint, i:uint;
 
-			n = AzimuthTable.MOON_RISES_MIN.length;
+			n = Ephemeris.MOON_MIN_RISES.length;
 			for (i = 0; i < n; i++)
 			{
 				m = new MoonPoint();
 				risePoints.push(m);
 				addChild(m);
-				setAzimuthPosition(AzimuthTable.MOON_RISES_MIN[i], gr - m.width, m);
+				setAzimuthPosition(Ephemeris.MOON_MIN_RISES[i], gr - m.width, m);
 			}
 
-			n = AzimuthTable.MOON_SETS_MIN.length;
+			n = Ephemeris.MOON_MIN_SETS.length;
 			for (i = 0; i < n; i++)
 			{
 				m = new MoonPoint();
 				setPoints.push(m);
 				addChild(m);
-				setAzimuthPosition(AzimuthTable.MOON_SETS_MIN[i], gr - m.width, m);
+				setAzimuthPosition(Ephemeris.MOON_MIN_SETS[i], gr - m.width, m);
 			}
 
 			var a:ArtifactPoint;
@@ -130,25 +130,25 @@ package mteb.view.scene.models.compass
 			a.icon = Textures.artifact1PointBitmap.bitmapData;
 			artifactPoints.push(a);
 			addChild(a);
-			setAzimuthPosition(AzimuthTable.northMinRise, gr + a.width * .5, a);
+			setAzimuthPosition(Ephemeris.northMinRise, gr + a.width * .5, a);
 
 			a = new ArtifactPoint();
 			a.icon = Textures.artifact2PointBitmap.bitmapData;
 			artifactPoints.push(a);
 			addChild(a);
-			setAzimuthPosition(AzimuthTable.northMinSet, gr + a.width * .5, a);
+			setAzimuthPosition(Ephemeris.northMinSet, gr + a.width * .5, a);
 
 			a = new ArtifactPoint();
 			a.icon = Textures.artifact3PointBitmap.bitmapData;
 			artifactPoints.push(a);
 			addChild(a);
-			setAzimuthPosition(AzimuthTable.southMinRise, gr + a.width * .5, a);
+			setAzimuthPosition(Ephemeris.southMinRise, gr + a.width * .5, a);
 
 			a = new ArtifactPoint();
 			a.icon = Textures.artifact4PointBitmap.bitmapData;
 			artifactPoints.push(a);
 			addChild(a);
-			setAzimuthPosition(AzimuthTable.southMinSet, gr + a.width * .5, a);
+			setAzimuthPosition(Ephemeris.southMinSet, gr + a.width * .5, a);
 		}
 
 		protected function setAzimuthPosition(azimuth:Number, radius:Number, object:DisplayObject):void

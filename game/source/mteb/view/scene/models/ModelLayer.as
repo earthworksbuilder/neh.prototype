@@ -31,7 +31,7 @@ package mteb.view.scene.models
 	import mteb.data.config.IConfig;
 	import mteb.data.map.ActionTrigger;
 	import mteb.data.map.ActionTypeEnum;
-	import mteb.data.map.AzimuthTable;
+	import mteb.data.orbit.Ephemeris;
 	import mteb.data.map.IArtifact;
 	import mteb.data.map.IAzimuthProvider;
 	import mteb.data.map.IMap;
@@ -94,7 +94,7 @@ package mteb.view.scene.models
 
 		public function initialize():void
 		{
-			STARTING_AZIMUTH = AzimuthTable.northMaxRise;
+			STARTING_AZIMUTH = Ephemeris.northMaxRise;
 			initScene();
 
 			const signalBus:ISignalBus = SignalBus.getInstance();

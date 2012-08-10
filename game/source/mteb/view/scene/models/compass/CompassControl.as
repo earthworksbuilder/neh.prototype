@@ -17,7 +17,7 @@ package mteb.view.scene.models.compass
 	import mteb.control.signals.RiseStarted;
 	import mteb.control.signals.SetEnded;
 	import mteb.control.signals.SetStarted;
-	import mteb.data.map.AzimuthTable;
+	import mteb.data.orbit.Ephemeris;
 	import mteb.data.map.IAzimuthProvider;
 	import mteb.data.map.ICompassLightStateProvider;
 	import mteb.data.time.ITime;
@@ -101,7 +101,7 @@ package mteb.view.scene.models.compass
 
 		protected function onAzimuthChanged(compass:IAzimuthProvider):void
 		{
-			rotationY = compass.currentAzimuth - AzimuthTable.northMaxRise;
+			rotationY = compass.currentAzimuth - Ephemeris.northMaxRise;
 			compassGeo.rotationY = -1 * compass.currentAzimuth;
 		}
 
