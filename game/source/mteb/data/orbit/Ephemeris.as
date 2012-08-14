@@ -1,5 +1,7 @@
 package mteb.data.orbit
 {
+	import flash.geom.Point;
+	import flash.geom.Vector3D;
 
 
 	/**
@@ -45,6 +47,8 @@ package mteb.data.orbit
 	*/
 	public class Ephemeris
 	{
+		private static const TO_RADIANS:Number = Math.PI / 180;
+		
 		/** Total number of rises / sets / transits available for min or max */
 		public static const NUM_DAYS:uint = 15;
 		
@@ -102,6 +106,14 @@ package mteb.data.orbit
 		public static const MOON_MIN_SETS:Vector.<Number> = new <Number>[294.3181, 293.2025, 290.7739, 287.2413, 283.0594, 278.3127, 273.4997, 268.4695, 263.5171, 258.7804, 254.5634, 250.8861, 247.9622, 246.0549, 245.6333];
 
 		
+		public static function getMaxRisePosition(which:uint, distance:Number = 100):Vector3D { return getPolarVectorXZ(distance, MOON_MAX_RISES[which]); }
+		public static function getMaxTransitPosition(which:uint, under:Boolean = false, distance:Number = 100):Vector3D { return getPolarVectorYZ(distance, MOON_MAX_TRANSITS[which], under); }
+		public static function getMaxSetPosition(which:uint, distance:Number = 100):Vector3D { return getPolarVectorXZ(distance, MOON_MAX_SETS[which]); }
+		
+		public static function getMinRisePosition(which:uint, distance:Number = 100):Vector3D { return getPolarVectorXZ(distance, MOON_MAX_RISES[which]); }
+		public static function getMinTransitPosition(which:uint, under:Boolean = false, distance:Number = 100):Vector3D { return getPolarVectorYZ(distance, MOON_MAX_TRANSITS[which], under); }
+		public static function getMinSetPosition(which:uint, distance:Number = 100):Vector3D { return getPolarVectorXZ(distance, MOON_MAX_SETS[which]); }
+		
 		public static function get northMaxRise():Number { return MOON_MAX_RISES[0]; }
 		public static function get northMaxSet():Number { return MOON_MAX_SETS[0]; }
 		
@@ -113,6 +125,21 @@ package mteb.data.orbit
 		
 		public static function get southMinRise():Number { return MOON_MIN_RISES[MOON_MIN_RISES.length-1]; }
 		public static function get southMinSet():Number { return MOON_MIN_SETS[MOON_MIN_SETS.length-1]; }
+		
+		private static function getPolarVectorXZ(distance:Number, degrees:Number):Vector3D
+		{
+			degrees -= 90; // flash.geom.Point at 0 degrees == WEST; must correct 0 degrees to NORTH
+			const point:Point = Point.polar(distance, degrees * TO_RADIANS);
+			const vector:Vector3D = new Vector3D(point.x, 0, -point.y); // screen space +y is down; correct to world space (up)
+			return vector;
+		}
+		
+		private static function getPolarVectorYZ(distance:Number, degrees:Number, under:Boolean = false):Vector3D
+		{
+			const point:Point = under ? Point.polar(distance, (270 - degrees) * TO_RADIANS) : Point.polar(distance, degrees * TO_RADIANS);
+			const vector:Vector3D = new Vector3D(0.001, point.y, point.x); // x = epsilon to avoid interpolation weirdness
+			return vector;
+		}
 	}
 }
 

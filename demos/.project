@@ -14,4 +14,11 @@
 	<natures>
 		<nature>com.adobe.flexbuilder.project.actionscriptnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>[source path] source</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/neh.prototype/game/source</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
