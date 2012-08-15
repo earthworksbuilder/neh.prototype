@@ -1,7 +1,7 @@
 package
 {
 	import away3d.containers.ObjectContainer3D;
-	import away3d.core.raycast.MouseHitMethod;
+	import away3d.core.pick.PickingColliderType;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.SphereGeometry;
@@ -29,7 +29,7 @@ package
 			var mesh:Mesh = new Mesh(geometry, material);
 			mesh.name = "MeshSky";
 			mesh.mouseEnabled = true;
-			mesh.mouseHitMethod = MouseHitMethod.MESH_ANY_HIT;
+			mesh.pickingCollider = PickingColliderType.AS3_BEST_HIT;
 			addChild(mesh);
 		}
 	}

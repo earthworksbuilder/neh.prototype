@@ -11,6 +11,7 @@ package
 	import pixeldroid.away3d.SimpleView3D;
 
 	import mteb.data.orbit.Ephemeris;
+	import mteb.util.lerpV3D;
 	import mteb.util.paletteColor;
 	import mteb.util.slerp;
 
@@ -69,6 +70,12 @@ package
 				geometry = new CubeGeometry(c, c, c);
 				mesh = new Mesh(geometry, material);
 				t = i / n;
+				/*
+				if (t < .5)
+					mesh.position = lerpV3D(pr, prt, (t - .0) * 2);
+				else
+					mesh.position = lerpV3D(prt, ps, (t - .5) * 2);
+				*/
 				mesh.position = slerp(slerp(pr, prt, t / 2), slerp(prt, ps, t / 2 + .5), t);
 
 				geoContainer.addChild(mesh);
@@ -80,6 +87,12 @@ package
 				geometry = new CubeGeometry(c, c, c);
 				mesh = new Mesh(geometry, material);
 				t = i / n;
+				/*
+				if (t < .5)
+					mesh.position = lerpV3D(ps, pst, (t - .0) * 2);
+				else
+					mesh.position = lerpV3D(pst, pr, (t - .5) * 2);
+				*/
 				mesh.position = slerp(slerp(ps, pst, t / 2), slerp(pst, pr, t / 2 + .5), t);
 
 				geoContainer.addChild(mesh);

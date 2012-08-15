@@ -110,9 +110,9 @@ package mteb.data.orbit
 		public static function getMaxTransitPosition(which:uint, under:Boolean = false, distance:Number = 100):Vector3D { return getPolarVectorYZ(distance, MOON_MAX_TRANSITS[which], under); }
 		public static function getMaxSetPosition(which:uint, distance:Number = 100):Vector3D { return getPolarVectorXZ(distance, MOON_MAX_SETS[which]); }
 		
-		public static function getMinRisePosition(which:uint, distance:Number = 100):Vector3D { return getPolarVectorXZ(distance, MOON_MAX_RISES[which]); }
-		public static function getMinTransitPosition(which:uint, under:Boolean = false, distance:Number = 100):Vector3D { return getPolarVectorYZ(distance, MOON_MAX_TRANSITS[which], under); }
-		public static function getMinSetPosition(which:uint, distance:Number = 100):Vector3D { return getPolarVectorXZ(distance, MOON_MAX_SETS[which]); }
+		public static function getMinRisePosition(which:uint, distance:Number = 100):Vector3D { return getPolarVectorXZ(distance, MOON_MIN_RISES[which]); }
+		public static function getMinTransitPosition(which:uint, under:Boolean = false, distance:Number = 100):Vector3D { return getPolarVectorYZ(distance, MOON_MIN_TRANSITS[which], under); }
+		public static function getMinSetPosition(which:uint, distance:Number = 100):Vector3D { return getPolarVectorXZ(distance, MOON_MIN_SETS[which]); }
 		
 		public static function get northMaxRise():Number { return MOON_MAX_RISES[0]; }
 		public static function get northMaxSet():Number { return MOON_MAX_SETS[0]; }
@@ -128,7 +128,7 @@ package mteb.data.orbit
 		
 		private static function getPolarVectorXZ(distance:Number, degrees:Number):Vector3D
 		{
-			degrees -= 90; // flash.geom.Point at 0 degrees == WEST; must correct 0 degrees to NORTH
+			degrees -= (90+51.5); // flash.geom.Point at 0 degrees == WEST; must correct 0 degrees to NORTH, then add azimuth correction for model
 			const point:Point = Point.polar(distance, degrees * TO_RADIANS);
 			const vector:Vector3D = new Vector3D(point.x, 0, -point.y); // screen space +y is down; correct to world space (up)
 			return vector;

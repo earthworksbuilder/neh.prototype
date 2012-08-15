@@ -4,7 +4,7 @@ package
 	import flash.geom.Vector3D;
 
 	import away3d.containers.ObjectContainer3D;
-	import away3d.core.raycast.MouseHitMethod;
+	import away3d.core.pick.PickingColliderType;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
@@ -74,7 +74,7 @@ package
 
 			var mesh:Mesh = new Mesh(geo, mat);
 			mesh.mouseEnabled = true;
-			mesh.mouseHitMethod = MouseHitMethod.MESH_CLOSEST_HIT;
+			mesh.pickingCollider = PickingColliderType.AS3_BEST_HIT;
 			return mesh;
 		}
 
