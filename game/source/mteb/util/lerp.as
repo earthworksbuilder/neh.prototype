@@ -10,6 +10,7 @@ package mteb.util
 	 */
 	public function lerp(a:Number, b:Number, t:Number):Number
 	{
-		return a + ((b - a) * t);
+		return (1 - t) * a + t * b; // this form is accurate at t=0 and t=1, even with floating point err
+		// return a + ((b - a) * t);
 	}
 }

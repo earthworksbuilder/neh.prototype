@@ -14,9 +14,9 @@ package mteb.util
 	{
 		const v:Vector3D = new Vector3D();
 
-		v.x = a.x + ((b.x - a.x) * t);
-		v.y = a.y + ((b.y - a.y) * t);
-		v.z = a.z + ((b.z - a.z) * t);
+		v.x = (1 - t) * a.x + t * b.x;
+		v.y = (1 - t) * a.y + t * b.y;
+		v.z = (1 - t) * a.z + t * b.z;
 
 		return v;
 	}
