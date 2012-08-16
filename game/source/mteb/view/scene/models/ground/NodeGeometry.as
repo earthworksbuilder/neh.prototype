@@ -61,7 +61,7 @@ package mteb.view.scene.models.ground
 		protected function initialize(r:Number = 1024):void
 		{
 			const d:Number = r + r;
-			const picker:IPickingCollider = PickingColliderType.AS3_BEST_HIT;
+			const picker:IPickingCollider = PickingColliderType.AS3_FIRST_ENCOUNTERED;
 
 			const posZMesh:Mesh = GeometryFactory.createPlane(posZTexture, d, d, 1, false, false, true, picker);
 			posZMesh.name = SkyBoxFaceEnum.POSZ.toString();

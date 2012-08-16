@@ -19,6 +19,7 @@ package mteb.view.scene.models.moon
 		protected const TO_RADIANS:Number = 180 / Math.PI;
 
 		protected var isMax:Boolean = false;
+		protected var isMoving:Boolean = false;
 		protected var rise:Vector3D;
 		protected var transit:Vector3D;
 		protected var set:Vector3D;
@@ -27,17 +28,13 @@ package mteb.view.scene.models.moon
 		protected var subject:ObjectContainer3D;
 		protected var orbitalRadius:Number;
 
-		protected var a:Number;
-		protected var t:Number;
-		protected var d:uint;
+		protected var a:Number = 0;
+		protected var d:uint = 0;
 		protected var dInc:int = 1;
 
 
 		public function Orbit()
 		{
-			a = 0;
-			t = 0;
-			day = 0;
 		}
 
 		public function get day():uint  { return d; }
@@ -55,8 +52,22 @@ package mteb.view.scene.models.moon
 			underTransit = isMax ? Ephemeris.getMaxTransitPosition(d, true, orbitalRadius) : Ephemeris.getMinTransitPosition(d, true, orbitalRadius);
 		}
 
+		public function gotoFirstPosition():void
+		{
+			day = Ephemeris.NUM_DAYS - 1;
+			a = 10;
+			setPosition();
+		}
+
+		public function get moving():Boolean  { return isMoving; }
+
+		public function set moving(value:Boolean):void  { isMoving = value; }
+
 		public function onTimeElapsed(time:ITime):void
 		{
+			if (!isMoving)
+				return;
+
 			a += degreesPerSecond * time.secondsElapsedScaled;
 			if (a >= 360)
 			{
@@ -68,12 +79,8 @@ package mteb.view.scene.models.moon
 					dInc = 1;
 				day = d;
 			}
-			t = a / 360;
 
-			if (t < .5)
-				position = slerp(slerp(rise, transit, t), slerp(transit, set, t + .5), t * 2);
-			else
-				position = slerp(slerp(set, underTransit, t - .5), slerp(underTransit, rise, t), (t - .5) * 2);
+			setPosition();
 		}
 
 		public function setSubject(value:ObjectContainer3D, distance:Number, scale:Number = 1):void
@@ -86,6 +93,16 @@ package mteb.view.scene.models.moon
 		public function get subjectPosition():Vector3D
 		{
 			return position;
+		}
+
+		protected function setPosition():void
+		{
+			const t:Number = a / 360;
+
+			if (t < .5)
+				position = slerp(slerp(rise, transit, t), slerp(transit, set, t + .5), t * 2);
+			else
+				position = slerp(slerp(set, underTransit, t - .5), slerp(underTransit, rise, t), (t - .5) * 2);
 		}
 	}
 }

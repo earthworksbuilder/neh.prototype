@@ -31,11 +31,11 @@ package mteb.view.scene.models
 	import mteb.data.config.IConfig;
 	import mteb.data.map.ActionTrigger;
 	import mteb.data.map.ActionTypeEnum;
-	import mteb.data.orbit.Ephemeris;
 	import mteb.data.map.IArtifact;
 	import mteb.data.map.IAzimuthProvider;
 	import mteb.data.map.IMap;
 	import mteb.data.map.Node;
+	import mteb.data.orbit.Ephemeris;
 	import mteb.data.time.ITime;
 	import mteb.data.time.ITimeDriven;
 	import mteb.util.uintToString;
@@ -102,7 +102,6 @@ package mteb.view.scene.models
 			signalBus.addSignal(actionTriggered as ISignal);
 			signalBus.addSignal(artifactCollected as ISignal);
 			signalBus.addReceiver(NodeChanged, this);
-			signalBus.addReceiver(StageResized, this);
 			signalBus.addReceiver(PreferencesChanged, this);
 		}
 
@@ -140,10 +139,6 @@ package mteb.view.scene.models
 			{
 				case (signal is NodeChanged):
 					onNodeChanged(authority as IMap);
-					break;
-
-				case (signal is StageResized):
-					onStageResized(authority as Stage);
 					break;
 
 				case (signal is PreferencesChanged):
@@ -211,12 +206,13 @@ package mteb.view.scene.models
 			skyGeo.shift = -227;
 
 			moonOrbit.setSubject(moon.geometry, 1024 + 512);
+			moonOrbit.gotoFirstPosition();
 
 			sceneGeo.addChildren(skyGeo, groundGeo, moonOrbit, moonTrail, compassControl);
 			view.scene.addChild(sceneGeo);
 
 			// add event handlers for interactive geo
-			moon.geometry.addEventListener(MouseEvent3D.CLICK, onMoonClicked);
+			//moon.geometry.addEventListener(MouseEvent3D.CLICK, onMoonClicked);
 			groundGeo.addEventListener(MouseEvent3D.CLICK, onGroundClicked);
 
 			// add lights to the scene (assuming lights already associated to appropriate geo)
@@ -284,8 +280,10 @@ package mteb.view.scene.models
 
 		protected function onMoonClicked(event:MouseEvent3D):void
 		{
-			debug(this, "onMoonClicked()");
-			moon.onClicked(event);
+			debug(this, "onMoonClicked() - asking moon to move; view: {0}, {1}; screen: {2}, {3}", view.mouseX, view.mouseY, event.screenX, event.screenY);
+			const screenCoords:Point = new Point(view.mouseX, view.mouseY);
+			moon.onClicked(screenCoords);
+			moonOrbit.moving = true;
 		}
 
 		protected function onNodeChanged(map:IMap):void
@@ -341,18 +339,11 @@ package mteb.view.scene.models
 
 			if (isMoonClick)
 			{
-				debug(this, "onSkyClicked() - clicked the moon!");
+				debug(this, "onSkyClicked() - clicked the moon!; view: {0}, {1}; screen: {2}, {3}", view.mouseX, view.mouseY, event.screenX, event.screenY);
 				onMoonClicked(event);
 			}
 			else
-				debug(this, "onSkyClicked() - no-op");
-		}
-
-		protected function onStageResized(stage:Stage):void
-		{
-			debug(this, "onStageResized() - adjusting to new dimensions: {0}x{1}", stage.stageWidth, stage.stageHeight);
-			view.width = stage.stageWidth;
-			view.height = stage.stageHeight;
+				debug(this, "onSkyClicked() - no-op; view: {0}, {1}; screen: {2}, {3}", view.mouseX, view.mouseY, event.screenX, event.screenY);
 		}
 
 		protected function onTexturesLoaded():void

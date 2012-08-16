@@ -1,11 +1,14 @@
 package mteb.view.scene.models.moon
 {
+	import flash.geom.Point;
+
 	import away3d.entities.Mesh;
 	import away3d.events.MouseEvent3D;
 	import away3d.lights.DirectionalLight;
 	import away3d.lights.LightBase;
 	import away3d.tools.helpers.LightsHelper;
 
+	import pixeldroid.signals.IProtectedSignal;
 	import pixeldroid.signals.ISignal;
 	import pixeldroid.signals.ISignalBus;
 	import pixeldroid.signals.ISignalReceiver;
@@ -13,6 +16,7 @@ package mteb.view.scene.models.moon
 	import mteb.control.SignalBus;
 	import mteb.control.gamestate.IGameStateMachine;
 	import mteb.control.signals.ArtifactChanged;
+	import mteb.control.signals.MoonClicked;
 	import mteb.data.DataLocator;
 	import mteb.data.map.ICompassLightStateProvider;
 	import mteb.data.time.ITime;
@@ -45,12 +49,15 @@ package mteb.view.scene.models.moon
 			return lights;
 		}
 
+		protected const moonClicked:IProtectedSignal = new MoonClicked();
+
 		protected var _state:MoonStateEnum = MoonStateEnum.WAITING;
 
 
 		public function Moon()
 		{
 			const signalBus:ISignalBus = SignalBus.getInstance();
+			signalBus.addSignal(moonClicked as ISignal);
 			signalBus.addReceiver(ArtifactChanged, this);
 
 			// apply lighting to geometry
@@ -67,10 +74,10 @@ package mteb.view.scene.models.moon
 			return _lights;
 		}
 
-		public function onClicked(event:MouseEvent3D):void
+		public function onClicked(screenCoords:Point):void
 		{
-			debug(this, "onClicked() - {0} moon clicked", _state);
-			// TODO: request point splash
+			debug(this, "onClicked() - {0} moon clicked (screen coords: {1})", _state, screenCoords);
+			moonClicked.send(screenCoords);
 
 			const mcp:IGameStateMachine = DataLocator.getInstance().mcp;
 			switch (_state)

@@ -27,7 +27,7 @@ package mteb.view.scene.models.moon
 
 			name = "MeshMoon";
 			mouseEnabled = true;
-			pickingCollider = PickingColliderType.BOUNDS_ONLY;
+			pickingCollider = PickingColliderType.AS3_BEST_HIT;
 		}
 
 		public function get alpha():Number  { return _material.alpha; }

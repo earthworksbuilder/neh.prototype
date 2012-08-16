@@ -1,6 +1,6 @@
 package mteb.view.scene.fx
 {
-	import flash.display.Stage;
+	import flash.geom.Point;
 
 	import starling.core.Starling;
 	import starling.display.Sprite;
@@ -13,7 +13,7 @@ package mteb.view.scene.fx
 
 	import mteb.assets.Particles;
 	import mteb.control.SignalBus;
-	import mteb.control.signals.StageResized;
+	import mteb.control.signals.MoonClicked;
 	import mteb.data.time.ITime;
 	import mteb.data.time.ITimeDriven;
 
@@ -32,7 +32,7 @@ package mteb.view.scene.fx
 		public function initialize():void
 		{
 			const signalBus:ISignalBus = SignalBus.getInstance();
-			signalBus.addReceiver(StageResized, this);
+			signalBus.addReceiver(MoonClicked, this);
 
 			particles = Particles.starParticleSystem;
 			addChild(particles);
@@ -43,43 +43,36 @@ package mteb.view.scene.fx
 
 		public function onTimeElapsed(time:ITime):void
 		{
-
+			// no-op, Starling juggler handles frame updates
 		}
 
 		public function pointSplash(emitterX:Number, emitterY:Number):void
 		{
 			particles.emitterX = emitterX;
 			particles.emitterY = emitterY;
-			particles.start(1.5);
+			particles.start(.65);
 		}
 
 		public function receive(signal:ISignal, authority:* = null):void
 		{
 			switch (true)
 			{
-				case (signal is StageResized):
-					onStageResized(authority as Stage);
+				case signal is MoonClicked:
+					var coords:Point = authority as Point;
+					pointSplash(coords.x, coords.y);
 					break;
 			}
-		}
-
-		protected function onStageResized(stage:Stage):void
-		{
-			debug(this, "onStageResized() - adjusting to new dimensions: {0}x{1}", stage.stageWidth, stage.stageHeight);
 		}
 
 		private function onAddedToStage(event:Event):void
 		{
 			Starling.juggler.add(particles);
-			particles.emitterX = stage.stageWidth / 2;
-			particles.emitterY = stage.stageHeight / 2;
-			particles.start();
 		}
 
 		private function onRemovedFromStage(event:Event):void
 		{
-			Starling.juggler.remove(particles);
 			particles.stop();
+			Starling.juggler.remove(particles);
 		}
 	}
 }

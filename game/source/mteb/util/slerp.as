@@ -28,20 +28,21 @@ package mteb.util
 		return p0t.add(p1t);
 
 	/*
-	const p0n:Vector3D = p0.clone();
-	const p1n:Vector3D = p1.clone();
-	p0n.normalize();
-	p1n.normalize();
+		// http://en.wikipedia.org/wiki/Slerp
+		const p0n:Vector3D = p0.clone();
+		const p1n:Vector3D = p1.clone();
+		p0n.normalize();
+		p1n.normalize();
 
-	const omega:Number = Math.acos(p0n.dotProduct(p1n));
-	const sinOmega:Number = Math.sin(omega);
+		const omega:Number = Math.acos(p0n.dotProduct(p1n));
+		const sinOmega:Number = Math.sin(omega);
 
-	const p0t:Vector3D = p0.clone();
-	const p1t:Vector3D = p1.clone();
-	p0t.scaleBy(Math.sin((1 - t) * omega) / sinOmega);
-	p1t.scaleBy(Math.sin(t * omega) / sinOmega);
+		const p0t:Vector3D = p0.clone();
+		const p1t:Vector3D = p1.clone();
+		p0t.scaleBy(Math.sin((1 - t) * omega) / sinOmega);
+		p1t.scaleBy(Math.sin(t * omega) / sinOmega);
 
-	return p0t.add(p1t);
+		return p0t.add(p1t);
 	*/
 	}
 }
