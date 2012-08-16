@@ -78,32 +78,20 @@ package mteb.view.debug
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+
 			addChild(container);
 
-			const consolePrefs:ConsoleAppenderProperties = new ConsoleAppenderProperties();
-			consolePrefs.width = stage.stageWidth;
-			consolePrefs.height = stage.stageHeight - 80;
-
-			console = new ConsoleAppender(consolePrefs);
-			container.addChild(console);
-			console.x = 0;
-			console.y = 0;
+			container.addChild(console = new ConsoleAppender());
 			LogDispatcher.addAppender(console);
 
 			const ci:ICommandInterpreter = new CommandInterpreter();
 			CommandLineInitializer.execute(ci);
-
-			cmd = new CommandLine(ci);
-			container.addChild(cmd);
-			cmd.x = 0;
-			cmd.y = console.y + console.height;
+			container.addChild(cmd = new CommandLine(ci));
 			cmd.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 
-			stats = new AwayStats();
-			container.addChild(stats);
-			stats.x = stage.stageWidth - stats.width;
-			stats.y = 0;
+			container.addChild(stats = new AwayStats());
 
+			onStageResized(stage);
 			updateVis();
 
 			debug(this, "debug layer ready...");
@@ -127,7 +115,20 @@ package mteb.view.debug
 
 		protected function onStageResized(stage:Stage):void
 		{
-			debug(this, "onStageResized() - TODO: adjust to new dimensions: {0}x{1}", stage.stageWidth, stage.stageHeight);
+			debug(this, "onStageResized() - adjusting to new dimensions: {0}x{1}", stage.stageWidth, stage.stageHeight);
+
+			const consoleProperties:ConsoleAppenderProperties = new ConsoleAppenderProperties();
+			consoleProperties.width = Math.min(1024, stage.stageWidth);
+			consoleProperties.height = Math.min(768 - 80, stage.stageHeight - 80);
+			console.properties = consoleProperties;
+			console.x = 0;
+			console.y = 0;
+
+			cmd.x = 0;
+			cmd.y = console.y + console.height;
+
+			stats.x = stage.stageWidth - stats.width;
+			stats.y = 0;
 		}
 
 		protected function updateVis():void

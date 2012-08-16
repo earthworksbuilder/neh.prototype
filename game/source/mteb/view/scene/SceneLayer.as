@@ -2,6 +2,7 @@ package mteb.view.scene
 {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.Event;
 
 	import away3d.containers.View3D;
@@ -17,6 +18,7 @@ package mteb.view.scene
 	import mteb.control.SignalBus;
 	import mteb.control.gamestate.MCP;
 	import mteb.control.signals.FrameEntered;
+	import mteb.control.signals.StageResized;
 	import mteb.data.DataLocator;
 	import mteb.data.IDataLocator;
 	import mteb.data.time.ITime;
@@ -52,6 +54,10 @@ package mteb.view.scene
 				case (signal is FrameEntered):
 					onFrameEntered(authority as ITime);
 					break;
+
+				case (signal is StageResized):
+					onStageResized(authority as Stage);
+					break;
 			}
 		}
 
@@ -85,6 +91,7 @@ package mteb.view.scene
 
 			const signalBus:ISignalBus = SignalBus.getInstance();
 			signalBus.addReceiver(FrameEntered, this);
+			signalBus.addReceiver(StageResized, this);
 
 			debug(this, "scene layer ready...");
 			const dataLocator:IDataLocator = DataLocator.getInstance();
@@ -99,6 +106,16 @@ package mteb.view.scene
 			fxLayer.nextFrame();
 
 			stage3DProxy.present();
+		}
+
+		protected function onStageResized(stage:Stage):void
+		{
+			debug(this, "onStageResized() - adjusting to new dimensions: {0}x{1}", stage.stageWidth, stage.stageHeight);
+			// updating the stage3DProxy updates the Starling engine as well
+			stage3DProxy.width = stage.stageWidth;
+			stage3DProxy.height = stage.stageHeight;
+			modelLayer.view3D.width = stage.stageWidth;
+			modelLayer.view3D.height = stage.stageHeight;
 		}
 	}
 }

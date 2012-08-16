@@ -1,5 +1,6 @@
 package mteb.view.title
 {
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -18,6 +19,9 @@ package mteb.view.title
 
 	public class TitleLayer extends Sprite implements ISignalReceiver
 	{
+		private var titleScreen:Bitmap;
+
+
 		public function TitleLayer()
 		{
 			super();
@@ -46,7 +50,7 @@ package mteb.view.title
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
-			addChild(UiElements.titleScreen);
+			addChild(titleScreen = UiElements.titleScreen);
 			addEventListener(MouseEvent.CLICK, onClicked);
 
 			onStageResized(stage);
@@ -62,8 +66,9 @@ package mteb.view.title
 
 		protected function onStageResized(stage:Stage):void
 		{
-			debug(this, "onStageResized() - TODO: adjust to new dimensions: {0}x{1}", stage.stageWidth, stage.stageHeight);
-
+			debug(this, "onStageResized() - adjusting to new dimensions: {0}x{1}", stage.stageWidth, stage.stageHeight);
+			titleScreen.width = stage.stageWidth;
+			titleScreen.height = stage.stageHeight;
 		}
 	}
 }
