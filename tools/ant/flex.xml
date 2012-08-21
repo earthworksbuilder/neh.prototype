@@ -30,6 +30,7 @@ ${msg.props}
 				jar="${flex.lib}/mxmlc.jar"
 				dir="${flex.frameworks}"
 				fork="true"
+				maxmemory="512m"
 				failonerror="true"
 				>
 				<arg line="@{file} -load-config@{configop}@{config}"/>
@@ -51,6 +52,7 @@ ${msg.props}
 				jar="${flex.lib}/compc.jar"
 				dir="${flex.frameworks}"
 				fork="true"
+				maxmemory="512m"
 				failonerror="true"
 				>
 				<arg line="@{options} -load-config@{configop}@{config}"/>

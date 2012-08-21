@@ -13,6 +13,7 @@ package mteb.view.scene.models.moon
 	import pixeldroid.signals.ISignalBus;
 	import pixeldroid.signals.ISignalReceiver;
 
+	import mteb.assets.Sounds;
 	import mteb.control.SignalBus;
 	import mteb.control.gamestate.IGameStateMachine;
 	import mteb.control.signals.ArtifactChanged;
@@ -78,6 +79,8 @@ package mteb.view.scene.models.moon
 		{
 			debug(this, "onClicked() - {0} moon clicked (screen coords: {1})", _state, screenCoords);
 			moonClicked.send(screenCoords);
+
+			Sounds.drumOneBeat.play();
 
 			const mcp:IGameStateMachine = DataLocator.getInstance().mcp;
 			switch (_state)

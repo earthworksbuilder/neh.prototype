@@ -5,11 +5,13 @@ package mteb.view.title
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.media.SoundChannel;
 
 	import pixeldroid.signals.ISignal;
 	import pixeldroid.signals.ISignalBus;
 	import pixeldroid.signals.ISignalReceiver;
 
+	import mteb.assets.Sounds;
 	import mteb.assets.UiElements;
 	import mteb.control.SignalBus;
 	import mteb.control.signals.StageResized;
@@ -20,6 +22,7 @@ package mteb.view.title
 	public class TitleLayer extends Sprite implements ISignalReceiver
 	{
 		private var titleScreen:Bitmap;
+		private var sound:SoundChannel;
 
 
 		public function TitleLayer()
@@ -53,6 +56,8 @@ package mteb.view.title
 			addChild(titleScreen = UiElements.titleScreen);
 			addEventListener(MouseEvent.CLICK, onClicked);
 
+			sound = Sounds.drumAndFlute.play();
+
 			onStageResized(stage);
 			debug(this, "title layer added to stage");
 		}
@@ -60,6 +65,7 @@ package mteb.view.title
 		protected function onClicked(event:MouseEvent):void
 		{
 			debug(this, "onClicked() - sending request for new game to start");
+			sound.stop();
 			const data:IDataLocator = DataLocator.getInstance();
 			data.mcp.onNewGameRequested();
 		}
