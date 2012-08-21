@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="MeetTheEarthworksBuilders.soundgen.environment" default="-usage" basedir=".">
+
+	<description>
+Builds the game sound assets used for embedding.
+</description>
+
+	<property name="dir.root" location="${basedir}/../../../.."/>
+	<import file="${dir.root}/tools/ant/init.xml"/>
+	<import file="${dir.root}/tools/ant/swfmill/swfmill.xml"/>
+
+	<property name="exe.swfmill" location="${dir.root}/tools/swfmill/swfmill${cli}"/>
+
+
+	<target name="all" description="&gt; all">
+		<wavtoswf filebase="countryNight" exe="${exe.swfmill}"/>
+		<wavtoswf filebase="nightCrickets" exe="${exe.swfmill}"/>
+	</target>
+
+</project>
