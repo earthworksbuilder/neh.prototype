@@ -33,14 +33,14 @@ package mteb.view.scene.models.moon
 		protected static function createLights():Vector.<LightBase>
 		{
 			// simple two-point light setup: key, fill
-			const key:DirectionalLight = new DirectionalLight(.5, -1, .75);
+			const key:DirectionalLight = new DirectionalLight(-.5, -1, -.75);
 			key.color = 0xffffff;
-			key.ambient = 0;
+			key.ambient = .6;
 			key.ambientColor = 0xeeeeff;
 			key.diffuse = .75;
 			key.specular = .1;
 
-			const fill:DirectionalLight = new DirectionalLight(-1, .5, .75);
+			const fill:DirectionalLight = new DirectionalLight(1, .5, -.75);
 			fill.color = 0xffffff;
 			fill.ambient = 0;
 			fill.diffuse = .25;
@@ -86,7 +86,8 @@ package mteb.view.scene.models.moon
 			switch (_state)
 			{
 				case MoonStateEnum.ACTIVATED:
-					debug(this, "onClicked() - moon captured! TODO: which rise or set is it? tell mcp");
+					debug(this, "onClicked() - moon captured! deactivate and travel...");
+					deactivate();
 					_state = MoonStateEnum.TRAVELING;
 					break;
 			}
@@ -127,20 +128,34 @@ package mteb.view.scene.models.moon
 			return _state;
 		}
 
+		protected function activate():void
+		{
+			debug(this, "activate()");
+			_lights[0].ambient = 1;
+			_state = MoonStateEnum.ACTIVATED;
+		}
+
+		protected function deactivate():void
+		{
+			debug(this, "deactivate()");
+			_geo.scaleX = _geo.scaleY = _geo.scaleZ = 1.00;
+			_geo.alpha = 1;
+			_lights[0].ambient = 0;
+			_state = MoonStateEnum.WAITING;
+		}
+
 		protected function onArtifactChanged(authority:ICompassLightStateProvider):void
 		{
 			switch (authority.pointState)
 			{
 				case CompassLightEnum.ACTIVATED:
 					debug(this, "onArtifactChanged() - activate moon!");
-					_lights[0].ambient = 1;
-					_state = MoonStateEnum.ACTIVATED;
+					activate();
 					break;
 
 				default:
 					debug(this, "onArtifactChanged() - state: {0}", authority.pointState);
-					_lights[0].ambient = 0;
-					_state = MoonStateEnum.WAITING;
+					deactivate();
 					break;
 			}
 		}

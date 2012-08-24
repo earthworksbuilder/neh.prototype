@@ -17,9 +17,9 @@ package mteb.view.scene.models.compass
 	import mteb.control.signals.RiseStarted;
 	import mteb.control.signals.SetEnded;
 	import mteb.control.signals.SetStarted;
-	import mteb.data.orbit.Ephemeris;
 	import mteb.data.map.IAzimuthProvider;
 	import mteb.data.map.ICompassLightStateProvider;
+	import mteb.data.orbit.Ephemeris;
 	import mteb.data.time.ITime;
 
 
@@ -28,6 +28,9 @@ package mteb.view.scene.models.compass
 
 		protected const compassGeo:CompassGeometry = new CompassGeometry();
 		protected const textureSprite:CompassSprite = new CompassSprite();
+
+		protected var lastRisePoint:int = -1;
+		protected var lastSetPoint:int = -1;
 
 
 		public function CompassControl()
@@ -114,13 +117,27 @@ package mteb.view.scene.models.compass
 		protected function onRisePointChanged(authority:ICompassLightStateProvider):void
 		{
 			debug(this, "onRisePointChanged() - change state of moonpoint {0} to {1}", authority.pointIndex, authority.pointState);
+			if (lastRisePoint > -1)
+			{
+				var newState:CompassLightEnum = (textureSprite.getRisePointState(lastRisePoint) == CompassLightEnum.CAPTURED) ? CompassLightEnum.CAPTURED : CompassLightEnum.UNLOCKED;
+				debug(this, "onRisePointChanged() - updates state of last moonpoint {0} to {1}", lastRisePoint, newState);
+				textureSprite.changeRisePointState(lastRisePoint, newState);
+			}
 			textureSprite.changeRisePointState(authority.pointIndex, authority.pointState);
+			lastRisePoint = authority.pointIndex;
 		}
 
 		protected function onSetPointChanged(authority:ICompassLightStateProvider):void
 		{
 			debug(this, "onSetPointChanged() - change state of moonpoint {0} to {1}", authority.pointIndex, authority.pointState);
+			if (lastSetPoint > -1)
+			{
+				var newState:CompassLightEnum = (textureSprite.getSetPointState(lastSetPoint) == CompassLightEnum.CAPTURED) ? CompassLightEnum.CAPTURED : CompassLightEnum.UNLOCKED;
+				debug(this, "onSetPointChanged() - updates state of last moonpoint {0} to {1}", lastSetPoint, newState);
+				textureSprite.changeSetPointState(lastSetPoint, newState);
+			}
 			textureSprite.changeSetPointState(authority.pointIndex, authority.pointState);
+			lastSetPoint = authority.pointIndex;
 		}
 	}
 }

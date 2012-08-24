@@ -49,6 +49,16 @@ package mteb.view.scene.models.compass
 			setPoints[which].state = value;
 		}
 
+		public function getRisePointState(which:uint):CompassLightEnum
+		{
+			return risePoints[which].state;
+		}
+
+		public function getSetPointState(which:uint):CompassLightEnum
+		{
+			return setPoints[which].state;
+		}
+
 		public function onTimeElapsed(time:ITime):void
 		{
 			var n:uint, i:uint;
@@ -130,25 +140,25 @@ package mteb.view.scene.models.compass
 			a.icon = Textures.artifact1PointBitmap.bitmapData;
 			artifactPoints.push(a);
 			addChild(a);
-			setAzimuthPosition(Ephemeris.northMinRise, gr + a.width * .5, a);
+			setAzimuthPosition(Ephemeris.southMinRise, gr + a.width * .5, a);
 
 			a = new ArtifactPoint();
 			a.icon = Textures.artifact2PointBitmap.bitmapData;
 			artifactPoints.push(a);
 			addChild(a);
-			setAzimuthPosition(Ephemeris.northMinSet, gr + a.width * .5, a);
+			setAzimuthPosition(Ephemeris.southMinSet, gr + a.width * .5, a);
 
 			a = new ArtifactPoint();
 			a.icon = Textures.artifact3PointBitmap.bitmapData;
 			artifactPoints.push(a);
 			addChild(a);
-			setAzimuthPosition(Ephemeris.southMinRise, gr + a.width * .5, a);
+			setAzimuthPosition(Ephemeris.northMinRise, gr + a.width * .5, a);
 
 			a = new ArtifactPoint();
 			a.icon = Textures.artifact4PointBitmap.bitmapData;
 			artifactPoints.push(a);
 			addChild(a);
-			setAzimuthPosition(Ephemeris.southMinSet, gr + a.width * .5, a);
+			setAzimuthPosition(Ephemeris.northMinSet, gr + a.width * .5, a);
 		}
 
 		protected function setAzimuthPosition(azimuth:Number, radius:Number, object:DisplayObject):void
