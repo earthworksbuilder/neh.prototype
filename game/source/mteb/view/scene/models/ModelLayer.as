@@ -36,6 +36,7 @@ package mteb.view.scene.models
 	import mteb.data.map.IMap;
 	import mteb.data.map.Node;
 	import mteb.data.orbit.Ephemeris;
+	import mteb.data.player.IInventory;
 	import mteb.data.time.ITime;
 	import mteb.data.time.ITimeDriven;
 	import mteb.util.uintToString;
@@ -306,14 +307,20 @@ package mteb.view.scene.models
 			const node:Node = map.currentNode;
 
 			removeArtifact();
+			const inventory:IInventory = DataLocator.getInstance().inventory;
 			if (node.hasArtifact)
 			{
-				debug(this, "onNodeTraveled() - currentNode ({0}) has an artifact! Revealing artifact {1}...", node.id, node.artifact);
-				if (!artifactGeo)
-					artifactGeo = new ArtifactGeometry(node.artifact);
+				if (inventory.hasArtifact(node.artifact))
+					debug(this, "onNodeTraveled() - currentNode ({0}) had artifact {1}; player has already collected it", node.id, node.artifact);
 				else
-					artifactGeo.changeId(node.artifact);
-				addArtifact();
+				{
+					debug(this, "onNodeTraveled() - currentNode ({0}) has an artifact! Revealing artifact {1}...", node.id, node.artifact);
+					if (!artifactGeo)
+						artifactGeo = new ArtifactGeometry(node.artifact);
+					else
+						artifactGeo.changeId(node.artifact);
+					addArtifact();
+				}
 			}
 			else
 				debug(this, "onNodeTraveled() - no artifact for this node.");
