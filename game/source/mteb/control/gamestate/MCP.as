@@ -1,5 +1,7 @@
 package mteb.control.gamestate
 {
+	import away3d.library.assets.NamedAssetBase;
+
 	import pixeldroid.signals.IProtectedSignal;
 	import pixeldroid.signals.ISignal;
 	import pixeldroid.signals.ISignalBus;
@@ -9,6 +11,7 @@ package mteb.control.gamestate
 	import mteb.control.signals.ArtifactChanged;
 	import mteb.control.signals.FrameEntered;
 	import mteb.control.signals.GameStateChanged;
+	import mteb.control.signals.TimeScaleChanged;
 	import mteb.data.DataLocator;
 	import mteb.data.map.IArtifact;
 	import mteb.data.map.ICompassLightStateProvider;
@@ -24,6 +27,8 @@ package mteb.control.gamestate
 		private const compassState:CompassStateMachine = new CompassStateMachine();
 
 		private const gameStateChanged:IProtectedSignal = new GameStateChanged();
+		private const artifactChanged:ArtifactChanged = new ArtifactChanged();
+		private const timeScaleChanged:TimeScaleChanged = new TimeScaleChanged();
 
 		private var layerUiReady:Boolean = false;
 		private var layerSceneReady:Boolean = false;
@@ -34,19 +39,24 @@ package mteb.control.gamestate
 		private var pendingState:GameStateEnum;
 		private var gameStarted:Boolean = false;
 
+		private var currentActivatedArtifactIndex:int;
+
 
 		public function MCP()
 		{
 			const signalBus:ISignalBus = SignalBus.getInstance();
 			signalBus.addSignal(gameStateChanged as ISignal);
+			signalBus.addSignal(artifactChanged as ISignal);
+			signalBus.addSignal(timeScaleChanged as ISignal);
 		}
 
 		public function onArtifactCollected(artifact:IArtifact):void
 		{
 			debug(this, "onArtifactCollected() - player collected artifact {0}", artifact.id);
 			inventory.addArtifact(artifact);
+
 			if (artifact.index == compassState.currentArtifactIndex)
-				setState(GameStateEnum.CAPTURING);
+				setState(GameStateEnum.ACTIVATING);
 			else
 				debug(this, "onArtifactCollected() - doesn't match the currently sought index ({0})", compassState.currentArtifactIndex);
 		}
@@ -57,24 +67,22 @@ package mteb.control.gamestate
 
 		public function onMapLoadStarted():void  { setState(GameStateEnum.LOADING); }
 
+		public function onMoonCaptured():void
+		{
+			debug(this, "onMoonCaptured() - player captured moon; yay, points!");
+			if (compassState.captureMoonForArtifact(currentActivatedArtifactIndex))
+				setState(GameStateEnum.CAPTURING);
+			else
+				throw new Error("wait, what?! how can currentActivatedArtifact not match what compassState is looking for?");
+		}
+
+		public function onMoonTravelCompleted():void  { setState(GameStateEnum.UNLOCKING); }
+
 		public function onNewGameRequested():void  { setState(GameStateEnum.INITIALIZING); }
 
 		public function onNodeTravelCompleted():void  { setState(GameStateEnum.NODE_ARRIVED); }
 
 		public function onNodeTravelStarted():void  { setState(GameStateEnum.NODE_TRAVELING); }
-
-		public function onNorthMinRiseCaptured():void  { setState(GameStateEnum.NORTH_MIN_RISE_CAPTURED); }
-
-		public function onNorthMinRiseUnlocked():void  { setState(GameStateEnum.NORTH_MIN_RISE_UNLOCKED); }
-
-		public function onNorthMinSetCaptured():void  { setState(GameStateEnum.NORTH_MIN_SET_CAPTURED); }
-
-		public function onNorthMinSetUnlocked():void  { setState(GameStateEnum.NORTH_MIN_SET_UNLOCKED); }
-
-		public function onRiseCaptured(index:uint):void
-		{
-			debug(this, "onRiseCaptured() - player captured rise {0}", index);
-		}
 
 		public function onSceneLayerReady():void  { layerSceneReady = true; assessReadiness(); }
 
@@ -83,22 +91,6 @@ package mteb.control.gamestate
 		public function get state():GameStateEnum
 		{
 			return currentState;
-		}
-
-
-		private function activateArtifact(index:uint):void
-		{
-			// TODO: move to command
-			debug(this, "activateArtifact() - announcing activation of {0}", index);
-
-			const artifactChanged:ArtifactChanged = new ArtifactChanged();
-			artifactChanged.pointIndex = index;
-			artifactChanged.pointState = CompassLightEnum.ACTIVATED;
-
-			const signalBus:ISignalBus = SignalBus.getInstance();
-			const announcement:IProtectedSignal = artifactChanged as IProtectedSignal;
-			signalBus.addSignal(announcement as ISignal);
-			announcement.send(artifactChanged as ICompassLightStateProvider);
 		}
 
 		private function announceStateChange():void
@@ -115,6 +107,48 @@ package mteb.control.gamestate
 			}
 		}
 
+
+		private function onArtifactActivated(index:uint):void
+		{
+			debug(this, "onArtifactActivated() - announcing capture of artifact {0}, setting state to ACTIVATED", index);
+			currentActivatedArtifactIndex = index;
+
+			artifactChanged.pointIndex = index;
+			artifactChanged.pointState = CompassLightEnum.ACTIVATED;
+			artifactChanged.send(artifactChanged as ICompassLightStateProvider);
+		}
+
+		private function onArtifactCaptured(index:uint):void
+		{
+			debug(this, "onArtifactCaptured() - announcing capture of artifact {0}, setting state to CAPTURED", index);
+
+			artifactChanged.pointIndex = index;
+			artifactChanged.pointState = CompassLightEnum.CAPTURED;
+			artifactChanged.send(artifactChanged as ICompassLightStateProvider);
+
+			const t:Number = .35;
+			timeScaleChanged.scale = t * t * t * (50 * 1000);
+			timeScaleChanged.send();
+
+			if (compassState.capturesRemaining == 0)
+			{
+				debug(this, "onArtifactCaptured() - GAME OVER, YOU WIN!");
+					// TODO: announce end game state
+			}
+		}
+
+		private function onArtifactUnlocked(index:uint):void
+		{
+			debug(this, "onArtifactUnlocked() - announcing unlocking of {0}, setting state to UNLOCKED", index);
+
+			artifactChanged.pointIndex = index;
+			artifactChanged.pointState = CompassLightEnum.UNLOCKED;
+			artifactChanged.send(artifactChanged as ICompassLightStateProvider);
+
+			timeScaleChanged.scale = 0;
+			timeScaleChanged.send();
+		}
+
 		private function setState(value:GameStateEnum):void
 		{
 			if (value != currentState)
@@ -122,21 +156,6 @@ package mteb.control.gamestate
 				pendingState = value;
 				updateState();
 			}
-		}
-
-		private function unlockArtifact(index:uint):void
-		{
-			// TODO: move to command
-			debug(this, "unlockArtifact() - announcing unlocking of {0}", index);
-
-			const artifactChanged:ArtifactChanged = new ArtifactChanged();
-			artifactChanged.pointIndex = index;
-			artifactChanged.pointState = CompassLightEnum.UNLOCKED;
-
-			const signalBus:ISignalBus = SignalBus.getInstance();
-			const announcement:IProtectedSignal = artifactChanged as IProtectedSignal;
-			signalBus.addSignal(announcement as ISignal);
-			announcement.send(artifactChanged as ICompassLightStateProvider);
 		}
 
 		private function updateState():void
@@ -167,12 +186,17 @@ package mteb.control.gamestate
 
 				case GameStateEnum.UNLOCKING:
 					nextState = GameStateEnum.WAITING;
-					unlockArtifact(compassState.currentArtifactIndex);
+					onArtifactUnlocked(compassState.currentArtifactIndex);
+					break;
+
+				case GameStateEnum.ACTIVATING:
+					nextState = GameStateEnum.WAITING;
+					onArtifactActivated(compassState.currentArtifactIndex);
 					break;
 
 				case GameStateEnum.CAPTURING:
 					nextState = GameStateEnum.WAITING;
-					activateArtifact(compassState.currentArtifactIndex);
+					onArtifactCaptured(compassState.lastCapturedArtifactIndex);
 					break;
 			}
 

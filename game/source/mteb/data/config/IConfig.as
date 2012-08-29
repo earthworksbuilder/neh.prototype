@@ -27,6 +27,13 @@ package mteb.data.config
 		function set showStars(value:Boolean):void;
 
 
+		/** true to reveal time control bar */
+		function get showTimeControl():Boolean;
+
+		/** @private */
+		function set showTimeControl(value:Boolean):void;
+
+
 		/** Degrees per second */
 		function get spinRate():Number;
 

@@ -86,7 +86,8 @@ package mteb.view.scene.models.moon
 			switch (_state)
 			{
 				case MoonStateEnum.ACTIVATED:
-					debug(this, "onClicked() - moon captured! deactivate and travel...");
+					debug(this, "onClicked() - moon captured! announce capture, deactivate and travel...");
+					announceCapture();
 					deactivate();
 					_state = MoonStateEnum.TRAVELING;
 					break;
@@ -133,6 +134,12 @@ package mteb.view.scene.models.moon
 			debug(this, "activate()");
 			_lights[0].ambient = 1;
 			_state = MoonStateEnum.ACTIVATED;
+		}
+
+		protected function announceCapture():void
+		{
+			const mcp:IGameStateMachine = DataLocator.getInstance().mcp;
+			mcp.onMoonCaptured();
 		}
 
 		protected function deactivate():void

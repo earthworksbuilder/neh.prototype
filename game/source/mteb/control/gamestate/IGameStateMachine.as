@@ -14,21 +14,15 @@ package mteb.control.gamestate
 
 		function onMapLoadStarted():void;
 
+		function onMoonCaptured():void;
+
+		function onMoonTravelCompleted():void;
+
 		function onNewGameRequested():void;
 
 		function onNodeTravelCompleted():void;
 
 		function onNodeTravelStarted():void;
-
-		function onNorthMinRiseCaptured():void;
-
-		function onNorthMinRiseUnlocked():void;
-
-		function onNorthMinSetCaptured():void;
-
-		function onNorthMinSetUnlocked():void;
-
-		function onRiseCaptured(index:uint):void;
 
 		function onSceneLayerReady():void;
 

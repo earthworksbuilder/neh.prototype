@@ -9,8 +9,11 @@ package mteb.view.scene.models.moon
 	import pixeldroid.signals.ISignalBus;
 
 	import mteb.control.SignalBus;
+	import mteb.control.gamestate.IGameStateMachine;
+	import mteb.control.gamestate.MCP;
 	import mteb.control.signals.RiseStarted;
 	import mteb.control.signals.SetStarted;
+	import mteb.data.DataLocator;
 	import mteb.data.map.ICompassLightStateProvider;
 	import mteb.data.orbit.Ephemeris;
 	import mteb.data.time.ITime;
@@ -91,9 +94,15 @@ package mteb.view.scene.models.moon
 			const aInc:Number = degreesPerSecond * time.secondsElapsedScaled;
 
 			if ((a < SET_ANGLE) && (a + aInc >= SET_ANGLE))
+			{
+				announceTravelCompleted();
 				announceSet(d);
+			}
 			else if ((a < RISE_ANGLE) && (a + aInc >= RISE_ANGLE))
+			{
+				announceTravelCompleted();
 				announceRise(d + dInc);
+			}
 
 			a += aInc;
 			if (a >= 360)
@@ -146,6 +155,12 @@ package mteb.view.scene.models.moon
 			const announcement:IProtectedSignal = setStarted as IProtectedSignal;
 			const authority:ICompassLightStateProvider = setStarted as ICompassLightStateProvider;
 			announcement.send(authority);
+		}
+
+		protected function announceTravelCompleted():void
+		{
+			const mcp:IGameStateMachine = DataLocator.getInstance().mcp;
+			mcp.onMoonTravelCompleted();
 		}
 
 		protected function setPosition():void
