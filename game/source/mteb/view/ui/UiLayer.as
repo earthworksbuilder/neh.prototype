@@ -9,9 +9,11 @@ package mteb.view.ui
 	import pixeldroid.signals.ISignalReceiver;
 
 	import mteb.control.SignalBus;
+	import mteb.control.signals.PreferencesChanged;
 	import mteb.control.signals.StageResized;
 	import mteb.data.DataLocator;
 	import mteb.data.IDataLocator;
+	import mteb.data.config.IConfig;
 
 
 	public final class UiLayer extends Sprite implements ISignalReceiver
@@ -27,6 +29,7 @@ package mteb.view.ui
 
 			const signalBus:ISignalBus = SignalBus.getInstance();
 			signalBus.addReceiver(StageResized, this);
+			signalBus.addReceiver(PreferencesChanged, this);
 
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
@@ -37,6 +40,10 @@ package mteb.view.ui
 			{
 				case (signal is StageResized):
 					onStageResized(authority as Stage);
+					break;
+
+				case (signal is PreferencesChanged):
+					onPreferencesChanged(authority as IConfig);
 					break;
 
 				default:
@@ -54,6 +61,7 @@ package mteb.view.ui
 
 			timeControl = new TimeControl();
 			addChild(timeControl);
+			timeControl.visible = false;
 
 			mapControl = new MapControl();
 			addChild(mapControl);
@@ -63,6 +71,11 @@ package mteb.view.ui
 			debug(this, "ui layer ready...");
 			const dataLocator:IDataLocator = DataLocator.getInstance();
 			dataLocator.mcp.onUiLayerReady();
+		}
+
+		protected function onPreferencesChanged(config:IConfig):void
+		{
+			timeControl.visible = config.showTimeControl;
 		}
 
 		protected function onStageResized(stage:Stage):void

@@ -6,6 +6,8 @@ package mteb.data.config
 	{
 		protected var _showHotspots:Boolean = false;
 
+		protected var _showTimeControl:Boolean = false;
+
 		protected var _moveRate:Number = 250;
 
 		protected var _spinRate:Number = 45;
@@ -31,6 +33,12 @@ package mteb.data.config
 		public function set showStars(value:Boolean):void  { _showStars = value; }
 
 		/** @inheritDoc */
+		public function get showTimeControl():Boolean  { return _showTimeControl; }
+
+		/** @inheritDoc */
+		public function set showTimeControl(value:Boolean):void  { _showTimeControl = value; }
+
+		/** @inheritDoc */
 		public function get spinRate():Number  { return _spinRate; }
 
 		/** @inheritDoc */
@@ -41,6 +49,7 @@ package mteb.data.config
 			const a:Array = [];
 			a.push("moveRate: " + moveRate);
 			a.push("showHotspots: " + showHotspots);
+			a.push("showTimeControl: " + showHotspots);
 			a.push("showStars: " + showStars);
 			a.push("spinRate: " + spinRate);
 
