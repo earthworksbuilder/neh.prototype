@@ -35,7 +35,7 @@ package mteb.view.scene.models.moon
 			// simple two-point light setup: key, fill
 			const key:DirectionalLight = new DirectionalLight(-.5, -1, -.75);
 			key.color = 0xffffff;
-			key.ambient = .6;
+			key.ambient = .8;
 			key.ambientColor = 0xeeeeff;
 			key.diffuse = .75;
 			key.specular = .1;
@@ -86,10 +86,13 @@ package mteb.view.scene.models.moon
 			switch (_state)
 			{
 				case MoonStateEnum.ACTIVATED:
-					debug(this, "onClicked() - moon captured! announce capture, deactivate and travel...");
-					announceCapture();
+					debug(this, "onClicked() - moon captured! announce capture, deactivate and wait...");
+					mcp.onMoonCaptured();
 					deactivate();
-					_state = MoonStateEnum.TRAVELING;
+					break;
+
+				default:
+					mcp.onMoonClicked();
 					break;
 			}
 		}
@@ -136,18 +139,12 @@ package mteb.view.scene.models.moon
 			_state = MoonStateEnum.ACTIVATED;
 		}
 
-		protected function announceCapture():void
-		{
-			const mcp:IGameStateMachine = DataLocator.getInstance().mcp;
-			mcp.onMoonCaptured();
-		}
-
 		protected function deactivate():void
 		{
 			debug(this, "deactivate()");
 			_geo.scaleX = _geo.scaleY = _geo.scaleZ = 1.00;
 			_geo.alpha = 1;
-			_lights[0].ambient = 0;
+			_lights[0].ambient = .8;
 			_state = MoonStateEnum.WAITING;
 		}
 
