@@ -95,13 +95,13 @@ package mteb.view.scene.models.moon
 
 			if ((a < SET_ANGLE) && (a + aInc >= SET_ANGLE))
 			{
-				announceTravelCompleted();
+				announceTravelCompleted(d);
 				announceSet(d);
 			}
 			else if ((a < RISE_ANGLE) && (a + aInc >= RISE_ANGLE))
 			{
-				announceTravelCompleted();
-				announceRise(d + dInc);
+				announceTravelCompleted(d);
+				announceRise(d);
 			}
 
 			a += aInc;
@@ -131,11 +131,9 @@ package mteb.view.scene.models.moon
 			return position;
 		}
 
-		protected function announceRise(index:uint):void
+		protected function announceRise(day:uint):void
 		{
-			isMoving = false;
-
-			riseStarted.pointIndex = index;
+			riseStarted.pointIndex = day;
 			riseStarted.pointState = CompassLightEnum.ACTIVATED;
 			debug(this, "announceRise() - day: {0}, state: {1}", riseStarted.pointIndex, riseStarted.pointState);
 
@@ -144,11 +142,9 @@ package mteb.view.scene.models.moon
 			announcement.send(authority);
 		}
 
-		protected function announceSet(index:uint):void
+		protected function announceSet(day:uint):void
 		{
-			isMoving = false;
-
-			setStarted.pointIndex = index;
+			setStarted.pointIndex = day;
 			setStarted.pointState = CompassLightEnum.ACTIVATED;
 			debug(this, "announceSet() - day: {0}, state: {1}", setStarted.pointIndex, setStarted.pointState);
 
@@ -157,10 +153,12 @@ package mteb.view.scene.models.moon
 			announcement.send(authority);
 		}
 
-		protected function announceTravelCompleted():void
+		protected function announceTravelCompleted(day:uint):void
 		{
+			isMoving = false;
+
 			const mcp:IGameStateMachine = DataLocator.getInstance().mcp;
-			mcp.onMoonTravelCompleted();
+			mcp.onMoonTravelCompleted(day);
 		}
 
 		protected function setPosition():void

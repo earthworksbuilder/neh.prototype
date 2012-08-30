@@ -13,6 +13,7 @@ package mteb.control.gamestate
 		public static const LOADING:GameStateEnum = new GameStateEnum("LOADING");
 		public static const STARTED:GameStateEnum = new GameStateEnum("STARTED");
 		public static const WAITING:GameStateEnum = new GameStateEnum("WAITING");
+		public static const MOON_PAUSED:GameStateEnum = new GameStateEnum("MOON_PAUSED");
 		public static const UNLOCKING:GameStateEnum = new GameStateEnum("UNLOCKING");
 		public static const ACTIVATING:GameStateEnum = new GameStateEnum("ACTIVATING");
 		public static const CAPTURING:GameStateEnum = new GameStateEnum("CAPTURING");

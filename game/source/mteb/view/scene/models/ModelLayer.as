@@ -23,6 +23,7 @@ package mteb.view.scene.models
 	import mteb.control.signals.ActionTriggered;
 	import mteb.control.signals.ArtifactCollected;
 	import mteb.control.signals.AzimuthChanged;
+	import mteb.control.signals.MoonTravelChanged;
 	import mteb.control.signals.NodeChanged;
 	import mteb.control.signals.PreferencesChanged;
 	import mteb.control.signals.StageResized;
@@ -104,6 +105,7 @@ package mteb.view.scene.models
 			signalBus.addSignal(artifactCollected as ISignal);
 			signalBus.addReceiver(NodeChanged, this);
 			signalBus.addReceiver(PreferencesChanged, this);
+			signalBus.addReceiver(MoonTravelChanged, this);
 		}
 
 		public function onTimeElapsed(time:ITime):void
@@ -144,6 +146,10 @@ package mteb.view.scene.models
 
 				case (signal is PreferencesChanged):
 					onPreferencesChanged(authority as IConfig);
+					break;
+
+				case (signal is MoonTravelChanged):
+					moonOrbit.moving = (authority as MoonTravelChanged).isMoving;
 					break;
 
 				default:
@@ -281,10 +287,9 @@ package mteb.view.scene.models
 
 		protected function onMoonClicked(event:MouseEvent3D):void
 		{
-			debug(this, "onMoonClicked() - asking moon to move; view: {0}, {1}; screen: {2}, {3}", view.mouseX, view.mouseY, event.screenX, event.screenY);
+			debug(this, "onMoonClicked() - passing event on to moon geo; view: {0}, {1}; screen: {2}, {3}", view.mouseX, view.mouseY, event.screenX, event.screenY);
 			const screenCoords:Point = new Point(view.mouseX, view.mouseY);
 			moon.onClicked(screenCoords);
-			moonOrbit.moving = true;
 		}
 
 		protected function onNodeChanged(map:IMap):void
@@ -310,7 +315,7 @@ package mteb.view.scene.models
 			const inventory:IInventory = DataLocator.getInstance().inventory;
 			if (node.hasArtifact)
 			{
-				if (inventory.hasArtifact(node.artifact))
+				if (inventory.hasArtifact(node.artifact - 1))
 					debug(this, "onNodeTraveled() - currentNode ({0}) had artifact {1}; player has already collected it", node.id, node.artifact);
 				else
 				{

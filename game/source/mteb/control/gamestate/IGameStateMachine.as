@@ -16,7 +16,9 @@ package mteb.control.gamestate
 
 		function onMoonCaptured():void;
 
-		function onMoonTravelCompleted():void;
+		function onMoonClicked():void;
+
+		function onMoonTravelCompleted(day:uint):void;
 
 		function onNewGameRequested():void;
 
