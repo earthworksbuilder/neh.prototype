@@ -7,7 +7,6 @@ package mteb.view.scene.models.moon
 
 		public static const WAITING:MoonStateEnum = new MoonStateEnum("WAITING");
 		public static const ACTIVATED:MoonStateEnum = new MoonStateEnum("ACTIVATED");
-		public static const TRAVELING:MoonStateEnum = new MoonStateEnum("TRAVELING");
 
 		private var label:String;
 
