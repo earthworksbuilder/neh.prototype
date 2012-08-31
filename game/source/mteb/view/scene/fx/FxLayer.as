@@ -2,11 +2,6 @@ package mteb.view.scene.fx
 {
 	import flash.geom.Point;
 
-	import starling.core.Starling;
-	import starling.display.Sprite;
-	import starling.events.Event;
-	import starling.extensions.PDParticleSystem;
-
 	import pixeldroid.signals.ISignal;
 	import pixeldroid.signals.ISignalBus;
 	import pixeldroid.signals.ISignalReceiver;
@@ -14,11 +9,13 @@ package mteb.view.scene.fx
 	import mteb.assets.Particles;
 	import mteb.control.SignalBus;
 	import mteb.control.signals.MoonClicked;
-	import mteb.data.time.ITime;
-	import mteb.data.time.ITimeDriven;
+	import starling.core.Starling;
+	import starling.display.Sprite;
+	import starling.events.Event;
+	import starling.extensions.PDParticleSystem;
 
 
-	public class FxLayer extends Sprite implements ITimeDriven, ISignalReceiver
+	public class FxLayer extends Sprite implements ISignalReceiver
 	{
 		protected var particles:PDParticleSystem;
 
@@ -39,11 +36,6 @@ package mteb.view.scene.fx
 
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
-		}
-
-		public function onTimeElapsed(time:ITime):void
-		{
-			// no-op, Starling juggler handles frame updates
 		}
 
 		public function pointSplash(emitterX:Number, emitterY:Number):void

@@ -9,14 +9,12 @@ package mteb.view.scene
 	import away3d.core.managers.Stage3DManager;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.events.Stage3DEvent;
-	import starling.core.Starling;
 
 	import pixeldroid.signals.ISignal;
 	import pixeldroid.signals.ISignalBus;
 	import pixeldroid.signals.ISignalReceiver;
 
 	import mteb.control.SignalBus;
-	import mteb.control.gamestate.MCP;
 	import mteb.control.signals.FrameEntered;
 	import mteb.control.signals.StageResized;
 	import mteb.data.DataLocator;
@@ -24,6 +22,7 @@ package mteb.view.scene
 	import mteb.data.time.ITime;
 	import mteb.view.scene.fx.FxLayer;
 	import mteb.view.scene.models.ModelLayer;
+	import starling.core.Starling;
 
 
 	public final class SceneLayer extends Sprite implements ISceneLayer, ISignalReceiver
