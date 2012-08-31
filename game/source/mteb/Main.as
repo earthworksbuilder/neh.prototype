@@ -16,6 +16,7 @@ package mteb
 	import mteb.control.gamestate.IGameStateMachine;
 	import mteb.control.signals.GameStateChanged;
 	import mteb.control.signals.StageResized;
+	import mteb.control.signals.UiMessageChanged;
 	import mteb.data.DataLocator;
 	import mteb.data.IDataLocator;
 	import mteb.view.ILayerLocator;
@@ -27,6 +28,7 @@ package mteb
 	{
 
 		protected const stageResized:IProtectedSignal = new StageResized();
+		protected const uiMessageChanged:UiMessageChanged = new UiMessageChanged();
 
 
 		public function Main()
@@ -38,6 +40,7 @@ package mteb
 			// register signals
 			const signalBus:ISignalBus = SignalBus.getInstance();
 			signalBus.addSignal(stageResized as ISignal);
+			signalBus.addSignal(uiMessageChanged as ISignal);
 			signalBus.addReceiver(GameStateChanged, this);
 
 			const layers:ILayerLocator = LayerLocator.getInstance();
@@ -96,6 +99,12 @@ package mteb
 				case GameStateEnum.WAITING_TO_SHOW:
 					// remove title
 					removeChild(layers.title);
+
+					uiMessageChanged.message = "Welcome to the earthworks..";
+					uiMessageChanged.send(uiMessageChanged);
+
+					uiMessageChanged.message = "Use the arrow keys to look around.\nClick on the map to jump to a new spot.";
+					uiMessageChanged.send(uiMessageChanged);
 					break;
 			}
 		}

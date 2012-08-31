@@ -21,6 +21,7 @@ package mteb.view.ui
 		protected var heading:HeadingDisplay;
 		protected var timeControl:TimeControl;
 		protected var mapControl:MapControl;
+		protected var messageControl:MessageControl;
 
 
 		public function UiLayer()
@@ -56,15 +57,27 @@ package mteb.view.ui
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
+			mouseEnabled = false;
+			mouseChildren = true;
+
 			heading = new HeadingDisplay();
+			heading.mouseEnabled = false;
+			heading.mouseChildren = false;
 			addChild(heading);
 
 			timeControl = new TimeControl();
+			timeControl.mouseEnabled = true;
 			addChild(timeControl);
 			timeControl.visible = false;
 
 			mapControl = new MapControl();
+			mapControl.mouseEnabled = true;
 			addChild(mapControl);
+
+			messageControl = new MessageControl();
+			messageControl.mouseEnabled = false;
+			messageControl.mouseChildren = false;
+			addChild(messageControl);
 
 			onStageResized(stage);
 

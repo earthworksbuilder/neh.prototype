@@ -13,6 +13,7 @@ package mteb.control.gamestate
 	import mteb.control.signals.GameStateChanged;
 	import mteb.control.signals.MoonTravelChanged;
 	import mteb.control.signals.TimeScaleChanged;
+	import mteb.control.signals.UiMessageChanged;
 	import mteb.data.DataLocator;
 	import mteb.data.map.IArtifact;
 	import mteb.data.map.ICompassLightStateProvider;
@@ -32,6 +33,7 @@ package mteb.control.gamestate
 		private const artifactChanged:ArtifactChanged = new ArtifactChanged();
 		private const timeScaleChanged:TimeScaleChanged = new TimeScaleChanged();
 		private const moonTravelChanged:MoonTravelChanged = new MoonTravelChanged();
+		private const uiMessageChanged:UiMessageChanged = new UiMessageChanged();
 
 		private var layerUiReady:Boolean = false;
 		private var layerSceneReady:Boolean = false;
@@ -41,6 +43,7 @@ package mteb.control.gamestate
 		private var currentState:GameStateEnum = GameStateEnum.TITLE_SHOWING;
 		private var pendingState:GameStateEnum;
 		private var gameStarted:Boolean = false;
+		private var moonPaused:Boolean = false;
 
 		private var currentActivatedArtifactIndex:int;
 		private var currentDay:uint;
@@ -53,12 +56,17 @@ package mteb.control.gamestate
 			signalBus.addSignal(artifactChanged as ISignal);
 			signalBus.addSignal(timeScaleChanged as ISignal);
 			signalBus.addSignal(moonTravelChanged as ISignal);
+			signalBus.addSignal(uiMessageChanged as ISignal);
 		}
 
 		public function onArtifactCollected(artifact:IArtifact):void
 		{
 			debug(this, "onArtifactCollected() - player collected artifact {0}", artifact.id);
 			inventory.addArtifact(artifact);
+
+			uiMessageChanged.message = "You got the (" + artifact.index + ")";
+			uiMessageChanged.send(uiMessageChanged);
+
 			checkForActivation();
 		}
 
@@ -72,7 +80,12 @@ package mteb.control.gamestate
 		{
 			debug(this, "onMoonCaptured() - player captured moon; yay, points!");
 			if (compassState.captureMoonForArtifact(currentActivatedArtifactIndex))
+			{
+				uiMessageChanged.message = "You caught the moon!";
+				uiMessageChanged.send(uiMessageChanged);
+
 				setState(GameStateEnum.CAPTURING);
+			}
 			else
 				throw new Error("wait, what?! how can currentActivatedArtifact not match what compassState is looking for?");
 		}
@@ -123,6 +136,9 @@ package mteb.control.gamestate
 				timeScaleChanged.scale *= 1.05;
 				timeScaleChanged.send();
 
+				uiMessageChanged.message = "Where is the moon now?";
+				uiMessageChanged.send(uiMessageChanged);
+
 				setState(GameStateEnum.MOON_PAUSED);
 			}
 
@@ -163,7 +179,12 @@ package mteb.control.gamestate
 			if (inventory.hasArtifact(compassState.currentArtifactIndex))
 				setState(GameStateEnum.ACTIVATING);
 			else
+			{
 				debug(this, "checkForActivation() - inventory does not contain the currently sought index ({0})", compassState.currentArtifactIndex);
+
+				uiMessageChanged.message = "You still need to collect the (" + compassState.currentArtifactIndex + ")!";
+				uiMessageChanged.send(uiMessageChanged);
+			}
 		}
 
 
@@ -175,6 +196,9 @@ package mteb.control.gamestate
 			artifactChanged.pointIndex = index;
 			artifactChanged.pointState = CompassLightEnum.ACTIVATED;
 			artifactChanged.send(artifactChanged as ICompassLightStateProvider);
+
+			//uiMessageChanged.message = "You have activated the (" + index + ")!";
+			//uiMessageChanged.send(uiMessageChanged);
 		}
 
 		private function onArtifactCaptured(index:int):void
@@ -182,7 +206,9 @@ package mteb.control.gamestate
 			if (compassState.capturesRemaining == 0)
 			{
 				debug(this, "onArtifactCaptured() - GAME OVER, YOU WIN!");
-					// TODO: announce end game state
+
+				uiMessageChanged.message = "Level 1 Complete!";
+				uiMessageChanged.send(uiMessageChanged);
 			}
 			else
 			{
@@ -198,6 +224,9 @@ package mteb.control.gamestate
 
 				moonTravelChanged.isMoving = true;
 				moonTravelChanged.send(moonTravelChanged);
+
+					//uiMessageChanged.message = "You captured the (" + index + ")!";
+					//uiMessageChanged.send(uiMessageChanged);
 			}
 		}
 
@@ -208,6 +237,9 @@ package mteb.control.gamestate
 			artifactChanged.pointIndex = index;
 			artifactChanged.pointState = CompassLightEnum.UNLOCKED;
 			artifactChanged.send(artifactChanged as ICompassLightStateProvider);
+
+			uiMessageChanged.message = "The (" + index + ") is now unlocked";
+			uiMessageChanged.send(uiMessageChanged);
 		}
 
 		private function setState(value:GameStateEnum):void
@@ -238,6 +270,8 @@ package mteb.control.gamestate
 				case GameStateEnum.WAITING:
 					if (!gameStarted)
 						nextState = GameStateEnum.STARTED;
+					else if (moonPaused)
+						nextState = GameStateEnum.MOON_PAUSED;
 					break;
 
 				case GameStateEnum.STARTED:
@@ -258,6 +292,10 @@ package mteb.control.gamestate
 				case GameStateEnum.CAPTURING:
 					nextState = GameStateEnum.WAITING;
 					onArtifactCaptured(compassState.lastCapturedArtifactIndex);
+					break;
+
+				case GameStateEnum.MOON_PAUSED:
+					moonPaused = true;
 					break;
 			}
 
