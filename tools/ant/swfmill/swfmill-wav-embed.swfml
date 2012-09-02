@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<movie width="${movie-width}" height="${movie-height}" framerate="${movie-fps}">
+	<background color="${movie-background-color}" />
+	<frame>
+		<library>
+			<sound id="${sound-linkage-id}" import="${sound-file}" />
+		</library>
+
+		<!-- init -->
+		<DoAction>
+			<actions>
+				<PushData>
+					<items>
+						<StackString value="soundplay"/>
+						<StackInteger value="0"/>
+						<StackString value="Sound"/>
+					</items>
+				</PushData>
+				<New/>
+				<SetVariable/>
+			</actions>
+		</DoAction>
+
+		<!-- attach -->
+		<DoAction>
+			<actions>
+				<PushData>
+					<items>
+						<StackString value="${sound-linkage-id}" />
+						<StackInteger value="1" />
+						<StackString value="soundplay" />
+					</items>
+				</PushData>
+				<GetVariable />
+				<PushData>
+					<items>
+						<StackString value="attachSound" />
+					</items>
+				</PushData>
+				<CallMethod />
+				<Pop />
+			</actions>
+		</DoAction>
+
+		<!-- play -->
+		<DoAction>
+			<actions>
+				<PushData>
+					<items>
+						<StackInteger value="0" />
+						<StackString value="soundplay" />
+					</items>
+				</PushData>
+				<GetVariable />
+				<PushData>
+					<items>
+						<StackString value="start" />
+					</items>
+				</PushData>
+				<CallMethod />
+				<Pop />
+			</actions>
+		</DoAction>
+	</frame>
+</movie>

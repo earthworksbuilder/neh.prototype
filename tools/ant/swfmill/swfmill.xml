@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="swfmill.macros" basedir=".">
+
+<description>
+Initialization of swfmill macros.
+Defines wavtoswf macro.
+</description>
+	
+	<macrodef name="wavtoswf">
+		<attribute name="exe" default="UNKNOWN"/>
+		<attribute name="filebase" default="UNKNOWN"/>
+		<attribute name="filepath" default="."/>
+		<attribute name="linkageid" default="wav"/>
+		<attribute name="moviewidth" default="320"/>
+		<attribute name="movieheight" default="240"/>
+		<attribute name="moviebackgroundcolor" default="#ffffff"/>
+		<attribute name="moviefps" default="12"/>
+		<attribute name="keepswfml" default="false"/>
+		<sequential>
+			<echo message="- - wavtoswf macro - -"/>
+			<echo message="generating '@{filebase}.swf' in @{filepath}/"/>
+			
+			<echoxml file="@{filepath}/@{filebase}.swfml">
+				<movie width="@{moviewidth}" height="@{movieheight}" framerate="@{moviefps}">
+					<background color="@{moviebackgroundcolor}" />
+					<frame>
+						<library>
+							<sound id="@{linkageid}" import="@{filepath}/@{filebase}.wav" />
+						</library>
+				
+						<!-- init -->
+						<DoAction>
+							<actions>
+								<PushData>
+									<items>
+										<StackString value="soundplay"/>
+										<StackInteger value="0"/>
+										<StackString value="Sound"/>
+									</items>
+								</PushData>
+								<New/>
+								<SetVariable/>
+							</actions>
+						</DoAction>
+				
+						<!-- attach -->
+						<DoAction>
+							<actions>
+								<PushData>
+									<items>
+										<StackString value="@{linkageid}" />
+										<StackInteger value="1" />
+										<StackString value="soundplay" />
+									</items>
+								</PushData>
+								<GetVariable />
+								<PushData>
+									<items>
+										<StackString value="attachSound" />
+									</items>
+								</PushData>
+								<CallMethod />
+								<Pop />
+							</actions>
+						</DoAction>
+				
+						<!-- play -->
+						<DoAction>
+							<actions>
+								<PushData>
+									<items>
+										<StackInteger value="0" />
+										<StackString value="soundplay" />
+									</items>
+								</PushData>
+								<GetVariable />
+								<PushData>
+									<items>
+										<StackString value="start" />
+									</items>
+								</PushData>
+								<CallMethod />
+								<Pop />
+							</actions>
+						</DoAction>
+					</frame>
+				</movie>
+			</echoxml>
+			
+			<exec osfamily="windows" spawn="false" executable="cmd">
+				<arg line='/c @{exe} simple @{filepath}/@{filebase}.swfml @{filepath}/@{filebase}.swf'/>
+			</exec>
+			
+			<exec osfamily="mac" spawn="false" executable="@{exe}">
+				<arg line="simple @{filepath}/@{filebase}.swfml @{filepath}/@{filebase}.swf"/>
+			</exec>
+			
+			<delete file="@{filepath}/@{filebase}.swfml"/>
+		</sequential>
+	</macrodef>
+
+</project>

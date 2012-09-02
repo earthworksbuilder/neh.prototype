@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.6.0_29" class="java.beans.XMLDecoder"> 
+ <object class="com.horstmann.violet.StateDiagramGraph"> 
+  <void method="addNode"> 
+   <object id="StateNode0" class="com.horstmann.violet.StateNode"> 
+    <void property="name"> 
+     <void property="text"> 
+      <string>FrameEntered</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>447.0</double> 
+     <double>205.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object id="StateNode1" class="com.horstmann.violet.StateNode"> 
+    <void property="name"> 
+     <void property="text"> 
+      <string>HotspotActivated</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>429.0</double> 
+     <double>423.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object id="StateNode2" class="com.horstmann.violet.StateNode"> 
+    <void property="name"> 
+     <void property="text"> 
+      <string>AzimuthChanged</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>429.0</double> 
+     <double>539.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object id="StateNode3" class="com.horstmann.violet.StateNode"> 
+    <void property="name"> 
+     <void property="text"> 
+      <string>time</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>759.0</double> 
+     <double>209.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object id="StateNode4" class="com.horstmann.violet.StateNode"> 
+    <void property="name"> 
+     <void property="text"> 
+      <string>NodeChanged</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>448.0</double> 
+     <double>658.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object id="StateNode5" class="com.horstmann.violet.StateNode"> 
+    <void property="name"> 
+     <void property="text"> 
+      <string>input</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>761.0</double> 
+     <double>326.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object id="StateNode6" class="com.horstmann.violet.StateNode"> 
+    <void property="name"> 
+     <void property="text"> 
+      <string>scene</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>760.0</double> 
+     <double>483.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object id="StateNode7" class="com.horstmann.violet.StateNode"> 
+    <void property="name"> 
+     <void property="text"> 
+      <string>map</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>764.0</double> 
+     <double>624.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object id="StateNode8" class="com.horstmann.violet.StateNode"> 
+    <void property="name"> 
+     <void property="text"> 
+      <string>player</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>760.0</double> 
+     <double>767.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object id="StateNode9" class="com.horstmann.violet.StateNode"> 
+    <void property="name"> 
+     <void property="text"> 
+      <string>ItemAdded</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>465.0</double> 
+     <double>763.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object class="com.horstmann.violet.NoteNode"> 
+    <void property="text"> 
+     <void property="text"> 
+      <string>signals on the bus</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>425.0</double> 
+     <double>110.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object class="com.horstmann.violet.NoteNode"> 
+    <void property="text"> 
+     <void property="text"> 
+      <string>signal owners and receivers</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>757.0</double> 
+     <double>112.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object id="StateNode10" class="com.horstmann.violet.StateNode"> 
+    <void property="name"> 
+     <void property="text"> 
+      <string>data</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>1033.0</double> 
+     <double>420.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object class="com.horstmann.violet.NoteNode"> 
+    <void property="text"> 
+     <void property="text"> 
+      <string>locators</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>1033.0</double> 
+     <double>113.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.StateTransitionEdge"/> 
+   <object idref="StateNode3"/> 
+   <object idref="StateNode0"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.StateTransitionEdge"/> 
+   <object idref="StateNode0"/> 
+   <object idref="StateNode5"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.StateTransitionEdge"/> 
+   <object idref="StateNode0"/> 
+   <object idref="StateNode6"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.StateTransitionEdge"/> 
+   <object idref="StateNode6"/> 
+   <object idref="StateNode2"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.StateTransitionEdge"/> 
+   <object idref="StateNode1"/> 
+   <object idref="StateNode7"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.StateTransitionEdge"/> 
+   <object idref="StateNode6"/> 
+   <object idref="StateNode1"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.StateTransitionEdge"/> 
+   <object idref="StateNode7"/> 
+   <object idref="StateNode4"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.StateTransitionEdge"/> 
+   <object idref="StateNode4"/> 
+   <object idref="StateNode8"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.StateTransitionEdge"/> 
+   <object idref="StateNode4"/> 
+   <object idref="StateNode6"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.StateTransitionEdge"/> 
+   <object idref="StateNode2"/> 
+   <object idref="StateNode8"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.StateTransitionEdge"/> 
+   <object idref="StateNode7"/> 
+   <object idref="StateNode9"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.StateTransitionEdge"/> 
+   <object idref="StateNode9"/> 
+   <object idref="StateNode8"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.StateTransitionEdge"/> 
+   <object idref="StateNode5"/> 
+   <object idref="StateNode10"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.StateTransitionEdge"/> 
+   <object idref="StateNode10"/> 
+   <object idref="StateNode6"/> 
+  </void> 
+ </object> 
+</java> 

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="MeetTheEarthworksBuilders" default="-usage" basedir=".">
+
+	<description>
+Builds the game prototype.
+</description>
+
+	<property name="dir.root" location="${basedir}/.."/>
+	<import file="${dir.root}/tools/ant/init.xml"/>
+
+	<property name="dir.config" location="${dir.root}/tools/mxmlc"/>
+	<property name="dir.source" location="${basedir}/source"/>
+	<property name="dir.source.starling-particles" location="${dir.root}/tools/starling-particles/src"/>
+	<property name="dir.libs.away3d" location="${dir.root}/tools/away3d"/>
+	<property name="dir.libs.log-as3" location="${dir.root}/tools/log-as3"/>
+	<property name="dir.libs.simplesignals-as3" location="${dir.root}/tools/simplesignals-as3"/>
+	<property name="dir.libs.starling" location="${dir.root}/tools/starling"/>
+	<property name="dir.target" location="${basedir}/target"/>
+	<property name="dir.release" location="${basedir}/release"/>
+	<property name="exe.flashplayer" location="${dir.root}/tools/flashplayer/debug/flashplayer${exe}"/>
+
+	<property name="file" value="Main"/>
+
+
+	<target name="all" description="&gt; all (clean, compile, release, run)" depends="clean, compile, release, run"/>
+
+	<target name="clean" description="remove the contents of ${dir.target} and ${dir.release}">
+		<delete failonerror="true" includeemptydirs="true">
+			<fileset dir="${dir.target}" includes="*" excludes="readme"/>
+		</delete>
+	</target>
+
+	<macrodef name="compile-source">
+		<attribute name="name" default="UNKNOWN"/>
+		<attribute name="path" default="UNKNOWN"/>
+		<sequential>
+			<local name="filename"/>
+			<property name="filename" value="@{name}"/>
+			<local name="filepath"/>
+			<property name="filepath" value="@{path}"/>
+			<local name="source-path"/>
+			<property name="source-path" value="-source-path=${dir.source} -source-path+=${dir.source.starling-particles}"/>
+			<local name="library-path"/>
+			<property name="library-path" value="-library-path+=${dir.libs.away3d} -library-path+=${dir.libs.log-as3} -library-path+=${dir.libs.simplesignals-as3} -library-path+=${dir.libs.starling}"/>
+			<local name="swf-version"/>
+			<property name="swf-version" value="-swf-version=15"/>
+			<local name="link-report"/>
+			<property name="link-report" value="-link-report=${dir.target}/@{name}-linkage.xml"/>
+			<local name="size-report"/>
+			<property name="size-report" value="-size-report=${dir.target}/@{name}-sizes.xml"/>
+			<local name="output"/>
+			<property name="output" value="-output=${dir.target}/@{name}.swf"/>
+			<mxmlc file="${filepath}/${filename}.as" config="${dir.config}/mxmlc-config.xml" options="${source-path} ${library-path} ${swf-version} ${link-report} ${size-report} ${output}"/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="run-file">
+		<attribute name="name" default="UNKNOWN"/>
+		<sequential>
+			<open file="${dir.release}/@{name}.swf" exe="${exe.flashplayer}"/>
+		</sequential>
+	</macrodef>
+
+	<target name="compile" depends="clean" description="compiles source file into target folder">
+		<compile-source name="${file}" path="${dir.source}/mteb"/>
+	</target>
+
+	<target name="release" depends="compile" description="copies build artifacts from target to release folder">
+		<copy file="${dir.target}/${file}.swf" tofile="${dir.release}/${ant.project.name}.swf"/>
+	</target>
+
+	<target name="run" description="launches build artifact from release folder">
+		<run-file name="${ant.project.name}"/>
+	</target>
+
+</project>

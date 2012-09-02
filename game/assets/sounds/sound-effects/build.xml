@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="MeetTheEarthworksBuilders.soundgen.sfx" default="-usage" basedir=".">
+
+	<description>
+Builds the game sound assets used for embedding.
+</description>
+
+	<property name="dir.root" location="${basedir}/../../../.."/>
+	<import file="${dir.root}/tools/ant/init.xml"/>
+	<import file="${dir.root}/tools/ant/swfmill/swfmill.xml"/>
+
+	<property name="exe.swfmill" location="${dir.root}/tools/swfmill/swfmill${cli}"/>
+
+
+	<target name="all" description="&gt; all">
+		<wavtoswf filebase="drum_1_beat" exe="${exe.swfmill}"/>
+		<wavtoswf filebase="drum_1_beat2" exe="${exe.swfmill}"/>
+		<wavtoswf filebase="drum_1then2" exe="${exe.swfmill}"/>
+		<wavtoswf filebase="drum_2_beats" exe="${exe.swfmill}"/>
+		<wavtoswf filebase="drum_3_beats" exe="${exe.swfmill}"/>
+		<wavtoswf filebase="drum_5_beats" exe="${exe.swfmill}"/>
+		<wavtoswf filebase="drum_alt_3Beats" exe="${exe.swfmill}"/>
+		<wavtoswf filebase="drum_rattle2" exe="${exe.swfmill}"/>
+		<wavtoswf filebase="rattle1" exe="${exe.swfmill}"/>
+		<wavtoswf filebase="rattle2" exe="${exe.swfmill}"/>
+	</target>
+
+</project>
