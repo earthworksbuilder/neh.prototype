@@ -39,7 +39,8 @@ package mteb.view.scene.models.sky
 
 		public function onTimeElapsed(time:ITime):void
 		{
-			spin += speed * time.secondsElapsedScaled;
+			//spin += speed * time.secondsElapsedScaled;
+			spin += speed * time.secondsElapsedScaled / 10; // Hack: it was spinning to fast for people's stomachs.  This slows it down a bit. -- Chad Joan
 		}
 
 		public function get shift():Number
