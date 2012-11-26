@@ -56,7 +56,9 @@ package mteb.control.gamestate
 			signalBus.addSignal(artifactChanged as ISignal);
 			signalBus.addSignal(timeScaleChanged as ISignal);
 			signalBus.addSignal(moonTravelChanged as ISignal);
-			signalBus.addSignal(uiMessageChanged as ISignal);
+			
+			// Hack: prevent display of ingame message text.  It goes against the game design doc constraints. -- Chad Joan
+			//signalBus.addSignal(uiMessageChanged as ISignal);
 		}
 
 		public function onArtifactCollected(artifact:IArtifact):void

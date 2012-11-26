@@ -99,12 +99,15 @@ package mteb
 				case GameStateEnum.WAITING_TO_SHOW:
 					// remove title
 					removeChild(layers.title);
-
+					
+					/* Hack: prevent display of ingame message text.  It goes against the game design doc constraints. -- Chad Joan
+					
 					uiMessageChanged.message = "Welcome to the earthworks..";
 					uiMessageChanged.send(uiMessageChanged);
 
 					uiMessageChanged.message = "Use the arrow keys to look around.\nClick on the map to jump to a new spot.";
 					uiMessageChanged.send(uiMessageChanged);
+					*/
 					break;
 			}
 		}
