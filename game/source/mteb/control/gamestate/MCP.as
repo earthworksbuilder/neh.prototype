@@ -103,6 +103,8 @@ package mteb.control.gamestate
 
 		public function onMoonTravelCompleted(day:uint):void
 		{
+			/* HACK: Removing this code prevents the moon from stopping.  I'm not exactly sure why.  -- Chad Joan
+			
 			const firstDay:uint = Ephemeris.NUM_DAYS - 1;
 			const lastDay:uint = 0;
 
@@ -142,7 +144,7 @@ package mteb.control.gamestate
 				uiMessageChanged.send(uiMessageChanged);
 
 				setState(GameStateEnum.MOON_PAUSED);
-			}
+			}*/
 
 
 		}

@@ -82,13 +82,14 @@ package mteb.view.scene.models.moon
 			setPosition();
 		}
 
-		public function get moving():Boolean  { return isMoving; }
+		//public function get moving():Boolean  { return isMoving; }
+		public function get moving():Boolean  { return true; }
 
 		public function set moving(value:Boolean):void  { isMoving = value; }
 
 		public function onTimeElapsed(time:ITime):void
 		{
-			if (!isMoving)
+			if (!moving)
 				return;
 
 			const aInc:Number = degreesPerSecond * time.secondsElapsedScaled;
